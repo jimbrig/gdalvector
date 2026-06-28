@@ -4,7 +4,7 @@
 \alias{gdal_vector_driver_capabilities}
 \title{GDAL Vector Driver Capabilities}
 \usage{
-gdal_vector_driver_capabilities(dsn, ...)
+gdal_vector_driver_capabilities(driver)
 }
 \arguments{
 \item{driver}{Character scalar GDAL driver short name.}

@@ -87,10 +87,7 @@ gdal_sitrep_version_check <- function(major = 13L, minor = 11L, patch = 0L) {
 }
 
 gdal_sitrep_alg_check <- function() {
-  if (identical(gdal_alg_names(), character(0))) {
-    FALSE
-  }
-  TRUE
+  !identical(gdal_alg_names(), character(0))
 }
 
 # algorithmic -----------------------------------------------------------------------------------------------------
@@ -217,7 +214,7 @@ proj_version_terra <- function() {
 
 .parse_gdal_version_string <- function(str) {
   str <- trimws(str)
-  match <- regexpr("[0-9]+\\.[0-9]+\\.[0-9]+(rc[0-9]+)?", version_str)
+  match <- regexpr("[0-9]+\\.[0-9]+\\.[0-9]+(rc[0-9]+)?", str)
   if (match == -1L) {
     return(NULL)
   }

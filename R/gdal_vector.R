@@ -1,3 +1,13 @@
+#  ------------------------------------------------------------------------
+#
+# Title : GDAL Vector
+#    By : Jimmy Briggs
+#  Date : 2026-06-13
+#
+#  ------------------------------------------------------------------------
+
+# open ------------------------------------------------------------------------------------------------------------
+
 gdal_vector_open <- function(
   dsn,
   layer = "",
@@ -35,8 +45,6 @@ gdal_vector_identify_driver <- function(dsn, vector = TRUE, raster = FALSE, allo
 gdal_vector_driver_format <- function(dsn) {
   gdalraster::ogr_ds_format(dsn)
 }
-
-gdal_vector_driver_capabilities <- function(dsn, ...) {}
 
 # driver - open opts ----------------------------------------------------------------------------------------------
 
@@ -103,7 +111,7 @@ gdal_vector_check_capability <- function(capability, dsn, layer = gdal_vector_la
   caps <- gdal_vector_capabilities(dsn, layer)
   if (!capability %in% names(caps)) {
     gdal_warn_check(
-      "Capability provided {.field {capability}} is not a valid vector capability. Valid capabilities are: {.field {names(cap)}}"
+      "Capability provided {.field {capability}} is not a valid vector capability. Valid capabilities are: {.field {names(caps)}}"
     )
     return(FALSE)
   }
@@ -117,12 +125,7 @@ gdal_vector_layer_fields <- function(dsn, layer = gdal_vector_layer(dsn), ...) {
   gdalraster::ogr_layer_field_names(dsn = dsn, layer = layer)
 }
 
-gdal_vector_layer_definition <- function(
-  dsn,
-  layer = gdal_vector_layer(dsn),
-  driver = gdal_vector_get_driver(dsn),
-  ...
-) {
+gdal_vector_layer_definition <- function(dsn, layer = gdal_vector_layer(dsn), ...) {
   vec <- gdal_vector_open(dsn = dsn, layer = layer, ...)
   withr::defer(vec$close())
   vec$getLayerDefn()

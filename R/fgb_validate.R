@@ -6,13 +6,6 @@
 #
 #  ------------------------------------------------------------------------
 
-# constants -------------------------------------------------------------------------------------------------------
-
-#' @keywords internal
-#' @noRd
-FGB_MAGIC_BYTES <- as.raw(c(0x66, 0x67, 0x62, 0x03, 0x66, 0x67, 0x62, 0x01))
-
-
 # main validation -------------------------------------------------------------------------------------------------
 
 fgb_validate <- function(fgb_dsn, ...) {
@@ -48,7 +41,7 @@ fgb_magic_header <- function(path) {
 # validate - spatial index ----------------------------------------------------------------------------------------
 
 fgb_validate_spatial_index <- function(fgb_dsn) {
-  gdal_vector_get_capability(capability = "FastSpatialFilter", fgb_dsn)
+  gdal_vector_check_capability(capability = "FastSpatialFilter", dsn = fgb_dsn)
 }
 
 #' Validate Spatial Index RAM Requirement

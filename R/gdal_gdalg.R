@@ -80,49 +80,30 @@ new_gdalg <- function(command_line, relative_paths = TRUE, gdal_version = gdal_v
       type = "gdal_streamed_alg",
       command_line = command_line,
       gdal_version = as.character(gdal_version),
-      relative_paths_to_this_file = relative_paths
+      relative_paths_relative_to_this_file = relative_paths
     ),
     path = .path,
     class = c("gdalg", "list")
   )
 }
 
+# format and print ------------------------------------------------------------------------------------------------
 
-#' @keywords internal
-#' @noRd
 #' @export
 format.gdalg <- function(x, ...) {
-  cmd_display <- if (nchar(x$command_line) > 70L) {
-    paste0(strtrim(x$command_line, 67), "...")
-  } else {
-    x$command_line
-  }
-  paste0(
-    "Type: ",
-    x$type,
-    "\n",
-    "Command Line: ",
-    cmd_display,
-    "\n",
-    "Relative Paths: ",
-    x$relative_paths_relative_to_this_file
+  cmd <- if (nchar(x$command_line) > 70L) paste0(strtrim(x$command_line, 67), "...") else x$command_line
+  c(
+    cli::format_inline("{.cls {class(x)[[1]]}}"),
+    cli::format_inline("Type: {.strong {x$type}}"),
+    cli::format_inline("Command Line: {.field {cmd}}"),
+    cli::format_inline("Relative Paths: {.field {x$relative_paths_relative_to_this_file}}"),
+    cli::format_inline("GDAL Version: {.field {x$gdal_version}}")
   )
 }
 
-#' @keywords internal
-#' @noRd
-#' @importFrom cli cat_line format_inline
 #' @export
 print.gdalg <- function(x, ...) {
-  cmd_display <- if (nchar(x$command_line) > 70L) {
-    paste0(strtrim(x$command_line, 67), "...")
-  } else {
-    x$command_line
-  }
-  cli::cat_line(cli::format_inline("{.cls {toupper(class(x)[[1]])}}"))
-  cli::cat_line(cli::format_inline("Type: {.strong {x$type}}"))
-  cli::cat_line(cli::format_inline("Command Line: {.field {cmd_display}}"))
-  cli::cat_line(cli::format_inline("Relative Paths: {.field {x$relative_paths_relative_to_this_file}}"))
+  cat(format(x, ...), sep = "\n")
   invisible(x)
 }
 
