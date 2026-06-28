@@ -1,0 +1,39 @@
+---
+title: "FlatGeobuf"
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+# library(gdalvector)
+```
+
+## Overview
+
+::: callout-note
+### Useful Links
+
+-   [FlatGeobuf - GDAL Vector Driver](https://gdal.org/en/stable/drivers/vector/flatgeobuf.html)
+-   [FlatGeobuf.org Homepage](https://flatgeobuf.org/)
+-   [Format Specification Changelog](https://flatgeobuf.org/doc/format-changelog.html)
+-   [flatgeobuf/src/rdf/schema.ttl at master · flatgeobuf/flatgeobuf](https://github.com/flatgeobuf/flatgeobuf/blob/master/src/rdf/schema.ttl)
+-   [flatgeobuf/flatgeobuf: A performant binary encoding for geographic data based on flatbuffers](https://github.com/flatgeobuf/flatgeobuf)
+-   [FlatBuffers Docs](https://flatbuffers.dev/)
+-   [HTTP range requests - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Range_requests)
+-   [Shapefile must die!](http://switchfromshapefile.org/)
+-   [Hilbert R-tree - Wikipedia](https://en.wikipedia.org/wiki/Hilbert_R-tree#Packed_Hilbert_R-trees)
+-   [mapbox/geobuf: A compact binary encoding for geographic data.](https://github.com/mapbox/geobuf)
+-   [Optimizing FlatGeobuf for Web… · Spatial Data Archival](https://www.spatialdataarchival.org/format-conversion-pipeline-automation/flatgeobuf-optimization-techniques/optimizing-flatgeobuf-for-web-mapping-archives/)
+-   [FlatGeobuf – Cloud-Optimized Geospatial Formats Guide](https://guide.cloudnativegeo.org/flatgeobuf/intro.html)
+:::
+
+[FlatGeoBuf](https://flatgeobuf.org/) is a modern, performant, binary encoding for geographic vector data based on 
+[flatbuffers](https://flatbuffers.dev/) that can hold a collection of features. It is inspired by [geobuf](https://github.com/mapbox/geobuf) 
+and [flatbush](https://github.com/mourner/flatbush) and deliberately does not support random writes for simplicity and 
+to be able to cluster the data on a [packed Hilbert R-Tree](https://en.wikipedia.org/wiki/Hilbert_R-tree#Packed_Hilbert_R-trees) 
+enabling fast bounding box spatial filtering. The spatial index is optional to allow the format to be efficiently written 
+as a stream, support appending, and for use cases where spatial filtering is not needed.
+

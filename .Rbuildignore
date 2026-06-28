@@ -32,3 +32,10 @@
 ^CHANGELOG\.md$
 ^LICENSE\.md$
 ^cran-comments\.md$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^vignettes/articles/\.quarto$
+^vignettes/articles/*_files$
+^vignettes/articles$
+^[.]?air[.]toml$

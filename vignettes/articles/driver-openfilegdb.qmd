@@ -1,0 +1,15 @@
+---
+title: "OpenFileGDB"
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(gdalvector)
+```
+
+## ESRI File Geodatabase (OpenFileGDB)
+

@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "id": "usparcels",
+      "name": "US Parcels",
+      "description": "",
+      "provider": "https://landrecords.us",
+      "url": ""
+    }
+
+  ]
+}

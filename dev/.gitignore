@@ -1,0 +1,13 @@
+*
+!.gitignore
+!R/
+!R/**
+!docs/
+!docs/**
+!check/
+!check/**
+!scripts/
+!scripts/**
+!README.md
+!config_attachment.yaml
+!config_attachment.yml

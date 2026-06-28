@@ -1,0 +1,12 @@
+---
+title: "PMTiles"
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(gdalvector)
+```

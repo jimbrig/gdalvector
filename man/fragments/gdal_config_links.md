@@ -1,0 +1,2 @@
+- [GDAL Configuration Options](https://gdal.org/en/stable/user/configoptions.html)
+  - [Setting Configuration Options](https://gdal.org/en/stable/user/configoptions.html#setting-configuration-options)

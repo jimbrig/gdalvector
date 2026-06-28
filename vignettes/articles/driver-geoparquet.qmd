@@ -1,0 +1,19 @@
+---
+title: "GeoParquet"
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+# library(gdalvector)
+```
+
+## GeoParquet Best Practices
+
+- **COMPRESSION**: Use `COMPRESSION=ZSTD` for optimal compression and performance.
+- **COMPRESSION_LEVEL**: Set `COMPRESSION_LEVEL=15` for a solid balance between compression ratio and speed.
+
+- **GEOMETRY_ENCODING**: Use 

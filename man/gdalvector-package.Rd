@@ -4,9 +4,20 @@
 \name{gdalvector-package}
 \alias{gdalvector}
 \alias{gdalvector-package}
-\title{gdalvector: What the Package Does (One Line, Title Case)}
+\title{\code{gdalvector} Package}
 \description{
-What the package does (one paragraph).
+The \code{gdalvector} package provides tools for working with vector data using modern GDAL bindings in R. It builds
+on top of the \code{gdalraster} package, but focuses on vector data sources and modern cloud-native formats and
+specifications.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/jimbrig/gdalvector}
+  \item \url{http://docs.jimbrig.com/gdalvector/}
+  \item Report bugs at \url{https://github.com/jimbrig/gdalvector/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Jimmy Briggs \email{jimmy.briggs@jimbrig.com} (\href{https://orcid.org/0000-0002-7489-8787}{ORCID})

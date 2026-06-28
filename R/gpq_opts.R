@@ -1,0 +1,139 @@
+#  ------------------------------------------------------------------------
+#
+# Title : GeoParquet (Parquet) Options
+#    By : Jimmy Briggs
+#  Date : 2026-06-28
+#
+#  ------------------------------------------------------------------------
+
+# open ------------------------------------------------------------------------------------------------------------
+
+#' GeoParquet Open Options
+#'
+#' @description
+#' Construct a [gdal_open_opts()] object for the `Parquet` (GeoParquet) driver.
+#'
+#' @param geom_possible_names Value for `GEOM_POSSIBLE_NAMES` (comma-separated candidate geometry
+#'   column names).
+#' @param crs Value for `CRS` (override CRS for geometry columns, e.g. `"EPSG:4326"`).
+#' @param lists_as_string_json Value for `LISTS_AS_STRING_JSON` (logical -> `"YES"`/`"NO"`).
+#' @inheritParams .shared_params
+#'
+#' @returns A [gdal_open_opts()] object for the `Parquet` driver.
+#' @export
+#'
+#' @seealso [gpq_creation_opts()], [gdal_open_opts()]
+#'
+#' ```{r child = "man/fragments/gpq_links.md"}
+#' ```
+#'
+#' @examples
+#' gpq_open_opts(crs = "EPSG:4326")
+gpq_open_opts <- function(geom_possible_names = NULL, crs = NULL, lists_as_string_json = NULL, .set_defaults = FALSE) {
+  opts <- purrr::compact(list(
+    GEOM_POSSIBLE_NAMES = geom_possible_names,
+    CRS = crs,
+    LISTS_AS_STRING_JSON = as_gdal_boolean(lists_as_string_json)
+  ))
+  if (length(opts) > 0L) {
+    check_gdal_opts(opts, gdal_vector_driver_open_opts_values("Parquet"))
+  }
+  if (isTRUE(.set_defaults)) {
+    opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("Parquet")), opts)
+  }
+  new_gdal_open_opts(.gdal_opts_normalize(opts), driver = "Parquet")
+}
+
+# creation --------------------------------------------------------------------------------------------------------
+
+#' GeoParquet Creation Options
+#'
+#' @description
+#' Construct a layer-level [gdal_creation_opts()] object for the `Parquet` (GeoParquet) driver. Only
+#' options you supply are emitted; enumerated values are validated against the driver metadata.
+#'
+#' @param compression Value for `COMPRESSION` (e.g. `"ZSTD"`, `"SNAPPY"`).
+#' @param compression_level Value for `COMPRESSION_LEVEL` (codec-dependent integer).
+#' @param geometry_encoding Value for `GEOMETRY_ENCODING` (e.g. `"WKB"`, `"GEOARROW"`).
+#' @param row_group_size Value for `ROW_GROUP_SIZE` (max rows per group).
+#' @param geometry_name Value for `GEOMETRY_NAME`.
+#' @param fid Value for `FID`.
+#' @param polygon_orientation Value for `POLYGON_ORIENTATION`.
+#' @param edges Value for `EDGES` (`"PLANAR"`/`"SPHERICAL"`).
+#' @param creator Value for `CREATOR`.
+#' @param write_covering_bbox Value for `WRITE_COVERING_BBOX` (logical -> `"YES"`/`"NO"`).
+#' @param covering_bbox_name Value for `COVERING_BBOX_NAME`.
+#' @param use_parquet_geo_types Value for `USE_PARQUET_GEO_TYPES`.
+#' @param sort_by_bbox Value for `SORT_BY_BBOX` (logical -> `"YES"`/`"NO"`).
+#' @param timestamp_with_offset Value for `TIMESTAMP_WITH_OFFSET`.
+#' @param coordinate_precision Value for `COORDINATE_PRECISION` (only for `GEOMETRY_ENCODING=WKT`).
+#' @inheritParams .shared_params
+#'
+#' @section Distributing GeoParquet:
+#' Following the OGC *Best Practices for Distributing GeoParquet*, good defaults for distribution
+#' are `ZSTD` compression at a moderate level, a row-group size around 50000-150000, the per-row
+#' bounding-box covering columns enabled, and spatially ordered features:
+#'
+#' ```r
+#' gpq_creation_opts(
+#'   compression = "ZSTD",
+#'   compression_level = 15,
+#'   row_group_size = 100000,
+#'   write_covering_bbox = TRUE,
+#'   sort_by_bbox = TRUE
+#' )
+#' ```
+#'
+#' @returns A layer-level [gdal_creation_opts()] object for the `Parquet` driver.
+#' @export
+#'
+#' @seealso [gpq_open_opts()], [gdal_creation_opts()]
+#'
+#' ```{r child = "man/fragments/gpq_links.md"}
+#' ```
+#'
+#' @examples
+#' gpq_creation_opts(compression = "ZSTD", geometry_encoding = "WKB")
+gpq_creation_opts <- function(
+  compression = NULL,
+  compression_level = NULL,
+  geometry_encoding = NULL,
+  row_group_size = NULL,
+  geometry_name = NULL,
+  fid = NULL,
+  polygon_orientation = NULL,
+  edges = NULL,
+  creator = NULL,
+  write_covering_bbox = NULL,
+  covering_bbox_name = NULL,
+  use_parquet_geo_types = NULL,
+  sort_by_bbox = NULL,
+  timestamp_with_offset = NULL,
+  coordinate_precision = NULL,
+  .set_defaults = FALSE
+) {
+  opts <- purrr::compact(list(
+    COMPRESSION = compression,
+    COMPRESSION_LEVEL = compression_level,
+    GEOMETRY_ENCODING = geometry_encoding,
+    ROW_GROUP_SIZE = row_group_size,
+    GEOMETRY_NAME = geometry_name,
+    FID = fid,
+    POLYGON_ORIENTATION = polygon_orientation,
+    EDGES = edges,
+    CREATOR = creator,
+    WRITE_COVERING_BBOX = as_gdal_boolean(write_covering_bbox),
+    COVERING_BBOX_NAME = covering_bbox_name,
+    USE_PARQUET_GEO_TYPES = use_parquet_geo_types,
+    SORT_BY_BBOX = as_gdal_boolean(sort_by_bbox),
+    TIMESTAMP_WITH_OFFSET = timestamp_with_offset,
+    COORDINATE_PRECISION = coordinate_precision
+  ))
+  if (length(opts) > 0L) {
+    check_gdal_opts(opts, gdal_vector_driver_creation_opts_values("Parquet", sub_type = "layer"))
+  }
+  if (isTRUE(.set_defaults)) {
+    opts <- utils::modifyList(as.list(gdal_vector_driver_creation_opts_defaults("Parquet", sub_type = "layer")), opts)
+  }
+  new_gdal_creation_opts(.gdal_opts_normalize(opts), driver = "Parquet", level = "layer")
+}
