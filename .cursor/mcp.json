@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "tigris": {
+      "type": "http",
+      "url": "https://mcp.storage.dev/mcp",
+      "headers": {},
+      "envFile": "${workspaceFolder}/.cursor/mcp.env",
+      "env": {
+        "TIGRIS_STORAGE_ACCESS_KEY_ID": "${env:TIGRIS_STORAGE_ACCESS_KEY_ID}",
+        "TIGRIS_STORAGE_SECRET_ACCESS_KEY": "${env:TIGRIS_STORAGE_SECRET_ACCESS_KEY}"
+      }
+    }
+  }
+}
