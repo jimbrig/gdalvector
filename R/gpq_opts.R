@@ -30,7 +30,7 @@
 #' @examples
 #' gpq_open_opts(crs = "EPSG:4326")
 gpq_open_opts <- function(geom_possible_names = NULL, crs = NULL, lists_as_string_json = NULL, .set_defaults = FALSE) {
-  opts <- purrr::compact(list(
+  opts <- .gdal_opts_normalize(list(
     GEOM_POSSIBLE_NAMES = geom_possible_names,
     CRS = crs,
     LISTS_AS_STRING_JSON = as_gdal_boolean(lists_as_string_json)
@@ -41,7 +41,7 @@ gpq_open_opts <- function(geom_possible_names = NULL, crs = NULL, lists_as_strin
   if (isTRUE(.set_defaults)) {
     opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("Parquet")), opts)
   }
-  new_gdal_open_opts(.gdal_opts_normalize(opts), driver = "Parquet")
+  new_gdal_open_opts(opts, driver = "Parquet")
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ gpq_creation_opts <- function(
   coordinate_precision = NULL,
   .set_defaults = FALSE
 ) {
-  opts <- purrr::compact(list(
+  opts <- .gdal_opts_normalize(list(
     COMPRESSION = compression,
     COMPRESSION_LEVEL = compression_level,
     GEOMETRY_ENCODING = geometry_encoding,
@@ -135,5 +135,5 @@ gpq_creation_opts <- function(
   if (isTRUE(.set_defaults)) {
     opts <- utils::modifyList(as.list(gdal_vector_driver_creation_opts_defaults("Parquet", sub_type = "layer")), opts)
   }
-  new_gdal_creation_opts(.gdal_opts_normalize(opts), driver = "Parquet", level = "layer")
+  new_gdal_creation_opts(opts, driver = "Parquet", level = "layer")
 }

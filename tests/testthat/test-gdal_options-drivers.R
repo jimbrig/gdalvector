@@ -27,6 +27,15 @@ test_that("gdb builders coerce types and accept advanced opts via ...", {
   expect_identical(unclass(co)[["XYTOLERANCE"]], "0.001")
 })
 
+test_that("boolean options passed via ... are coerced before validation", {
+  # dataset-level boolean creation option supplied through `...`
+  ds <- gpkg_creation_opts(ADD_GPKG_OGR_CONTENTS = TRUE, level = "dataset")
+  expect_identical(unclass(ds)[["ADD_GPKG_OGR_CONTENTS"]], "YES")
+  # boolean config option supplied through `...`
+  cfg <- gdb_config_opts(OPENFILEGDB_IN_MEMORY_SPI = TRUE)
+  expect_identical(unclass(cfg)[["OPENFILEGDB_IN_MEMORY_SPI"]], "YES")
+})
+
 test_that("gpkg dataset vs layer creation level is honored", {
   ds <- gpkg_creation_opts(VERSION = "1.4", level = "dataset")
   expect_identical(attr(ds, "level"), "dataset")

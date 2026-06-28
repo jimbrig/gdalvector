@@ -75,8 +75,8 @@ JSON_WRITE_OPTS <- yyjsonr::opts_write_json(
 #' Common, shared parameters that can be inherited by other functions in the package.
 #'
 #' @param .set_defaults Logical. If `TRUE`, options left unset (`NULL`) are filled with the driver's
-#'   GDAL metadata defaults (via the relevant `gdal_driver_get_*_opts_defaults()`); user-supplied
-#'   values always take precedence. Defaults to `FALSE`.
+#'   documented GDAL metadata defaults (via the relevant `gdal_vector_driver_*_opts_defaults()`);
+#'   user-supplied values always take precedence. Defaults to `FALSE`.
 #'
 #' @keywords internal
 NULL

@@ -39,7 +39,7 @@ shp_config_opts <- function(
   shape_encoding = NULL,
   .set_defaults = FALSE
 ) {
-  opts <- purrr::compact(list(
+  opts <- .gdal_opts_normalize(list(
     SHAPE_REWIND_ON_WRITE = as_gdal_boolean(shape_rewind_on_write),
     SHAPE_RESTORE_SHX = as_gdal_boolean(shape_restore_shx),
     SHAPE_2GB_LIMIT = as_gdal_boolean(shape_2gb_limit),
@@ -51,7 +51,7 @@ shp_config_opts <- function(
   if (isTRUE(.set_defaults)) {
     opts <- utils::modifyList(as.list(gdal_vector_driver_config_opts_defaults("ESRI Shapefile")), opts)
   }
-  new_gdal_config_opts(.gdal_opts_normalize(opts), driver = "ESRI Shapefile")
+  new_gdal_config_opts(opts, driver = "ESRI Shapefile")
 }
 
 # open ------------------------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ shp_open_opts <- function(
   if (!is.null(dbf_date_last_update)) {
     check_regex(dbf_date_last_update, pattern = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
   }
-  opts <- purrr::compact(list(
+  opts <- .gdal_opts_normalize(list(
     ENCODING = encoding,
     DBF_DATE_LAST_UPDATE = dbf_date_last_update,
     ADJUST_TYPE = as_gdal_boolean(adjust_type),
@@ -105,7 +105,7 @@ shp_open_opts <- function(
   if (isTRUE(.set_defaults)) {
     opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("ESRI Shapefile")), opts)
   }
-  new_gdal_open_opts(.gdal_opts_normalize(opts), driver = "ESRI Shapefile")
+  new_gdal_open_opts(opts, driver = "ESRI Shapefile")
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -149,7 +149,7 @@ shp_creation_opts <- function(
   if (!is.null(dbf_date_last_update)) {
     check_regex(dbf_date_last_update, pattern = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
   }
-  opts <- purrr::compact(list(
+  opts <- .gdal_opts_normalize(list(
     SPATIAL_INDEX = as_gdal_boolean(spatial_index),
     ENCODING = encoding,
     RESIZE = as_gdal_boolean(resize),
@@ -168,5 +168,5 @@ shp_creation_opts <- function(
       opts
     )
   }
-  new_gdal_creation_opts(.gdal_opts_normalize(opts), driver = "ESRI Shapefile", level = "layer")
+  new_gdal_creation_opts(opts, driver = "ESRI Shapefile", level = "layer")
 }

@@ -31,8 +31,8 @@ gpkg_config_opts(
 \item{...}{Additional \code{NAME = value} configuration options passed through after coercion.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
-GDAL metadata defaults (via the relevant \verb{gdal_driver_get_*_opts_defaults()}); user-supplied
-values always take precedence. Defaults to \code{FALSE}.}
+documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});
+user-supplied values always take precedence. Defaults to \code{FALSE}.}
 }
 \value{
 A \code{\link[=gdal_config_opts]{gdal_config_opts()}} object for the \code{GPKG} driver.

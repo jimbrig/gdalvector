@@ -103,7 +103,7 @@ gpkg_config_opts <- function(
   ...,
   .set_defaults = FALSE
 ) {
-  opts <- purrr::compact(c(
+  opts <- .gdal_opts_normalize(c(
     list(
       OGR_SQLITE_CACHE = sqlite_cache,
       OGR_SQLITE_JOURNAL = sqlite_journal,
@@ -120,7 +120,7 @@ gpkg_config_opts <- function(
   if (isTRUE(.set_defaults)) {
     opts <- utils::modifyList(as.list(gdal_vector_driver_config_opts_defaults("GPKG")), opts)
   }
-  new_gdal_config_opts(.gdal_opts_normalize(opts), driver = "GPKG")
+  new_gdal_config_opts(opts, driver = "GPKG")
 }
 
 # open ------------------------------------------------------------------------------------------------------------
@@ -163,7 +163,7 @@ gpkg_open_opts <- function(
   immutable = NULL,
   .set_defaults = FALSE
 ) {
-  opts <- purrr::compact(list(
+  opts <- .gdal_opts_normalize(list(
     LIST_ALL_TABLES = as_gdal_boolean(list_all_tables),
     PRELUDE_STATEMENTS = if (!is.null(prelude_statements) && nzchar(prelude_statements)) prelude_statements,
     NOLOCK = as_gdal_boolean(nolock),
@@ -175,7 +175,7 @@ gpkg_open_opts <- function(
   if (isTRUE(.set_defaults)) {
     opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("GPKG")), opts)
   }
-  new_gdal_open_opts(.gdal_opts_normalize(opts), driver = "GPKG")
+  new_gdal_open_opts(opts, driver = "GPKG")
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -226,7 +226,7 @@ gpkg_creation_opts <- function(
   .set_defaults = FALSE
 ) {
   level <- rlang::arg_match(level)
-  opts <- purrr::compact(c(
+  opts <- .gdal_opts_normalize(c(
     list(
       FID = fid,
       GEOMETRY_NAME = geometry_name,
@@ -245,5 +245,5 @@ gpkg_creation_opts <- function(
   if (isTRUE(.set_defaults)) {
     opts <- utils::modifyList(as.list(gdal_vector_driver_creation_opts_defaults("GPKG", sub_type = level)), opts)
   }
-  new_gdal_creation_opts(.gdal_opts_normalize(opts), driver = "GPKG", level = level)
+  new_gdal_creation_opts(opts, driver = "GPKG", level = level)
 }

@@ -29,7 +29,7 @@
 #' @examples
 #' gdb_config_opts(default_string_width = 1024L, in_memory_spi = TRUE)
 gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, ..., .set_defaults = FALSE) {
-  opts <- purrr::compact(c(
+  opts <- .gdal_opts_normalize(c(
     list(
       OPENFILEGDB_DEFAULT_STRING_WIDTH = default_string_width,
       OPENFILEGDB_IN_MEMORY_SPI = as_gdal_boolean(in_memory_spi)
@@ -42,7 +42,7 @@ gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, .
   if (isTRUE(.set_defaults)) {
     opts <- utils::modifyList(as.list(gdal_vector_driver_config_opts_defaults("OpenFileGDB")), opts)
   }
-  new_gdal_config_opts(.gdal_opts_normalize(opts), driver = "OpenFileGDB")
+  new_gdal_config_opts(opts, driver = "OpenFileGDB")
 }
 
 # open ------------------------------------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, .
 #' @examples
 #' gdb_open_opts(list_all_tables = TRUE)
 gdb_open_opts <- function(list_all_tables = NULL, .set_defaults = FALSE) {
-  opts <- purrr::compact(list(
+  opts <- .gdal_opts_normalize(list(
     LIST_ALL_TABLES = as_gdal_boolean(list_all_tables)
   ))
   if (length(opts) > 0L) {
@@ -73,7 +73,7 @@ gdb_open_opts <- function(list_all_tables = NULL, .set_defaults = FALSE) {
   if (isTRUE(.set_defaults)) {
     opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("OpenFileGDB")), opts)
   }
-  new_gdal_open_opts(.gdal_opts_normalize(opts), driver = "OpenFileGDB")
+  new_gdal_open_opts(opts, driver = "OpenFileGDB")
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -124,7 +124,7 @@ gdb_creation_opts <- function(
   ...,
   .set_defaults = FALSE
 ) {
-  opts <- purrr::compact(c(
+  opts <- .gdal_opts_normalize(c(
     list(
       FID = fid,
       GEOMETRY_NAME = geometry_name,
@@ -150,5 +150,5 @@ gdb_creation_opts <- function(
       opts
     )
   }
-  new_gdal_creation_opts(.gdal_opts_normalize(opts), driver = "OpenFileGDB", level = "layer")
+  new_gdal_creation_opts(opts, driver = "OpenFileGDB", level = "layer")
 }

@@ -19,8 +19,8 @@ gdal_creation_opts(
 \item{level}{Creation-option level, \code{"layer"} (default) or \code{"dataset"}.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
-GDAL metadata defaults (via the relevant \verb{gdal_driver_get_*_opts_defaults()}); user-supplied
-values always take precedence. Defaults to \code{FALSE}.}
+documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});
+user-supplied values always take precedence. Defaults to \code{FALSE}.}
 }
 \value{
 A \code{\link[=gdal_creation_opts]{gdal_creation_opts()}} object.

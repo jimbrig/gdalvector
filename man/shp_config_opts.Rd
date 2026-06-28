@@ -23,8 +23,8 @@ missing/broken \code{.shx} from the \code{.shp} on open.}
 \item{shape_encoding}{Value for \code{SHAPE_ENCODING} (override DBF encoding; \code{""} disables recoding).}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
-GDAL metadata defaults (via the relevant \verb{gdal_driver_get_*_opts_defaults()}); user-supplied
-values always take precedence. Defaults to \code{FALSE}.}
+documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});
+user-supplied values always take precedence. Defaults to \code{FALSE}.}
 }
 \value{
 A \code{\link[=gdal_config_opts]{gdal_config_opts()}} object for the \verb{ESRI Shapefile} driver.

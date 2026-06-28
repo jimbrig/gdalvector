@@ -11,8 +11,8 @@ gdb_open_opts(list_all_tables = NULL, .set_defaults = FALSE)
 list all tables, including system/internal \verb{GDB_*} tables. GDAL default \code{"NO"}.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
-GDAL metadata defaults (via the relevant \verb{gdal_driver_get_*_opts_defaults()}); user-supplied
-values always take precedence. Defaults to \code{FALSE}.}
+documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});
+user-supplied values always take precedence. Defaults to \code{FALSE}.}
 }
 \value{
 A \code{\link[=gdal_open_opts]{gdal_open_opts()}} object for the \code{OpenFileGDB} driver.
