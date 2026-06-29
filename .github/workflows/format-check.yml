@@ -1,11 +1,10 @@
 # Workflow derived from https://github.com/posit-dev/setup-air/tree/main/examples
+name: Format Check
 
 on:
   push:
     branches: [main, master]
   pull_request:
-
-name: format-check.yaml
 
 permissions: read-all
 
