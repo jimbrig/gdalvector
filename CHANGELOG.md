@@ -8,6 +8,12 @@
 
 ## Bug Fixes
 
+- **drivers:** Fix issues when missing drivers ([b5230ac](https://github.com/jimbrig/gdalvector/commit/b5230ac20f552f31ed68797f4b8d8250f402b6b1))  - (Jimmy Briggs)
+
+## [0.0.3](https://github.com/jimbrig/gdalvector/tree/v0.0.3)- (2026-06-29)
+
+## Bug Fixes
+
 - **opts:** Address review feedback on PR #5 ([#2](https://github.com/jimbrig/gdalvector/issues/2)) ([438eaa6](https://github.com/jimbrig/gdalvector/commit/438eaa6521ef968e19d1013a9130c9cf0f108334))  - (Jimmy Briggs)
 - Fix initialization ([20f2bad](https://github.com/jimbrig/gdalvector/commit/20f2badfea891c446083d34177841ccb288318b4))  - (Jimmy Briggs)
 
