@@ -82,6 +82,14 @@ skip_if_no_gdalalg <- function() {
   testthat::skip_if_not(ok, "gdal algorithms not available")
 }
 
+# skip unless the given GDAL driver is registered in the running build. several core vector drivers
+# (notably Parquet/Arrow, which need libarrow) are optional and absent from many GDAL builds; tests
+# that assert driver-metadata or perform driver IO must be guarded with this.
+skip_if_no_driver <- function(driver) {
+  testthat::skip_if_not_installed("gdalraster")
+  testthat::skip_if_not(gdal_sitrep_driver_check(driver), paste0("GDAL driver not available: ", driver))
+}
+
 # write a tiny throwaway GPKG (from gdalraster's bundled shapefile) and register cleanup.
 local_tmp_gpkg <- function(env = parent.frame()) {
   skip_if_no_gdalalg()

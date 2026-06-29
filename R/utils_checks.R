@@ -314,10 +314,14 @@ check_gdal_driver <- function(x, arg = rlang::caller_arg(x), call = rlang::calle
   invisible(x)
 }
 
-check_gdal_driver_name <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+# `known` lists additional driver names to accept even when not registered in the running GDAL
+# build (e.g. the package's core vector drivers, so opts can be crafted for a driver that is not
+# locally installed - validation against driver metadata is best-effort and simply no-ops when the
+# metadata is unavailable).
+check_gdal_driver_name <- function(x, known = NULL, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   check_string(x, arg = arg, call = call)
   drvs <- gdal_driver_names(pattern = x)
-  if (!(toupper(x) %in% toupper(drvs))) {
+  if (!(toupper(x) %in% toupper(c(drvs, known)))) {
     check_abort(
       "{.arg {arg}} must be a valid GDAL driver. Run {.code gdal_drivers_list()} for available options.",
       call = call

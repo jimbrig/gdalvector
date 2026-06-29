@@ -872,7 +872,7 @@ gdal_opts_cmd_inline <- function(x) {
   level <- rlang::arg_match(level)
   opts <- .gdal_opts_normalize(args, call = call)
   if (!is.null(driver)) {
-    check_gdal_driver_name(driver, call = call)
+    check_gdal_driver_name(driver, known = GDAL_VECTOR_DRIVERS, call = call)
     if (length(opts) > 0L) {
       values <- switch(
         channel,
