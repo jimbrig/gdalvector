@@ -80,6 +80,8 @@ object for the `Parquet` driver.
 
 ``` r
 gpq_open_opts(crs = "EPSG:4326")
-#> Error in gdal_vector_driver_opts(driver, type = "open"): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
-#> available options.
+#> <gdal_open_opts/gdal_opts>
+#> ℹ Driver: Parquet
+#> ℹ Open Options: CRS=EPSG:4326
+#> ℹ Command Line: --input-format 'Parquet' --open-option 'CRS=EPSG:4326'
 ```

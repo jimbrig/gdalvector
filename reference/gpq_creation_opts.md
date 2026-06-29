@@ -169,6 +169,8 @@ columns enabled, and spatially ordered features:
 
 ``` r
 gpq_creation_opts(compression = "ZSTD", geometry_encoding = "WKB")
-#> Error in gdal_vector_driver_opts(driver, type = "creation", sub_type = sub_type): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
-#> available options.
+#> <gdal_creation_opts/gdal_opts>
+#> ℹ Driver: Parquet
+#> ℹ Creation Options: COMPRESSION=ZSTD, GEOMETRY_ENCODING=WKB
+#> ℹ Command Line: --output-format 'Parquet' --layer-creation-option 'COMPRESSION=ZSTD' --layer-creation-option 'GEOMETRY_ENCODING=WKB'
 ```

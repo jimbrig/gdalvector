@@ -67,8 +67,10 @@ named character vector, or named list (see
 
 ``` r
 gdal_vector_driver_creation_opts("Parquet", sub_type = "layer")
-#> Error in gdal_vector_driver_opts(driver, type = "creation", sub_type = sub_type): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
-#> available options.
+#> # A tibble: 0 × 9
+#> # ℹ 9 variables: driver <chr>, type <chr>, sub_type <chr>, name <chr>,
+#> #   description <chr>, scope <chr>, default <chr>, values <list>,
+#> #   data_type <chr>
 gdal_vector_driver_creation_opts_values("GPKG", sub_type = "layer")
 #> $ASPATIAL_VARIANT
 #> [1] "GPKG_ATTRIBUTES" "NOT_REGISTERED" 
