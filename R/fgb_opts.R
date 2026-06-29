@@ -60,7 +60,7 @@ fgb_config_opts <- function(...) {
 #' fgb_open_opts(.set_defaults = TRUE)
 fgb_open_opts <- function(verify_buffers = NULL, .set_defaults = FALSE) {
   opts <- .gdal_opts_normalize(list(
-    VERIFY_BUFFERS = as_gdal_boolean(verify_buffers)
+    VERIFY_BUFFERS = verify_buffers
   ))
   if (length(opts) > 0L) {
     check_gdal_opts(opts, gdal_vector_driver_open_opts_values("FlatGeobuf"))
@@ -104,7 +104,7 @@ fgb_creation_opts <- function(
   .set_defaults = FALSE
 ) {
   opts <- .gdal_opts_normalize(list(
-    SPATIAL_INDEX = as_gdal_boolean(spatial_index),
+    SPATIAL_INDEX = spatial_index,
     TEMPORARY_DIR = temporary_dir,
     TITLE = title,
     DESCRIPTION = description

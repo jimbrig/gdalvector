@@ -49,7 +49,7 @@ gpkg_config_opts <- function(
       OGR_SQLITE_JOURNAL = sqlite_journal,
       OGR_SQLITE_SYNCHRONOUS = sqlite_synchronous,
       OGR_SQLITE_PRAGMA = sqlite_pragma,
-      SQLITE_USE_OGR_VFS = as_gdal_boolean(use_ogr_vfs),
+      SQLITE_USE_OGR_VFS = use_ogr_vfs,
       OGR_GPKG_NUM_THREADS = num_threads
     ),
     rlang::list2(...)
@@ -133,10 +133,10 @@ gpkg_open_opts <- function(
   .set_defaults = FALSE
 ) {
   opts <- .gdal_opts_normalize(list(
-    LIST_ALL_TABLES = as_gdal_boolean(list_all_tables),
+    LIST_ALL_TABLES = list_all_tables,
     PRELUDE_STATEMENTS = if (!is.null(prelude_statements) && nzchar(prelude_statements)) prelude_statements,
-    NOLOCK = as_gdal_boolean(nolock),
-    IMMUTABLE = as_gdal_boolean(immutable)
+    NOLOCK = nolock,
+    IMMUTABLE = immutable
   ))
   if (length(opts) > 0L) {
     check_gdal_opts(opts, gdal_vector_driver_open_opts_values("GPKG"))
@@ -199,12 +199,12 @@ gpkg_creation_opts <- function(
     list(
       FID = fid,
       GEOMETRY_NAME = geometry_name,
-      GEOMETRY_NULLABLE = as_gdal_boolean(geometry_nullable),
-      SPATIAL_INDEX = as_gdal_boolean(spatial_index),
+      GEOMETRY_NULLABLE = geometry_nullable,
+      SPATIAL_INDEX = spatial_index,
       IDENTIFIER = identifier,
       DESCRIPTION = description,
-      LAUNDER = as_gdal_boolean(launder),
-      OVERWRITE = as_gdal_boolean(overwrite)
+      LAUNDER = launder,
+      OVERWRITE = overwrite
     ),
     rlang::list2(...)
   ))

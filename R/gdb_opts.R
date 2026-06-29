@@ -32,7 +32,7 @@ gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, .
   opts <- .gdal_opts_normalize(c(
     list(
       OPENFILEGDB_DEFAULT_STRING_WIDTH = default_string_width,
-      OPENFILEGDB_IN_MEMORY_SPI = as_gdal_boolean(in_memory_spi)
+      OPENFILEGDB_IN_MEMORY_SPI = in_memory_spi
     ),
     rlang::list2(...)
   ))
@@ -65,7 +65,7 @@ gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, .
 #' gdb_open_opts(list_all_tables = TRUE)
 gdb_open_opts <- function(list_all_tables = NULL, .set_defaults = FALSE) {
   opts <- .gdal_opts_normalize(list(
-    LIST_ALL_TABLES = as_gdal_boolean(list_all_tables)
+    LIST_ALL_TABLES = list_all_tables
   ))
   if (length(opts) > 0L) {
     check_gdal_opts(opts, gdal_vector_driver_open_opts_values("OpenFileGDB"))
@@ -128,12 +128,12 @@ gdb_creation_opts <- function(
     list(
       FID = fid,
       GEOMETRY_NAME = geometry_name,
-      GEOMETRY_NULLABLE = as_gdal_boolean(geometry_nullable),
+      GEOMETRY_NULLABLE = geometry_nullable,
       CONFIGURATION_KEYWORD = configuration_keyword,
       TARGET_ARCGIS_VERSION = target_arcgis_version,
-      CREATE_MULTIPATCH = as_gdal_boolean(create_multipatch),
-      CREATE_SHAPE_AREA_AND_LENGTH_FIELDS = as_gdal_boolean(create_shape_area_and_length_fields),
-      TIME_IN_UTC = as_gdal_boolean(time_in_utc),
+      CREATE_MULTIPATCH = create_multipatch,
+      CREATE_SHAPE_AREA_AND_LENGTH_FIELDS = create_shape_area_and_length_fields,
+      TIME_IN_UTC = time_in_utc,
       COLUMN_TYPES = column_types,
       FEATURE_DATASET = feature_dataset,
       LAYER_ALIAS = layer_alias,

@@ -33,7 +33,7 @@ gpq_open_opts <- function(geom_possible_names = NULL, crs = NULL, lists_as_strin
   opts <- .gdal_opts_normalize(list(
     GEOM_POSSIBLE_NAMES = geom_possible_names,
     CRS = crs,
-    LISTS_AS_STRING_JSON = as_gdal_boolean(lists_as_string_json)
+    LISTS_AS_STRING_JSON = lists_as_string_json
   ))
   if (length(opts) > 0L) {
     check_gdal_opts(opts, gdal_vector_driver_open_opts_values("Parquet"))
@@ -122,10 +122,10 @@ gpq_creation_opts <- function(
     POLYGON_ORIENTATION = polygon_orientation,
     EDGES = edges,
     CREATOR = creator,
-    WRITE_COVERING_BBOX = as_gdal_boolean(write_covering_bbox),
+    WRITE_COVERING_BBOX = write_covering_bbox,
     COVERING_BBOX_NAME = covering_bbox_name,
     USE_PARQUET_GEO_TYPES = use_parquet_geo_types,
-    SORT_BY_BBOX = as_gdal_boolean(sort_by_bbox),
+    SORT_BY_BBOX = sort_by_bbox,
     TIMESTAMP_WITH_OFFSET = timestamp_with_offset,
     COORDINATE_PRECISION = coordinate_precision
   ))

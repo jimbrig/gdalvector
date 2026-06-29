@@ -40,9 +40,9 @@ shp_config_opts <- function(
   .set_defaults = FALSE
 ) {
   opts <- .gdal_opts_normalize(list(
-    SHAPE_REWIND_ON_WRITE = as_gdal_boolean(shape_rewind_on_write),
-    SHAPE_RESTORE_SHX = as_gdal_boolean(shape_restore_shx),
-    SHAPE_2GB_LIMIT = as_gdal_boolean(shape_2gb_limit),
+    SHAPE_REWIND_ON_WRITE = shape_rewind_on_write,
+    SHAPE_RESTORE_SHX = shape_restore_shx,
+    SHAPE_2GB_LIMIT = shape_2gb_limit,
     SHAPE_ENCODING = shape_encoding
   ))
   if (length(opts) > 0L) {
@@ -94,10 +94,10 @@ shp_open_opts <- function(
   opts <- .gdal_opts_normalize(list(
     ENCODING = encoding,
     DBF_DATE_LAST_UPDATE = dbf_date_last_update,
-    ADJUST_TYPE = as_gdal_boolean(adjust_type),
+    ADJUST_TYPE = adjust_type,
     ADJUST_GEOM_TYPE = adjust_geom_type,
-    AUTO_REPACK = as_gdal_boolean(auto_repack),
-    DBF_EOF_CHAR = as_gdal_boolean(dbf_eof_char)
+    AUTO_REPACK = auto_repack,
+    DBF_EOF_CHAR = dbf_eof_char
   ))
   if (length(opts) > 0L) {
     check_gdal_opts(opts, gdal_vector_driver_open_opts_values("ESRI Shapefile"))
@@ -150,14 +150,14 @@ shp_creation_opts <- function(
     check_regex(dbf_date_last_update, pattern = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
   }
   opts <- .gdal_opts_normalize(list(
-    SPATIAL_INDEX = as_gdal_boolean(spatial_index),
+    SPATIAL_INDEX = spatial_index,
     ENCODING = encoding,
-    RESIZE = as_gdal_boolean(resize),
+    RESIZE = resize,
     SHPT = shpt,
-    `2GB_LIMIT` = as_gdal_boolean(two_gb_limit),
-    AUTO_REPACK = as_gdal_boolean(auto_repack),
+    `2GB_LIMIT` = two_gb_limit,
+    AUTO_REPACK = auto_repack,
     DBF_DATE_LAST_UPDATE = dbf_date_last_update,
-    DBF_EOF_CHAR = as_gdal_boolean(dbf_eof_char)
+    DBF_EOF_CHAR = dbf_eof_char
   ))
   if (length(opts) > 0L) {
     check_gdal_opts(opts, gdal_vector_driver_creation_opts_values("ESRI Shapefile", sub_type = "layer"))
