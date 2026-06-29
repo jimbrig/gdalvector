@@ -100,7 +100,10 @@ gdal_vector_driver_opts <- function(driver = NULL, type = NULL, sub_type = NULL,
       })
     )
   }
-  check_gdal_driver_name(driver)
+  # accept the package's known core vector drivers even when not registered in the running GDAL
+  # build: the opts table simply has no rows for an unavailable driver, so accessors return empty
+  # (best-effort metadata) rather than aborting.
+  check_gdal_driver_name(driver, known = GDAL_VECTOR_DRIVERS)
   opts_tbl <- .pkg_env$gdal$drivers$opts_tbl |> dplyr::filter(.data$driver == .env$driver)
   if (!is.null(type)) {
     type <- rlang::arg_match(type, c("config", "open", "creation"))
