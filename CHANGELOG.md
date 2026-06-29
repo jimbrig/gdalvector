@@ -18,6 +18,10 @@
 
 - **github-actions:** Add core workflows for R package CI ([d76bd6a](https://github.com/jimbrig/gdalvector/commit/d76bd6aa8302df93bd62f1d9fbf113362e719a6f))  - (Jimmy Briggs)
 
+## Documentation
+
+- Add and update project badges ([fe1d158](https://github.com/jimbrig/gdalvector/commit/fe1d15890acb84afe94e973925707cc76b13d5cb))  - (Jimmy Briggs)
+
 ## Features
 
 - **dev:** Add development scripts and package infrastructure setup ([f31275a](https://github.com/jimbrig/gdalvector/commit/f31275a5c3ad20e1b7713ff450ab75b7da6a149b))  - (Jimmy Briggs)
