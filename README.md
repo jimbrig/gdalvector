@@ -10,6 +10,17 @@
 [![R-universe version](https://jimbrig.r-universe.dev/gdalvector/badges/version)](https://jimbrig.r-universe.dev/gdalvector)
 <!-- badges: end -->
 
+```plaintext
+              __      __                __
+   ____ _____/ /___ _/ /   _____  _____/ /_____  _____
+  / __ `/ __  / __ `/ / | / / _ \/ ___/ __/ __ \/ ___/
+ / /_/ / /_/ / /_/ / /| |/ /  __/ /__/ /_/ /_/ / /
+ \__, /\__,_/\__,_/_/ |___/\___/\___/\__/\____/_/
+/____/
+
+gdalvector v0.0.1 - Modern Package for GDAL Vector Data
+```
+
 ## Overview
 
 > [!NOTE]
