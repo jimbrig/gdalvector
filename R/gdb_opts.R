@@ -66,9 +66,9 @@ gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, .
 #'
 #' @examples
 #' gdb_open_opts(list_all_tables = TRUE)
-gdb_open_opts <- function(list_all_tables = NULL, .set_defaults = FALSE) {
+gdb_open_opts <- function(list_all_tables = NULL, ..., .set_defaults = FALSE) {
   .build_gdal_opts(
-    list(LIST_ALL_TABLES = list_all_tables),
+    c(list(LIST_ALL_TABLES = list_all_tables), rlang::list2(...)),
     channel = "open",
     driver = "OpenFileGDB",
     .set_defaults = .set_defaults

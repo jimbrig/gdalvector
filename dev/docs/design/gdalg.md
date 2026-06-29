@@ -23,8 +23,6 @@
   
 - `new_gdalg()`: Internal constructor function for creating `gdalg` objects with minimal validation 
   - Signature: `new_gdalg(command_line, relative_paths = TRUE, gdal_version = gdal_version_number(), .path = NULL)`
-  
-- `
 
 ## Classes
 

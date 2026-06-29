@@ -394,7 +394,8 @@ test_that("validate_gdal_opts warns on invalid enumerated values", {
 
 test_that("generic constructors hard-validate enumerated values when a driver is supplied", {
   expect_error(gdal_open_opts(LIST_ALL_TABLES = "MAYBE", driver = "GPKG"), class = "gdal_check_error")
-  expect_no_error(gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet"))
+  # valid input must not error (regexp = NA keeps compatibility with testthat >= 3.0.0)
+  expect_error(gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet"), regexp = NA)
   # an unknown driver is rejected
   expect_error(gdal_open_opts(LIST_ALL_TABLES = "NO", driver = "NOPE"), class = "gdal_check_error")
 })

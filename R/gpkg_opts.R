@@ -128,14 +128,18 @@ gpkg_open_opts <- function(
   prelude_statements = NULL,
   nolock = NULL,
   immutable = NULL,
+  ...,
   .set_defaults = FALSE
 ) {
   .build_gdal_opts(
-    list(
-      LIST_ALL_TABLES = list_all_tables,
-      PRELUDE_STATEMENTS = if (!is.null(prelude_statements) && nzchar(prelude_statements)) prelude_statements,
-      NOLOCK = nolock,
-      IMMUTABLE = immutable
+    c(
+      list(
+        LIST_ALL_TABLES = list_all_tables,
+        PRELUDE_STATEMENTS = if (!is.null(prelude_statements) && nzchar(prelude_statements)) prelude_statements,
+        NOLOCK = nolock,
+        IMMUTABLE = immutable
+      ),
+      rlang::list2(...)
     ),
     channel = "open",
     driver = "GPKG",

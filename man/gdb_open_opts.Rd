@@ -4,11 +4,15 @@
 \alias{gdb_open_opts}
 \title{OpenFileGDB Open Options}
 \usage{
-gdb_open_opts(list_all_tables = NULL, .set_defaults = FALSE)
+gdb_open_opts(list_all_tables = NULL, ..., .set_defaults = FALSE)
 }
 \arguments{
 \item{list_all_tables}{Value for \code{LIST_ALL_TABLES} (\code{"YES"}/\code{"NO"}; logical coerced). Whether to
 list all tables, including system/internal \verb{GDB_*} tables. GDAL default \code{"NO"}.}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});
