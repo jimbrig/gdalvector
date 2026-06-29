@@ -15,13 +15,14 @@ fgb_creation_opts(
 }
 \arguments{
 \item{spatial_index}{Value for \code{SPATIAL_INDEX}. Logical \code{TRUE}/\code{FALSE} (coerced to \code{"YES"}/\code{"NO"})
-controlling whether a packed Hilbert R-tree spatial index is written. GDAL defaults to \code{"YES"}.}
+controlling whether a packed Hilbert R-tree spatial index is written. GDAL default \code{"YES"}.}
 
-\item{temporary_dir}{Directory for temporary files during write (\code{TEMPORARY_DIR}).}
+\item{temporary_dir}{Value for \code{TEMPORARY_DIR} (path to an existing directory for temporary files;
+only used when \code{SPATIAL_INDEX = TRUE}. \code{"/vsimem/"} may be used for in-memory temporaries).}
 
-\item{title}{Layer title (\code{TITLE}).}
+\item{title}{Value for \code{TITLE} (GDAL >= 3.9); dataset title (should be relatively short).}
 
-\item{description}{Layer description (\code{DESCRIPTION}).}
+\item{description}{Value for \code{DESCRIPTION} (GDAL >= 3.9); dataset description (free-form long text).}
 
 \item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
 arguments. They are coerced and validated against the driver metadata in the same way, and

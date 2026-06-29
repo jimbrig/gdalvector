@@ -31,14 +31,17 @@ gpkg_creation_opts(
 
 \item{description}{Value for \code{DESCRIPTION} (contents-table description).}
 
-\item{launder}{Value for \code{LAUNDER} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{launder}{Value for \code{LAUNDER} (logical -> \code{"YES"}/\code{"NO"}). GDAL default \code{"NO"}.}
 
-\item{overwrite}{Value for \code{OVERWRITE} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{overwrite}{Value for \code{OVERWRITE} (logical -> \code{"YES"}/\code{"NO"}). GDAL default \code{"NO"}.}
 
-\item{...}{Additional \code{NAME = value} creation options (dataset-level options when
-\code{level = "dataset"}).}
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
-\item{level}{Creation-option level, \code{"layer"} (default) or \code{"dataset"}.}
+\item{level}{Creation-option level, \code{"layer"} (default, \code{--lco}) or \code{"dataset"} (\code{--co}).
+Dataset-level options (e.g. \code{VERSION}, \code{METADATA_TABLES}, \code{ADD_GPKG_OGR_CONTENTS}) are supplied
+through \code{...} with \code{level = "dataset"}.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

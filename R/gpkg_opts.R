@@ -19,8 +19,8 @@
 #' @param sqlite_synchronous Value for `OGR_SQLITE_SYNCHRONOUS` (e.g. `"OFF"`).
 #' @param sqlite_pragma Value for `OGR_SQLITE_PRAGMA` (e.g. `"pragma_name=value,..."`).
 #' @param use_ogr_vfs Value for `SQLITE_USE_OGR_VFS` (logical -> `"YES"`/`"NO"`).
-#' @param num_threads Value for `OGR_GPKG_NUM_THREADS` (integer or `"ALL_CPUS"`).
-#' @param ... Additional `NAME = value` configuration options passed through after coercion.
+#' @param num_threads Value for `OGR_GPKG_NUM_THREADS` (GDAL >= 3.8.3); an integer or `"ALL_CPUS"`.
+#'   Threads used when reading tables through the ArrowArray interface. GDAL default is `min(4, nCPU)`.
 #' @inheritParams .shared_params
 #'
 #' @returns A [gdal_config_opts()] object for the `GPKG` driver.
@@ -159,11 +159,11 @@ gpkg_open_opts <- function(
 #' @param spatial_index Value for `SPATIAL_INDEX` (logical -> `"YES"`/`"NO"`). GDAL default `"YES"`.
 #' @param identifier Value for `IDENTIFIER` (contents-table identifier).
 #' @param description Value for `DESCRIPTION` (contents-table description).
-#' @param launder Value for `LAUNDER` (logical -> `"YES"`/`"NO"`).
-#' @param overwrite Value for `OVERWRITE` (logical -> `"YES"`/`"NO"`).
-#' @param ... Additional `NAME = value` creation options (dataset-level options when
-#'   `level = "dataset"`).
-#' @param level Creation-option level, `"layer"` (default) or `"dataset"`.
+#' @param launder Value for `LAUNDER` (logical -> `"YES"`/`"NO"`). GDAL default `"NO"`.
+#' @param overwrite Value for `OVERWRITE` (logical -> `"YES"`/`"NO"`). GDAL default `"NO"`.
+#' @param level Creation-option level, `"layer"` (default, `--lco`) or `"dataset"` (`--co`).
+#'   Dataset-level options (e.g. `VERSION`, `METADATA_TABLES`, `ADD_GPKG_OGR_CONTENTS`) are supplied
+#'   through `...` with `level = "dataset"`.
 #' @inheritParams .shared_params
 #'
 #' @returns A [gdal_creation_opts()] object for the `GPKG` driver.

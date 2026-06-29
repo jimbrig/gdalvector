@@ -22,32 +22,40 @@ gdb_creation_opts(
 )
 }
 \arguments{
-\item{fid}{Name of the OID column (\code{FID}). GDAL default \code{"OBJECTID"}.}
+\item{fid}{Value for \code{FID} (name of the OID column). GDAL default \code{"OBJECTID"}.}
 
-\item{geometry_name}{Name of the geometry column (\code{GEOMETRY_NAME}). GDAL default \code{"SHAPE"}.}
+\item{geometry_name}{Value for \code{GEOMETRY_NAME}. GDAL default \code{"SHAPE"}.}
 
-\item{geometry_nullable}{Value for \code{GEOMETRY_NULLABLE} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{geometry_nullable}{Value for \code{GEOMETRY_NULLABLE} (logical -> \code{"YES"}/\code{"NO"}). GDAL default \code{"YES"}.}
 
-\item{configuration_keyword}{Value for \code{CONFIGURATION_KEYWORD} (storage configuration).}
+\item{configuration_keyword}{Value for \code{CONFIGURATION_KEYWORD}. One of \code{DEFAULTS}/
+\code{MAX_FILE_SIZE_4GB}/\code{MAX_FILE_SIZE_256TB}. GDAL default \code{"DEFAULTS"} (UTF-8 text, up to 1 TB).}
 
-\item{target_arcgis_version}{Value for \code{TARGET_ARCGIS_VERSION}.}
+\item{target_arcgis_version}{Value for \code{TARGET_ARCGIS_VERSION} (GDAL >= 3.9). One of \code{ALL}/
+\code{ARCGIS_PRO_3_2_OR_LATER} (the latter required to create \code{Integer64}/\code{Date}/\code{Time} fields). GDAL
+default \code{"ALL"}.}
 
-\item{create_multipatch}{Value for \code{CREATE_MULTIPATCH} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{create_multipatch}{Value for \code{CREATE_MULTIPATCH} (logical -> \code{"YES"}/\code{"NO"}); write
+MultiPolygon layers as MultiPatch.}
 
 \item{create_shape_area_and_length_fields}{Value for \code{CREATE_SHAPE_AREA_AND_LENGTH_FIELDS}
-(logical -> \code{"YES"}/\code{"NO"}).}
+(logical -> \code{"YES"}/\code{"NO"}); auto-populated \code{Shape_Area}/\code{Shape_Length} fields. GDAL default \code{"NO"}.}
 
 \item{time_in_utc}{Value for \code{TIME_IN_UTC} (logical -> \code{"YES"}/\code{"NO"}).}
 
-\item{column_types}{Value for \code{COLUMN_TYPES} (e.g. \code{"field=fgdb_type,..."}).}
+\item{column_types}{Value for \code{COLUMN_TYPES} (\code{"field_name=fgdb_field_type,..."}) forcing FileGDB
+field types.}
 
-\item{feature_dataset}{Value for \code{FEATURE_DATASET}.}
+\item{feature_dataset}{Value for \code{FEATURE_DATASET} (FeatureDataset folder for the new layer;
+created if it does not exist).}
 
-\item{layer_alias}{Value for \code{LAYER_ALIAS}.}
+\item{layer_alias}{Value for \code{LAYER_ALIAS} (layer-name alias).}
 
 \item{documentation}{Value for \code{DOCUMENTATION} (XML documentation string).}
 
-\item{...}{Additional \code{NAME = value} layer-creation options (e.g. coordinate-grid options).}
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

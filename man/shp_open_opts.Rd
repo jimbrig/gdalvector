@@ -16,17 +16,23 @@ shp_open_opts(
 )
 }
 \arguments{
-\item{encoding}{Value for \code{ENCODING} (override DBF encoding).}
+\item{encoding}{Value for \code{ENCODING} (override DBF encoding with any \code{CPLRecode()} encoding; \code{""}
+avoids recoding).}
 
-\item{dbf_date_last_update}{Value for \code{DBF_DATE_LAST_UPDATE} (\code{YYYY-MM-DD}).}
+\item{dbf_date_last_update}{Value for \code{DBF_DATE_LAST_UPDATE} (\code{YYYY-MM-DD}); modification date
+written in the DBF header. Defaults to the current date.}
 
-\item{adjust_type}{Value for \code{ADJUST_TYPE} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{adjust_type}{Value for \code{ADJUST_TYPE} (logical -> \code{"YES"}/\code{"NO"}); read the whole \code{.dbf} to
+refine ambiguous \code{Real}/\code{Integer}/\code{Integer64} field types. GDAL default \code{"NO"}.}
 
-\item{adjust_geom_type}{Value for \code{ADJUST_GEOM_TYPE} (e.g. \code{"FIRST_SHAPE"}).}
+\item{adjust_geom_type}{Value for \code{ADJUST_GEOM_TYPE}. One of \code{NO}/\code{FIRST_SHAPE}/\code{ALL_SHAPES}; how
+the layer geometry type (notably the \code{M} dimension) is determined. GDAL default \code{"FIRST_SHAPE"}.}
 
-\item{auto_repack}{Value for \code{AUTO_REPACK} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{auto_repack}{Value for \code{AUTO_REPACK} (logical -> \code{"YES"}/\code{"NO"}); auto-repack the shapefile
+when needed. GDAL default \code{"YES"}.}
 
-\item{dbf_eof_char}{Value for \code{DBF_EOF_CHAR} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{dbf_eof_char}{Value for \code{DBF_EOF_CHAR} (logical -> \code{"YES"}/\code{"NO"}); write the \code{0x1A}
+end-of-file character in the \code{.dbf}. GDAL default \code{"YES"}.}
 
 \item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
 arguments. They are coerced and validated against the driver metadata in the same way, and

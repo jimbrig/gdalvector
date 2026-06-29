@@ -18,7 +18,9 @@ string fields created when the requested width is the unspecified value \code{0}
 \item{in_memory_spi}{Value for \code{OPENFILEGDB_IN_MEMORY_SPI}. Logical \code{TRUE}/\code{FALSE} (coerced to
 \code{"YES"}/\code{"NO"}); build an in-memory spatial index instead of using the native one.}
 
-\item{...}{Additional \code{NAME = value} configuration options passed through after coercion.}
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

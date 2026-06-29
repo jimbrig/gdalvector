@@ -18,7 +18,6 @@
 #'   string fields created when the requested width is the unspecified value `0`. GDAL default `65536`.
 #' @param in_memory_spi Value for `OPENFILEGDB_IN_MEMORY_SPI`. Logical `TRUE`/`FALSE` (coerced to
 #'   `"YES"`/`"NO"`); build an in-memory spatial index instead of using the native one.
-#' @param ... Additional `NAME = value` configuration options passed through after coercion.
 #' @inheritParams .shared_params
 #'
 #' @returns A [gdal_config_opts()] object for the `OpenFileGDB` driver.
@@ -85,20 +84,25 @@ gdb_open_opts <- function(list_all_tables = NULL, .set_defaults = FALSE) {
 #' arguments cover the common layer options; advanced coordinate-precision grid options
 #' (`XORIGIN`, `XYSCALE`, `XYTOLERANCE`, `Z*`/`M*`) may be supplied through `...`.
 #'
-#' @param fid Name of the OID column (`FID`). GDAL default `"OBJECTID"`.
-#' @param geometry_name Name of the geometry column (`GEOMETRY_NAME`). GDAL default `"SHAPE"`.
-#' @param geometry_nullable Value for `GEOMETRY_NULLABLE` (logical -> `"YES"`/`"NO"`).
-#' @param configuration_keyword Value for `CONFIGURATION_KEYWORD` (storage configuration).
-#' @param target_arcgis_version Value for `TARGET_ARCGIS_VERSION`.
-#' @param create_multipatch Value for `CREATE_MULTIPATCH` (logical -> `"YES"`/`"NO"`).
+#' @param fid Value for `FID` (name of the OID column). GDAL default `"OBJECTID"`.
+#' @param geometry_name Value for `GEOMETRY_NAME`. GDAL default `"SHAPE"`.
+#' @param geometry_nullable Value for `GEOMETRY_NULLABLE` (logical -> `"YES"`/`"NO"`). GDAL default `"YES"`.
+#' @param configuration_keyword Value for `CONFIGURATION_KEYWORD`. One of `DEFAULTS`/
+#'   `MAX_FILE_SIZE_4GB`/`MAX_FILE_SIZE_256TB`. GDAL default `"DEFAULTS"` (UTF-8 text, up to 1 TB).
+#' @param target_arcgis_version Value for `TARGET_ARCGIS_VERSION` (GDAL >= 3.9). One of `ALL`/
+#'   `ARCGIS_PRO_3_2_OR_LATER` (the latter required to create `Integer64`/`Date`/`Time` fields). GDAL
+#'   default `"ALL"`.
+#' @param create_multipatch Value for `CREATE_MULTIPATCH` (logical -> `"YES"`/`"NO"`); write
+#'   MultiPolygon layers as MultiPatch.
 #' @param create_shape_area_and_length_fields Value for `CREATE_SHAPE_AREA_AND_LENGTH_FIELDS`
-#'   (logical -> `"YES"`/`"NO"`).
+#'   (logical -> `"YES"`/`"NO"`); auto-populated `Shape_Area`/`Shape_Length` fields. GDAL default `"NO"`.
 #' @param time_in_utc Value for `TIME_IN_UTC` (logical -> `"YES"`/`"NO"`).
-#' @param column_types Value for `COLUMN_TYPES` (e.g. `"field=fgdb_type,..."`).
-#' @param feature_dataset Value for `FEATURE_DATASET`.
-#' @param layer_alias Value for `LAYER_ALIAS`.
+#' @param column_types Value for `COLUMN_TYPES` (`"field_name=fgdb_field_type,..."`) forcing FileGDB
+#'   field types.
+#' @param feature_dataset Value for `FEATURE_DATASET` (FeatureDataset folder for the new layer;
+#'   created if it does not exist).
+#' @param layer_alias Value for `LAYER_ALIAS` (layer-name alias).
 #' @param documentation Value for `DOCUMENTATION` (XML documentation string).
-#' @param ... Additional `NAME = value` layer-creation options (e.g. coordinate-grid options).
 #' @inheritParams .shared_params
 #'
 #' @returns A layer-level [gdal_creation_opts()] object for the `OpenFileGDB` driver.

@@ -76,10 +76,11 @@ fgb_open_opts <- function(verify_buffers = NULL, ..., .set_defaults = FALSE) {
 #' you supply are emitted; values are validated against the driver's registered metadata.
 #'
 #' @param spatial_index Value for `SPATIAL_INDEX`. Logical `TRUE`/`FALSE` (coerced to `"YES"`/`"NO"`)
-#'   controlling whether a packed Hilbert R-tree spatial index is written. GDAL defaults to `"YES"`.
-#' @param temporary_dir Directory for temporary files during write (`TEMPORARY_DIR`).
-#' @param title Layer title (`TITLE`).
-#' @param description Layer description (`DESCRIPTION`).
+#'   controlling whether a packed Hilbert R-tree spatial index is written. GDAL default `"YES"`.
+#' @param temporary_dir Value for `TEMPORARY_DIR` (path to an existing directory for temporary files;
+#'   only used when `SPATIAL_INDEX = TRUE`. `"/vsimem/"` may be used for in-memory temporaries).
+#' @param title Value for `TITLE` (GDAL >= 3.9); dataset title (should be relatively short).
+#' @param description Value for `DESCRIPTION` (GDAL >= 3.9); dataset description (free-form long text).
 #' @inheritParams .shared_params
 #'
 #' @returns A layer-level [gdal_creation_opts()] object for the `FlatGeobuf` driver.

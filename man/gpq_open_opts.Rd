@@ -13,12 +13,16 @@ gpq_open_opts(
 )
 }
 \arguments{
-\item{geom_possible_names}{Value for \code{GEOM_POSSIBLE_NAMES} (comma-separated candidate geometry
-column names).}
+\item{geom_possible_names}{Value for \code{GEOM_POSSIBLE_NAMES} (GDAL >= 3.8). Comma-separated list of
+candidate geometry column names, used only for files without GeoParquet metadata. GDAL default
+\code{"geometry,wkb_geometry,wkt_geometry"}.}
 
-\item{crs}{Value for \code{CRS} (override CRS for geometry columns, e.g. \code{"EPSG:4326"}).}
+\item{crs}{Value for \code{CRS} (GDAL >= 3.8). Set or override the CRS of geometry columns, typically
+\code{"AUTH:CODE"} (e.g. \code{"EPSG:4326"}), or a PROJ/WKT CRS string.}
 
-\item{lists_as_string_json}{Value for \code{LISTS_AS_STRING_JSON} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{lists_as_string_json}{Value for \code{LISTS_AS_STRING_JSON} (GDAL >= 3.12.1; logical ->
+\code{"YES"}/\code{"NO"}). Report lists of strings/integers/reals as \code{String(JSON)} fields. GDAL default
+\code{"NO"}.}
 
 \item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
 arguments. They are coerced and validated against the driver metadata in the same way, and

@@ -15,11 +15,15 @@
 #' configuration options applied to the process (via [gdalraster::set_config_option()] /
 #' `--config`). Only options you supply are emitted.
 #'
-#' @param shape_rewind_on_write Value for `SHAPE_REWIND_ON_WRITE` (logical -> `"YES"`/`"NO"`).
+#' @param shape_rewind_on_write Value for `SHAPE_REWIND_ON_WRITE` (logical -> `"YES"`/`"NO"`); whether
+#'   to correct the winding order of exterior/interior rings on write. Since GDAL 3.7 the default for
+#'   Polygon/MultiPolygon is `"NO"`.
 #' @param shape_restore_shx Value for `SHAPE_RESTORE_SHX` (logical -> `"YES"`/`"NO"`); restore a
-#'   missing/broken `.shx` from the `.shp` on open.
-#' @param shape_2gb_limit Value for `SHAPE_2GB_LIMIT` (logical -> `"YES"`/`"NO"`).
-#' @param shape_encoding Value for `SHAPE_ENCODING` (override DBF encoding; `""` disables recoding).
+#'   missing/broken `.shx` from the `.shp` on open. GDAL default `"NO"`.
+#' @param shape_2gb_limit Value for `SHAPE_2GB_LIMIT` (logical -> `"YES"`/`"NO"`); strictly enforce
+#'   the 2 GB `.shp`/`.dbf` size limit when updating.
+#' @param shape_encoding Value for `SHAPE_ENCODING` (override DBF encoding with any `CPLRecode()`
+#'   encoding; `""` disables recoding).
 #' @inheritParams .shared_params
 #'
 #' @returns A [gdal_config_opts()] object for the `ESRI Shapefile` driver.
@@ -63,12 +67,18 @@ shp_config_opts <- function(
 #' @description
 #' Construct a [gdal_open_opts()] object for the `ESRI Shapefile` driver.
 #'
-#' @param encoding Value for `ENCODING` (override DBF encoding).
-#' @param dbf_date_last_update Value for `DBF_DATE_LAST_UPDATE` (`YYYY-MM-DD`).
-#' @param adjust_type Value for `ADJUST_TYPE` (logical -> `"YES"`/`"NO"`).
-#' @param adjust_geom_type Value for `ADJUST_GEOM_TYPE` (e.g. `"FIRST_SHAPE"`).
-#' @param auto_repack Value for `AUTO_REPACK` (logical -> `"YES"`/`"NO"`).
-#' @param dbf_eof_char Value for `DBF_EOF_CHAR` (logical -> `"YES"`/`"NO"`).
+#' @param encoding Value for `ENCODING` (override DBF encoding with any `CPLRecode()` encoding; `""`
+#'   avoids recoding).
+#' @param dbf_date_last_update Value for `DBF_DATE_LAST_UPDATE` (`YYYY-MM-DD`); modification date
+#'   written in the DBF header. Defaults to the current date.
+#' @param adjust_type Value for `ADJUST_TYPE` (logical -> `"YES"`/`"NO"`); read the whole `.dbf` to
+#'   refine ambiguous `Real`/`Integer`/`Integer64` field types. GDAL default `"NO"`.
+#' @param adjust_geom_type Value for `ADJUST_GEOM_TYPE`. One of `NO`/`FIRST_SHAPE`/`ALL_SHAPES`; how
+#'   the layer geometry type (notably the `M` dimension) is determined. GDAL default `"FIRST_SHAPE"`.
+#' @param auto_repack Value for `AUTO_REPACK` (logical -> `"YES"`/`"NO"`); auto-repack the shapefile
+#'   when needed. GDAL default `"YES"`.
+#' @param dbf_eof_char Value for `DBF_EOF_CHAR` (logical -> `"YES"`/`"NO"`); write the `0x1A`
+#'   end-of-file character in the `.dbf`. GDAL default `"YES"`.
 #' @inheritParams .shared_params
 #'
 #' @returns A [gdal_open_opts()] object for the `ESRI Shapefile` driver.
@@ -119,14 +129,22 @@ shp_open_opts <- function(
 #' @description
 #' Construct a layer-level [gdal_creation_opts()] object for the `ESRI Shapefile` driver.
 #'
-#' @param spatial_index Value for `SPATIAL_INDEX` (logical -> `"YES"`/`"NO"`).
-#' @param encoding Value for `ENCODING` (DBF encoding).
-#' @param resize Value for `RESIZE` (logical -> `"YES"`/`"NO"`); resize fields to optimal size.
-#' @param shpt Value for `SHPT` (shape type, e.g. `"POLYGON"`).
-#' @param two_gb_limit Value for `2GB_LIMIT` (logical -> `"YES"`/`"NO"`); restrict `.shp`/`.dbf` to 2 GB.
-#' @param auto_repack Value for `AUTO_REPACK` (logical -> `"YES"`/`"NO"`).
-#' @param dbf_date_last_update Value for `DBF_DATE_LAST_UPDATE` (`YYYY-MM-DD`).
-#' @param dbf_eof_char Value for `DBF_EOF_CHAR` (logical -> `"YES"`/`"NO"`).
+#' @param spatial_index Value for `SPATIAL_INDEX` (logical -> `"YES"`/`"NO"`); create a `.qix`
+#'   spatial index. GDAL default `"NO"`.
+#' @param encoding Value for `ENCODING` (DBF encoding written to the `.cpg`/header). GDAL default
+#'   `"LDID/87"`.
+#' @param resize Value for `RESIZE` (logical -> `"YES"`/`"NO"`); resize fields to their optimal size.
+#'   GDAL default `"NO"`.
+#' @param shpt Value for `SHPT` (shape type override): one of `NULL`/`POINT`/`ARC`/`POLYGON`/
+#'   `MULTIPOINT` (2D), the `*Z`/`*M`/`*ZM` measured/3D variants, or `MULTIPATCH`.
+#' @param two_gb_limit Value for `2GB_LIMIT` (logical -> `"YES"`/`"NO"`); enforce the 2 GB `.shp`/`.dbf`
+#'   size limit. GDAL default `"NO"`.
+#' @param auto_repack Value for `AUTO_REPACK` (logical -> `"YES"`/`"NO"`); auto-repack when needed.
+#'   GDAL default `"YES"`.
+#' @param dbf_date_last_update Value for `DBF_DATE_LAST_UPDATE` (`YYYY-MM-DD`); modification date
+#'   written in the DBF header. Defaults to the current date.
+#' @param dbf_eof_char Value for `DBF_EOF_CHAR` (logical -> `"YES"`/`"NO"`); write the `0x1A`
+#'   end-of-file character in the `.dbf`. GDAL default `"YES"`.
 #' @inheritParams .shared_params
 #'
 #' @returns A layer-level [gdal_creation_opts()] object for the `ESRI Shapefile` driver.
