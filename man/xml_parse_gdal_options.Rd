@@ -16,10 +16,14 @@ xml_parse_gdal_options(
 \arguments{
 \item{xml}{The XML to be parsed. Must be either a valid XML character string or an \code{xml2::xml_document} object.}
 
-\item{driver, opt_type}{(Optional) Additional values that can be added to the resulting \code{\link[tibble:tibble]{tibble::tibble()}}. Useful
-for when merging options across multiple drivers or option types. Defaults to \code{NULL} and the columns
-will only be included in the output when provided. These values are also not properly validated against
-the GDAL drivers or option types, so they should be used with caution and primarily for internal use.}
+\item{driver}{(Optional) GDAL driver name added to the resulting \code{\link[tibble:tibble]{tibble::tibble()}}. Useful
+for when merging options across multiple drivers. Defaults to \code{NA} and is not validated against
+the registered GDAL drivers, so it should be used with caution and primarily for internal use.}
+
+\item{type}{The option type being parsed, one of \code{"config"}, \code{"open"}, or \code{"creation"}.}
+
+\item{sub_type}{For \code{type = "creation"}, the creation option level, one of \code{"dataset"} or \code{"layer"}.
+Ignored (forced to \code{NA}) for other types.}
 
 \item{scope}{(Optional) The scope of the options being parsed in terms of the supported data types, i.e. \code{vector}
 vs. \code{raster} or both. For example, \code{GPKG} has \code{scope}s defined for \code{"vector"}, \code{"raster"}, \code{"raster,vector"}, and
@@ -57,4 +61,5 @@ gdalraster::gdal_get_driver_md("GPKG", mdi_name = "DMD_CREATIONOPTIONLIST") |>
 # parse DMD_OPENOPTIONLIST
 gdalraster::gdal_get_driver_md("GPKG", mdi_name = "DMD_OPENOPTIONLIST") |>
   xml_parse_gdal_options()
+
 }

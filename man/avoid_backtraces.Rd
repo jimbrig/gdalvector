@@ -4,7 +4,7 @@
 \alias{avoid_backtraces}
 \title{Avoid backtraces in examples}
 \description{
-This example should run first and set an option for the process that builds the example. By default, {pkgdown} builds
+This example should run first and set an option for the process that builds the example. By default, \code{pkgdown} builds
 examples in a separate process.
 
 This also produces a help page that is not linked from anywhere.

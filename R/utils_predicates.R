@@ -144,56 +144,6 @@ is_xml_namespace <- function(x) {
   inherits(x, "xml_namespace")
 }
 
-# fips ------------------------------------------------------------------------------------------------------------
-
-is_state_fips <- function(x) {
-  if (is.null(x) || is.na(x) || length(x) == 0L || !nzchar(x)) {
-    return(FALSE)
-  }
-  if (nchar(x) != 2L) {
-    return(FALSE)
-  }
-  if (!(x %in% fips_codes$state_fips)) {
-    return(FALSE)
-  }
-  TRUE
-}
-
-is_county_fips <- function(x) {
-  if (is.null(x) || is.na(x) || length(x) == 0L || !nzchar(x)) {
-    return(FALSE)
-  }
-  if (nchar(x) != 5L) {
-    return(FALSE)
-  }
-  state_fips <- substr(x, 1L, 2L)
-  if (!is_state_fips(state_fips)) {
-    return(FALSE)
-  }
-  state_county_fips <- .get_county_fips_codes(state_fips = state_fips)
-  if (!(x %in% state_county_fips)) {
-    return(FALSE)
-  }
-  TRUE
-}
-
-is_community_fips <- function(x) {
-  if (is.null(x) || is.na(x) || length(x) == 0L || !nzchar(x)) {
-    return(FALSE)
-  }
-  if (nchar(x) != 6L) {
-    return(FALSE)
-  }
-  if (toupper(substr(x, 6L, 6L)) != "C") {
-    return(FALSE)
-  }
-  county_fips <- substr(x, 1L, 5L)
-  if (!is_county_fips(county_fips)) {
-    return(FALSE)
-  }
-  TRUE
-}
-
 # gdal ------------------------------------------------------------------------------------------------------------
 
 is_gdal_vector <- function(x) {
@@ -270,7 +220,9 @@ is_sfg <- function(x) {
   inherits(x, "sfg")
 }
 
-is_bbox <- function(x) {}
+is_crs <- function(x) {
+  inherits(try(sf::st_crs(x), silent = TRUE), "crs")
+}
 
 is_lonlat <- function(x) {
   if (!is_crs(x)) {
@@ -281,33 +233,4 @@ is_lonlat <- function(x) {
     return(FALSE)
   }
   crs$epsg == 4326L
-}
-
-
-# srs/crs ---------------------------------------------------------------------------------------------------------
-
-# is_crs_srs <- function(x) {
-#   try(gdalraster::srs_)
-# }
-#
-# is_crs_sf <- function(x) {
-#   inherits(try(sf::st_crs(x), silent = TRUE), "crs")
-# }
-#
-#
-#
-# is_crs_lonlat <- function(x) {
-#   if (!is_crs(x)) return(FALSE)
-#   crs <- sf::st_crs(x)
-#   if (is.na(crs$epsg)) return(FALSE)
-#   crs$epsg == 4326L
-# }
-
-# internal --------------------------------------------------------------------------------------------------------
-
-.get_county_fips_codes <- function(state_fips) {
-  dplyr::filter(fips_codes, .data$state_fips == .env$state_fips) |>
-    dplyr::pull(.data$county_fips) |>
-    sort() |>
-    unique()
 }

@@ -20,6 +20,8 @@ A \code{magic_header} list containing \code{path}, \code{raw}, and \code{str} el
 Reads the first \code{n} bytes of a file and returns the raw bytes and their string representation.
 }
 \examples{
+\dontrun{
 read_magic_header(pkg_sys_extdata("gpkg/cb_2025_us_all_20m.gpkg"), n = 15L)
+}
 }
 \keyword{internal}

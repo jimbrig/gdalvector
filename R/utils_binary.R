@@ -92,7 +92,9 @@ strip_gpkg_wkb_header <- function(wkb) {
 #' @keywords internal
 #'
 #' @examples
+#' \dontrun{
 #' read_magic_header(pkg_sys_extdata("gpkg/cb_2025_us_all_20m.gpkg"), n = 15L)
+#' }
 read_magic_header <- function(path, n = 4L, ...) {
   check_file(path)
   header_raw <- strip_null_bytes(readBin(path, what = "raw", n = n, ...))

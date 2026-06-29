@@ -6,6 +6,9 @@
 \usage{
 gdal_config(...)
 }
+\arguments{
+\item{...}{Configuration options as named \code{KEY = value} pairs.}
+}
 \value{
 gdal_config
 }

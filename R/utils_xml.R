@@ -34,7 +34,7 @@ parse_gdal_driver_config_opts <- function(driver, ...) {
 #'   This is used to categorize the options based on their applicability to different data types. Defaults to "all".
 #' @param driver The name of the GDAL driver for which the options are being parsed.
 #'   This is used for labeling purposes in the resulting tibble. Defaults to `NULL`.
-#' @param opt_type The type of options being parsed, such as "config", "open", or "creation".
+#' @param type The type of options being parsed, such as "config", "open", or "creation".
 #'   This is used for labeling purposes in the resulting tibble. Defaults to "config".
 #' @param call The calling function, used for error handling and messaging.
 #'
@@ -132,10 +132,12 @@ xml_parse_gdal_driver_config_opts <- function(
 #'   across all GDAL drivers, so use with caution and always check the resulting tibbles for the expected scope values
 #'   when working with drivers supporting both raster and vector data.
 #'
-#' @param driver,opt_type (Optional) Additional values that can be added to the resulting [tibble::tibble()]. Useful
-#'   for when merging options across multiple drivers or option types. Defaults to `NULL` and the columns
-#'   will only be included in the output when provided. These values are also not properly validated against
-#'   the GDAL drivers or option types, so they should be used with caution and primarily for internal use.
+#' @param driver (Optional) GDAL driver name added to the resulting [tibble::tibble()]. Useful
+#'   for when merging options across multiple drivers. Defaults to `NA` and is not validated against
+#'   the registered GDAL drivers, so it should be used with caution and primarily for internal use.
+#' @param type The option type being parsed, one of `"config"`, `"open"`, or `"creation"`.
+#' @param sub_type For `type = "creation"`, the creation option level, one of `"dataset"` or `"layer"`.
+#'   Ignored (forced to `NA`) for other types.
 #' @param call The calling function, used for error handling and messaging.
 #'
 #' @returns
@@ -163,16 +165,7 @@ xml_parse_gdal_driver_config_opts <- function(
 #' # parse DMD_OPENOPTIONLIST
 #' gdalraster::gdal_get_driver_md("GPKG", mdi_name = "DMD_OPENOPTIONLIST") |>
 #'   xml_parse_gdal_options()
-#' @importFrom dplyr filter_out mutate replace_values
-#' @importFrom purrr map_dfr
-#' @importFrom rlang arg_match0
-#' @importFrom tibble tibble add_column
-#' @importFrom xml2 read_xml xml_find_all xml_text xml_attr
-#' @importFrom dplyr filter_out mutate replace_values
-#' @importFrom purrr map_dfr
-#' @importFrom rlang arg_match0
-#' @importFrom tibble tibble add_column
-#' @importFrom xml2 read_xml xml_find_all xml_text xml_attr
+#'
 #' @importFrom dplyr filter_out mutate replace_values
 #' @importFrom purrr map_dfr
 #' @importFrom rlang arg_match0
@@ -197,7 +190,9 @@ xml_parse_gdal_options <- function(
     xml_doc <- xml
   }
 
-  check_gdal_driver_name(driver, call = call)
+  if (!is.null(driver) && !is.na(driver)) {
+    check_gdal_driver_name(driver, call = call)
+  }
   type <- rlang::arg_match(type, error_call = call)
   scope <- rlang::arg_match(scope, error_call = call)
   if (type == "creation") {
@@ -256,7 +251,7 @@ xml_parse_ogr_vrt_xml <- function(xml) {
 }
 
 xml_parse_ogr_vrt_layer <- function(xml) {
-  check_xml_nodeset(xml)
+  check_xml(xml)
   vrt_layer_name <- xml2::xml_attr(xml, "name")
   src_data_source <- xml2::xml_text(xml2::xml_find_first(xml, "./SrcDataSource"))
   src_layer <- xml2::xml_text(xml2::xml_find_first(xml, "./SrcLayer"))

@@ -179,14 +179,13 @@ geos_version_geos <- function() {
 
 # versions - proj -------------------------------------------------------------------------------------------------
 
-proj_version <- function(backend = c("gdalraster", "sf", "terra", "proj")) {
+proj_version <- function(backend = c("gdalraster", "sf", "terra")) {
   backend <- rlang::arg_match(backend)
   switch(
     backend,
     "gdalraster" = proj_version_gdalraster(),
     "sf" = proj_version_sf(),
-    "terra" = proj_version_terra(),
-    "proj" = proj_version_proj()
+    "terra" = proj_version_terra()
   )
 }
 
