@@ -29,17 +29,20 @@ test_that("gdal_drivers() returns the normalized driver schema", {
   # extensions / sql_dialects are split into list-columns of character vectors
   expect_type(d$extensions, "list")
   expect_type(d$sql_dialects, "list")
-  # the core vector drivers are present
-  expect_true(all(c("GPKG", "Parquet", "FlatGeobuf") %in% d$driver))
+  # the always-present core vector drivers are present (Parquet/Arrow are optional builds)
+  expect_true(all(c("GPKG", "FlatGeobuf") %in% d$driver))
+  if (gdal_sitrep_driver_check("Parquet")) {
+    expect_true("Parquet" %in% d$driver)
+  }
 })
 
 test_that("gdal_drivers(pattern) filters on short and long name, case-insensitively", {
   hits <- gdal_drivers("gpkg")
   expect_true(all(grepl("gpkg", hits$driver, ignore.case = TRUE) | grepl("gpkg", hits$long_name, ignore.case = TRUE)))
   expect_true("GPKG" %in% hits$driver)
-  # multiple patterns are OR-combined
-  multi <- gdal_drivers(c("gpkg", "parquet"))
-  expect_true(all(c("GPKG", "Parquet") %in% multi$driver))
+  # multiple patterns are OR-combined (use always-present core drivers)
+  multi <- gdal_drivers(c("gpkg", "flatgeobuf"))
+  expect_true(all(c("GPKG", "FlatGeobuf") %in% multi$driver))
 })
 
 test_that("gdal_driver_names() returns a character vector of short names", {
@@ -62,6 +65,7 @@ test_that("gdal_vector_driver_opts() filters by type, sub_type, and scope", {
 })
 
 test_that("gdal_vector_driver_opts(NULL) returns rows for all core vector drivers", {
+  skip_if_no_driver("Parquet")
   all_tbl <- gdal_vector_driver_opts()
   expect_s3_class(all_tbl, "tbl_df")
   expect_true(all(c("GPKG", "Parquet", "FlatGeobuf", "OpenFileGDB") %in% unique(all_tbl$driver)))
@@ -164,6 +168,7 @@ test_that("config opts accessors no longer error on the NULL opt_name path (bug 
 # creation-option accessors ---------------------------------------------------------------------------------------
 
 test_that("creation opts accessors respect sub_type and single-option lookups", {
+  skip_if_no_driver("Parquet")
   lco <- gdal_vector_driver_creation_opts("Parquet", sub_type = "layer")
   expect_true(all(lco$sub_type == "layer"))
 
