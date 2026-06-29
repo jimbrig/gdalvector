@@ -19,8 +19,8 @@
 #' @param sqlite_synchronous Value for `OGR_SQLITE_SYNCHRONOUS` (e.g. `"OFF"`).
 #' @param sqlite_pragma Value for `OGR_SQLITE_PRAGMA` (e.g. `"pragma_name=value,..."`).
 #' @param use_ogr_vfs Value for `SQLITE_USE_OGR_VFS` (logical -> `"YES"`/`"NO"`).
-#' @param num_threads Value for `OGR_GPKG_NUM_THREADS` (integer or `"ALL_CPUS"`).
-#' @param ... Additional `NAME = value` configuration options passed through after coercion.
+#' @param num_threads Value for `OGR_GPKG_NUM_THREADS` (GDAL >= 3.8.3); an integer or `"ALL_CPUS"`.
+#'   Threads used when reading tables through the ArrowArray interface. GDAL default is `min(4, nCPU)`.
 #' @inheritParams .shared_params
 #'
 #' @returns A [gdal_config_opts()] object for the `GPKG` driver.
@@ -43,24 +43,22 @@ gpkg_config_opts <- function(
   ...,
   .set_defaults = FALSE
 ) {
-  opts <- .gdal_opts_normalize(c(
-    list(
-      OGR_SQLITE_CACHE = sqlite_cache,
-      OGR_SQLITE_JOURNAL = sqlite_journal,
-      OGR_SQLITE_SYNCHRONOUS = sqlite_synchronous,
-      OGR_SQLITE_PRAGMA = sqlite_pragma,
-      SQLITE_USE_OGR_VFS = use_ogr_vfs,
-      OGR_GPKG_NUM_THREADS = num_threads
+  .build_gdal_opts(
+    c(
+      list(
+        OGR_SQLITE_CACHE = sqlite_cache,
+        OGR_SQLITE_JOURNAL = sqlite_journal,
+        OGR_SQLITE_SYNCHRONOUS = sqlite_synchronous,
+        OGR_SQLITE_PRAGMA = sqlite_pragma,
+        SQLITE_USE_OGR_VFS = use_ogr_vfs,
+        OGR_GPKG_NUM_THREADS = num_threads
+      ),
+      rlang::list2(...)
     ),
-    rlang::list2(...)
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_config_opts_values("GPKG"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_config_opts_defaults("GPKG")), opts)
-  }
-  new_gdal_config_opts(opts, driver = "GPKG")
+    channel = "config",
+    driver = "GPKG",
+    .set_defaults = .set_defaults
+  )
 }
 
 # open ------------------------------------------------------------------------------------------------------------
@@ -130,21 +128,23 @@ gpkg_open_opts <- function(
   prelude_statements = NULL,
   nolock = NULL,
   immutable = NULL,
+  ...,
   .set_defaults = FALSE
 ) {
-  opts <- .gdal_opts_normalize(list(
-    LIST_ALL_TABLES = list_all_tables,
-    PRELUDE_STATEMENTS = if (!is.null(prelude_statements) && nzchar(prelude_statements)) prelude_statements,
-    NOLOCK = nolock,
-    IMMUTABLE = immutable
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_open_opts_values("GPKG"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("GPKG")), opts)
-  }
-  new_gdal_open_opts(opts, driver = "GPKG")
+  .build_gdal_opts(
+    c(
+      list(
+        LIST_ALL_TABLES = list_all_tables,
+        PRELUDE_STATEMENTS = if (!is.null(prelude_statements) && nzchar(prelude_statements)) prelude_statements,
+        NOLOCK = nolock,
+        IMMUTABLE = immutable
+      ),
+      rlang::list2(...)
+    ),
+    channel = "open",
+    driver = "GPKG",
+    .set_defaults = .set_defaults
+  )
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -163,11 +163,11 @@ gpkg_open_opts <- function(
 #' @param spatial_index Value for `SPATIAL_INDEX` (logical -> `"YES"`/`"NO"`). GDAL default `"YES"`.
 #' @param identifier Value for `IDENTIFIER` (contents-table identifier).
 #' @param description Value for `DESCRIPTION` (contents-table description).
-#' @param launder Value for `LAUNDER` (logical -> `"YES"`/`"NO"`).
-#' @param overwrite Value for `OVERWRITE` (logical -> `"YES"`/`"NO"`).
-#' @param ... Additional `NAME = value` creation options (dataset-level options when
-#'   `level = "dataset"`).
-#' @param level Creation-option level, `"layer"` (default) or `"dataset"`.
+#' @param launder Value for `LAUNDER` (logical -> `"YES"`/`"NO"`). GDAL default `"NO"`.
+#' @param overwrite Value for `OVERWRITE` (logical -> `"YES"`/`"NO"`). GDAL default `"NO"`.
+#' @param level Creation-option level, `"layer"` (default, `--lco`) or `"dataset"` (`--co`).
+#'   Dataset-level options (e.g. `VERSION`, `METADATA_TABLES`, `ADD_GPKG_OGR_CONTENTS`) are supplied
+#'   through `...` with `level = "dataset"`.
 #' @inheritParams .shared_params
 #'
 #' @returns A [gdal_creation_opts()] object for the `GPKG` driver.
@@ -194,27 +194,25 @@ gpkg_creation_opts <- function(
   level = c("layer", "dataset"),
   .set_defaults = FALSE
 ) {
-  level <- rlang::arg_match(level)
-  opts <- .gdal_opts_normalize(c(
-    list(
-      FID = fid,
-      GEOMETRY_NAME = geometry_name,
-      GEOMETRY_NULLABLE = geometry_nullable,
-      SPATIAL_INDEX = spatial_index,
-      IDENTIFIER = identifier,
-      DESCRIPTION = description,
-      LAUNDER = launder,
-      OVERWRITE = overwrite
+  .build_gdal_opts(
+    c(
+      list(
+        FID = fid,
+        GEOMETRY_NAME = geometry_name,
+        GEOMETRY_NULLABLE = geometry_nullable,
+        SPATIAL_INDEX = spatial_index,
+        IDENTIFIER = identifier,
+        DESCRIPTION = description,
+        LAUNDER = launder,
+        OVERWRITE = overwrite
+      ),
+      rlang::list2(...)
     ),
-    rlang::list2(...)
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_creation_opts_values("GPKG", sub_type = level))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_creation_opts_defaults("GPKG", sub_type = level)), opts)
-  }
-  new_gdal_creation_opts(opts, driver = "GPKG", level = level)
+    channel = "creation",
+    driver = "GPKG",
+    level = rlang::arg_match(level),
+    .set_defaults = .set_defaults
+  )
 }
 
 

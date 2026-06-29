@@ -20,39 +20,55 @@ gpq_creation_opts(
   sort_by_bbox = NULL,
   timestamp_with_offset = NULL,
   coordinate_precision = NULL,
+  ...,
   .set_defaults = FALSE
 )
 }
 \arguments{
-\item{compression}{Value for \code{COMPRESSION} (e.g. \code{"ZSTD"}, \code{"SNAPPY"}).}
+\item{compression}{Value for \code{COMPRESSION}. One of \code{NONE}/\code{SNAPPY}/\code{GZIP}/\code{BROTLI}/\code{ZSTD}/
+\code{LZ4_RAW}/\code{LZ4_HADOOP} (available values depend on how the Parquet library was built). GDAL
+default \code{"SNAPPY"} when available, otherwise \code{NONE}.}
 
-\item{compression_level}{Value for \code{COMPRESSION_LEVEL} (codec-dependent integer).}
+\item{compression_level}{Value for \code{COMPRESSION_LEVEL} (GDAL >= 3.12). Codec-dependent integer.}
 
-\item{geometry_encoding}{Value for \code{GEOMETRY_ENCODING} (e.g. \code{"WKB"}, \code{"GEOARROW"}).}
+\item{geometry_encoding}{Value for \code{GEOMETRY_ENCODING}. One of \code{WKB}/\code{WKT}/\code{GEOARROW}/
+\code{GEOARROW_INTERLEAVED}. GDAL default \code{"WKB"} (recommended for interoperability).}
 
-\item{row_group_size}{Value for \code{ROW_GROUP_SIZE} (max rows per group).}
+\item{row_group_size}{Value for \code{ROW_GROUP_SIZE} (maximum rows per group). GDAL default \code{65536}.}
 
-\item{geometry_name}{Value for \code{GEOMETRY_NAME}.}
+\item{geometry_name}{Value for \code{GEOMETRY_NAME}. GDAL default \code{"geometry"}.}
 
-\item{fid}{Value for \code{FID}.}
+\item{fid}{Value for \code{FID} (name of the FID column to create; if unset, no FID column is created).}
 
-\item{polygon_orientation}{Value for \code{POLYGON_ORIENTATION}.}
+\item{polygon_orientation}{Value for \code{POLYGON_ORIENTATION}. One of \code{COUNTERCLOCKWISE}/
+\code{UNMODIFIED}. GDAL default \code{"COUNTERCLOCKWISE"}.}
 
-\item{edges}{Value for \code{EDGES} (\code{"PLANAR"}/\code{"SPHERICAL"}).}
+\item{edges}{Value for \code{EDGES}. One of \code{PLANAR}/\code{SPHERICAL}. GDAL default \code{"PLANAR"}.}
 
-\item{creator}{Value for \code{CREATOR}.}
+\item{creator}{Value for \code{CREATOR} (name of the creating application).}
 
-\item{write_covering_bbox}{Value for \code{WRITE_COVERING_BBOX} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{write_covering_bbox}{Value for \code{WRITE_COVERING_BBOX} (GDAL >= 3.9). One of \code{AUTO}/\code{YES}/\code{NO}
+(logical coerced); write per-row \code{xmin/ymin/xmax/ymax} bounding-box columns for faster spatial
+filtering. GDAL default \code{"AUTO"}.}
 
-\item{covering_bbox_name}{Value for \code{COVERING_BBOX_NAME}.}
+\item{covering_bbox_name}{Value for \code{COVERING_BBOX_NAME} (GDAL >= 3.13). Defaults to the geometry
+column name suffixed with \verb{_bbox}.}
 
-\item{use_parquet_geo_types}{Value for \code{USE_PARQUET_GEO_TYPES}.}
+\item{use_parquet_geo_types}{Value for \code{USE_PARQUET_GEO_TYPES} (GDAL >= 3.12; requires
+libarrow >= 21). One of \code{YES}/\code{NO}/\code{ONLY}. GDAL default \code{"NO"}.}
 
-\item{sort_by_bbox}{Value for \code{SORT_BY_BBOX} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{sort_by_bbox}{Value for \code{SORT_BY_BBOX} (GDAL >= 3.9; logical -> \code{"YES"}/\code{"NO"}). Spatially
+order features (via a temporary GeoPackage) for faster spatial filtering. GDAL default \code{"NO"}.}
 
-\item{timestamp_with_offset}{Value for \code{TIMESTAMP_WITH_OFFSET}.}
+\item{timestamp_with_offset}{Value for \code{TIMESTAMP_WITH_OFFSET} (GDAL >= 3.13). One of
+\code{AUTO}/\code{YES}/\code{NO}. GDAL default \code{"AUTO"}.}
 
-\item{coordinate_precision}{Value for \code{COORDINATE_PRECISION} (only for \code{GEOMETRY_ENCODING=WKT}).}
+\item{coordinate_precision}{Value for \code{COORDINATE_PRECISION} (number of decimals for coordinates;
+only for \code{GEOMETRY_ENCODING=WKT}).}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

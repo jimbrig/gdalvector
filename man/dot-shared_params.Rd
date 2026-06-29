@@ -7,6 +7,10 @@
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});
 user-supplied values always take precedence. Defaults to \code{FALSE}.}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 }
 \description{
 Use \verb{@inheritParams .shared_params} in a function's roxygen2 block to import these parameter descriptions.

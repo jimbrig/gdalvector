@@ -4,7 +4,8 @@ Version: 0.0.2
 Authors@R: 
     person("Jimmy", "Briggs", , "jimmy.briggs@jimbrig.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7489-8787"))
-Description: Opinionated system for working with modern geospatial vector data formats using GDAL. 
+Description: Opinionated system for working with modern geospatial vector
+    data formats using GDAL.
 License: MIT + file LICENSE
 URL: https://github.com/jimbrig/gdalvector,
     http://docs.jimbrig.com/gdalvector/
@@ -47,10 +48,9 @@ Imports:
     yyjsonr
 Suggests: 
     knitr,
-    quarto,
     rmarkdown,
     spelling,
-    testthat (>= 3.0.0)
+    testthat (>= 3.1.0)
 VignetteBuilder: 
     knitr
 Config/Needs/website: quarto

@@ -58,17 +58,13 @@ fgb_config_opts <- function(...) {
 #' fgb_open_opts()
 #' fgb_open_opts(verify_buffers = FALSE)
 #' fgb_open_opts(.set_defaults = TRUE)
-fgb_open_opts <- function(verify_buffers = NULL, .set_defaults = FALSE) {
-  opts <- .gdal_opts_normalize(list(
-    VERIFY_BUFFERS = verify_buffers
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_open_opts_values("FlatGeobuf"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("FlatGeobuf")), opts)
-  }
-  new_gdal_open_opts(opts, driver = "FlatGeobuf")
+fgb_open_opts <- function(verify_buffers = NULL, ..., .set_defaults = FALSE) {
+  .build_gdal_opts(
+    c(list(VERIFY_BUFFERS = verify_buffers), rlang::list2(...)),
+    channel = "open",
+    driver = "FlatGeobuf",
+    .set_defaults = .set_defaults
+  )
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -80,10 +76,11 @@ fgb_open_opts <- function(verify_buffers = NULL, .set_defaults = FALSE) {
 #' you supply are emitted; values are validated against the driver's registered metadata.
 #'
 #' @param spatial_index Value for `SPATIAL_INDEX`. Logical `TRUE`/`FALSE` (coerced to `"YES"`/`"NO"`)
-#'   controlling whether a packed Hilbert R-tree spatial index is written. GDAL defaults to `"YES"`.
-#' @param temporary_dir Directory for temporary files during write (`TEMPORARY_DIR`).
-#' @param title Layer title (`TITLE`).
-#' @param description Layer description (`DESCRIPTION`).
+#'   controlling whether a packed Hilbert R-tree spatial index is written. GDAL default `"YES"`.
+#' @param temporary_dir Value for `TEMPORARY_DIR` (path to an existing directory for temporary files;
+#'   only used when `SPATIAL_INDEX = TRUE`. `"/vsimem/"` may be used for in-memory temporaries).
+#' @param title Value for `TITLE` (GDAL >= 3.9); dataset title (should be relatively short).
+#' @param description Value for `DESCRIPTION` (GDAL >= 3.9); dataset description (free-form long text).
 #' @inheritParams .shared_params
 #'
 #' @returns A layer-level [gdal_creation_opts()] object for the `FlatGeobuf` driver.
@@ -101,22 +98,22 @@ fgb_creation_opts <- function(
   temporary_dir = NULL,
   title = NULL,
   description = NULL,
+  ...,
   .set_defaults = FALSE
 ) {
-  opts <- .gdal_opts_normalize(list(
-    SPATIAL_INDEX = spatial_index,
-    TEMPORARY_DIR = temporary_dir,
-    TITLE = title,
-    DESCRIPTION = description
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_creation_opts_values("FlatGeobuf", sub_type = "layer"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(
-      as.list(gdal_vector_driver_creation_opts_defaults("FlatGeobuf", sub_type = "layer")),
-      opts
-    )
-  }
-  new_gdal_creation_opts(opts, driver = "FlatGeobuf", level = "layer")
+  .build_gdal_opts(
+    c(
+      list(
+        SPATIAL_INDEX = spatial_index,
+        TEMPORARY_DIR = temporary_dir,
+        TITLE = title,
+        DESCRIPTION = description
+      ),
+      rlang::list2(...)
+    ),
+    channel = "creation",
+    driver = "FlatGeobuf",
+    level = "layer",
+    .set_defaults = .set_defaults
+  )
 }

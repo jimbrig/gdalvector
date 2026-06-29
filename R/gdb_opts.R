@@ -18,7 +18,6 @@
 #'   string fields created when the requested width is the unspecified value `0`. GDAL default `65536`.
 #' @param in_memory_spi Value for `OPENFILEGDB_IN_MEMORY_SPI`. Logical `TRUE`/`FALSE` (coerced to
 #'   `"YES"`/`"NO"`); build an in-memory spatial index instead of using the native one.
-#' @param ... Additional `NAME = value` configuration options passed through after coercion.
 #' @inheritParams .shared_params
 #'
 #' @returns A [gdal_config_opts()] object for the `OpenFileGDB` driver.
@@ -26,23 +25,24 @@
 #'
 #' @seealso [gdb_open_opts()], [gdb_creation_opts()], [gdal_config_opts()]
 #'
+#' ```{r child = "man/fragments/gdb_links.md"}
+#' ```
+#'
 #' @examples
 #' gdb_config_opts(default_string_width = 1024L, in_memory_spi = TRUE)
 gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, ..., .set_defaults = FALSE) {
-  opts <- .gdal_opts_normalize(c(
-    list(
-      OPENFILEGDB_DEFAULT_STRING_WIDTH = default_string_width,
-      OPENFILEGDB_IN_MEMORY_SPI = in_memory_spi
+  .build_gdal_opts(
+    c(
+      list(
+        OPENFILEGDB_DEFAULT_STRING_WIDTH = default_string_width,
+        OPENFILEGDB_IN_MEMORY_SPI = in_memory_spi
+      ),
+      rlang::list2(...)
     ),
-    rlang::list2(...)
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_config_opts_values("OpenFileGDB"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_config_opts_defaults("OpenFileGDB")), opts)
-  }
-  new_gdal_config_opts(opts, driver = "OpenFileGDB")
+    channel = "config",
+    driver = "OpenFileGDB",
+    .set_defaults = .set_defaults
+  )
 }
 
 # open ------------------------------------------------------------------------------------------------------------
@@ -61,19 +61,18 @@ gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, .
 #'
 #' @seealso [gdb_creation_opts()], [gdal_open_opts()]
 #'
+#' ```{r child = "man/fragments/gdb_links.md"}
+#' ```
+#'
 #' @examples
 #' gdb_open_opts(list_all_tables = TRUE)
-gdb_open_opts <- function(list_all_tables = NULL, .set_defaults = FALSE) {
-  opts <- .gdal_opts_normalize(list(
-    LIST_ALL_TABLES = list_all_tables
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_open_opts_values("OpenFileGDB"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("OpenFileGDB")), opts)
-  }
-  new_gdal_open_opts(opts, driver = "OpenFileGDB")
+gdb_open_opts <- function(list_all_tables = NULL, ..., .set_defaults = FALSE) {
+  .build_gdal_opts(
+    c(list(LIST_ALL_TABLES = list_all_tables), rlang::list2(...)),
+    channel = "open",
+    driver = "OpenFileGDB",
+    .set_defaults = .set_defaults
+  )
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -85,26 +84,34 @@ gdb_open_opts <- function(list_all_tables = NULL, .set_defaults = FALSE) {
 #' arguments cover the common layer options; advanced coordinate-precision grid options
 #' (`XORIGIN`, `XYSCALE`, `XYTOLERANCE`, `Z*`/`M*`) may be supplied through `...`.
 #'
-#' @param fid Name of the OID column (`FID`). GDAL default `"OBJECTID"`.
-#' @param geometry_name Name of the geometry column (`GEOMETRY_NAME`). GDAL default `"SHAPE"`.
-#' @param geometry_nullable Value for `GEOMETRY_NULLABLE` (logical -> `"YES"`/`"NO"`).
-#' @param configuration_keyword Value for `CONFIGURATION_KEYWORD` (storage configuration).
-#' @param target_arcgis_version Value for `TARGET_ARCGIS_VERSION`.
-#' @param create_multipatch Value for `CREATE_MULTIPATCH` (logical -> `"YES"`/`"NO"`).
+#' @param fid Value for `FID` (name of the OID column). GDAL default `"OBJECTID"`.
+#' @param geometry_name Value for `GEOMETRY_NAME`. GDAL default `"SHAPE"`.
+#' @param geometry_nullable Value for `GEOMETRY_NULLABLE` (logical -> `"YES"`/`"NO"`). GDAL default `"YES"`.
+#' @param configuration_keyword Value for `CONFIGURATION_KEYWORD`. One of `DEFAULTS`/
+#'   `MAX_FILE_SIZE_4GB`/`MAX_FILE_SIZE_256TB`. GDAL default `"DEFAULTS"` (UTF-8 text, up to 1 TB).
+#' @param target_arcgis_version Value for `TARGET_ARCGIS_VERSION` (GDAL >= 3.9). One of `ALL`/
+#'   `ARCGIS_PRO_3_2_OR_LATER` (the latter required to create `Integer64`/`Date`/`Time` fields). GDAL
+#'   default `"ALL"`.
+#' @param create_multipatch Value for `CREATE_MULTIPATCH` (logical -> `"YES"`/`"NO"`); write
+#'   MultiPolygon layers as MultiPatch.
 #' @param create_shape_area_and_length_fields Value for `CREATE_SHAPE_AREA_AND_LENGTH_FIELDS`
-#'   (logical -> `"YES"`/`"NO"`).
+#'   (logical -> `"YES"`/`"NO"`); auto-populated `Shape_Area`/`Shape_Length` fields. GDAL default `"NO"`.
 #' @param time_in_utc Value for `TIME_IN_UTC` (logical -> `"YES"`/`"NO"`).
-#' @param column_types Value for `COLUMN_TYPES` (e.g. `"field=fgdb_type,..."`).
-#' @param feature_dataset Value for `FEATURE_DATASET`.
-#' @param layer_alias Value for `LAYER_ALIAS`.
+#' @param column_types Value for `COLUMN_TYPES` (`"field_name=fgdb_field_type,..."`) forcing FileGDB
+#'   field types.
+#' @param feature_dataset Value for `FEATURE_DATASET` (FeatureDataset folder for the new layer;
+#'   created if it does not exist).
+#' @param layer_alias Value for `LAYER_ALIAS` (layer-name alias).
 #' @param documentation Value for `DOCUMENTATION` (XML documentation string).
-#' @param ... Additional `NAME = value` layer-creation options (e.g. coordinate-grid options).
 #' @inheritParams .shared_params
 #'
 #' @returns A layer-level [gdal_creation_opts()] object for the `OpenFileGDB` driver.
 #' @export
 #'
 #' @seealso [gdb_open_opts()], [gdal_creation_opts()]
+#'
+#' ```{r child = "man/fragments/gdb_links.md"}
+#' ```
 #'
 #' @examples
 #' gdb_creation_opts(geometry_name = "SHAPE", target_arcgis_version = "ALL")
@@ -124,31 +131,27 @@ gdb_creation_opts <- function(
   ...,
   .set_defaults = FALSE
 ) {
-  opts <- .gdal_opts_normalize(c(
-    list(
-      FID = fid,
-      GEOMETRY_NAME = geometry_name,
-      GEOMETRY_NULLABLE = geometry_nullable,
-      CONFIGURATION_KEYWORD = configuration_keyword,
-      TARGET_ARCGIS_VERSION = target_arcgis_version,
-      CREATE_MULTIPATCH = create_multipatch,
-      CREATE_SHAPE_AREA_AND_LENGTH_FIELDS = create_shape_area_and_length_fields,
-      TIME_IN_UTC = time_in_utc,
-      COLUMN_TYPES = column_types,
-      FEATURE_DATASET = feature_dataset,
-      LAYER_ALIAS = layer_alias,
-      DOCUMENTATION = documentation
+  .build_gdal_opts(
+    c(
+      list(
+        FID = fid,
+        GEOMETRY_NAME = geometry_name,
+        GEOMETRY_NULLABLE = geometry_nullable,
+        CONFIGURATION_KEYWORD = configuration_keyword,
+        TARGET_ARCGIS_VERSION = target_arcgis_version,
+        CREATE_MULTIPATCH = create_multipatch,
+        CREATE_SHAPE_AREA_AND_LENGTH_FIELDS = create_shape_area_and_length_fields,
+        TIME_IN_UTC = time_in_utc,
+        COLUMN_TYPES = column_types,
+        FEATURE_DATASET = feature_dataset,
+        LAYER_ALIAS = layer_alias,
+        DOCUMENTATION = documentation
+      ),
+      rlang::list2(...)
     ),
-    rlang::list2(...)
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_creation_opts_values("OpenFileGDB", sub_type = "layer"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(
-      as.list(gdal_vector_driver_creation_opts_defaults("OpenFileGDB", sub_type = "layer")),
-      opts
-    )
-  }
-  new_gdal_creation_opts(opts, driver = "OpenFileGDB", level = "layer")
+    channel = "creation",
+    driver = "OpenFileGDB",
+    level = "layer",
+    .set_defaults = .set_defaults
+  )
 }

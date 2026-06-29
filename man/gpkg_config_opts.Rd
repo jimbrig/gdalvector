@@ -26,9 +26,12 @@ gpkg_config_opts(
 
 \item{use_ogr_vfs}{Value for \code{SQLITE_USE_OGR_VFS} (logical -> \code{"YES"}/\code{"NO"}).}
 
-\item{num_threads}{Value for \code{OGR_GPKG_NUM_THREADS} (integer or \code{"ALL_CPUS"}).}
+\item{num_threads}{Value for \code{OGR_GPKG_NUM_THREADS} (GDAL >= 3.8.3); an integer or \code{"ALL_CPUS"}.
+Threads used when reading tables through the ArrowArray interface. GDAL default is \code{min(4, nCPU)}.}
 
-\item{...}{Additional \code{NAME = value} configuration options passed through after coercion.}
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

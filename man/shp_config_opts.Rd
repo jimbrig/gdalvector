@@ -9,18 +9,27 @@ shp_config_opts(
   shape_restore_shx = NULL,
   shape_2gb_limit = NULL,
   shape_encoding = NULL,
+  ...,
   .set_defaults = FALSE
 )
 }
 \arguments{
-\item{shape_rewind_on_write}{Value for \code{SHAPE_REWIND_ON_WRITE} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{shape_rewind_on_write}{Value for \code{SHAPE_REWIND_ON_WRITE} (logical -> \code{"YES"}/\code{"NO"}); whether
+to correct the winding order of exterior/interior rings on write. Since GDAL 3.7 the default for
+Polygon/MultiPolygon is \code{"NO"}.}
 
 \item{shape_restore_shx}{Value for \code{SHAPE_RESTORE_SHX} (logical -> \code{"YES"}/\code{"NO"}); restore a
-missing/broken \code{.shx} from the \code{.shp} on open.}
+missing/broken \code{.shx} from the \code{.shp} on open. GDAL default \code{"NO"}.}
 
-\item{shape_2gb_limit}{Value for \code{SHAPE_2GB_LIMIT} (logical -> \code{"YES"}/\code{"NO"}).}
+\item{shape_2gb_limit}{Value for \code{SHAPE_2GB_LIMIT} (logical -> \code{"YES"}/\code{"NO"}); strictly enforce
+the 2 GB \code{.shp}/\code{.dbf} size limit when updating.}
 
-\item{shape_encoding}{Value for \code{SHAPE_ENCODING} (override DBF encoding; \code{""} disables recoding).}
+\item{shape_encoding}{Value for \code{SHAPE_ENCODING} (override DBF encoding with any \code{CPLRecode()}
+encoding; \code{""} disables recoding).}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

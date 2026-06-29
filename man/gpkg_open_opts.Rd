@@ -9,6 +9,7 @@ gpkg_open_opts(
   prelude_statements = NULL,
   nolock = NULL,
   immutable = NULL,
+  ...,
   .set_defaults = FALSE
 )
 }
@@ -24,6 +25,10 @@ locking; only safe for read-only access to media nothing else can write).}
 
 \item{immutable}{Value for \code{IMMUTABLE} (logical -> \code{"YES"}/\code{"NO"}); declare the database
 immutable. Only when the file genuinely cannot change.}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});
