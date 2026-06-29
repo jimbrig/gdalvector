@@ -41,6 +41,7 @@
 
 ## Refactoring
 
+- Streamline utility functions and update documentation ([e9667da](https://github.com/jimbrig/gdalvector/commit/e9667dabf3129c2b4934f527a5f68275ec0d287d))  - (Jimmy Briggs)
 - **opts:** Add consistent \...\ pass-through to all typed builders ([#2](https://github.com/jimbrig/gdalvector/issues/2)) ([fa3ac9c](https://github.com/jimbrig/gdalvector/commit/fa3ac9c88bcef0fae56c8875934cfd0282172c23))  - (Jimmy Briggs)
 - **opts:** Route option builders through shared .build_gdal_opts() ([#1](https://github.com/jimbrig/gdalvector/issues/1)) ([1a7f4a5](https://github.com/jimbrig/gdalvector/commit/1a7f4a5c18dd858a98c745caf08be8da75f621f4))  - (Jimmy Briggs)
 - **gdal_opts:** Remove obsolete as_gdal_boolean helper ([37aed58](https://github.com/jimbrig/gdalvector/commit/37aed58121e8ce23914caf4ac2461d33ae0a87c6))  - (Jimmy Briggs)
