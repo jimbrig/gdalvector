@@ -35,6 +35,7 @@
 
 ## Refactoring
 
+- **gdal_drivers:** Consolidate option lookup logic ([2f6c33c](https://github.com/jimbrig/gdalvector/commit/2f6c33ca41dfac16f5074ed13d2287b386da2b63))  - (Jimmy Briggs)
 - **gdal:** Standardize object formatting and streamline internal utilities ([cdfa33b](https://github.com/jimbrig/gdalvector/commit/cdfa33b5f7cdd629f09d728ea298553b379bab22))  - (Jimmy Briggs)
 - **gdal-options:** Standardize option normalization and boolean coercion ([8c00bf5](https://github.com/jimbrig/gdalvector/commit/8c00bf5716ae2ac473d7abbe7619f391066ba5ff))  - (Jimmy Briggs)
 
