@@ -9,6 +9,7 @@ fgb_creation_opts(
   temporary_dir = NULL,
   title = NULL,
   description = NULL,
+  ...,
   .set_defaults = FALSE
 )
 }
@@ -21,6 +22,10 @@ controlling whether a packed Hilbert R-tree spatial index is written. GDAL defau
 \item{title}{Layer title (\code{TITLE}).}
 
 \item{description}{Layer description (\code{DESCRIPTION}).}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

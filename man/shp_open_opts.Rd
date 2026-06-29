@@ -11,6 +11,7 @@ shp_open_opts(
   adjust_geom_type = NULL,
   auto_repack = NULL,
   dbf_eof_char = NULL,
+  ...,
   .set_defaults = FALSE
 )
 }
@@ -26,6 +27,10 @@ shp_open_opts(
 \item{auto_repack}{Value for \code{AUTO_REPACK} (logical -> \code{"YES"}/\code{"NO"}).}
 
 \item{dbf_eof_char}{Value for \code{DBF_EOF_CHAR} (logical -> \code{"YES"}/\code{"NO"}).}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

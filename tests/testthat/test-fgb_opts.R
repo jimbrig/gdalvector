@@ -45,3 +45,9 @@ test_that("fgb_creation_opts builds a layer-level object and coerces booleans", 
   expect_opt_value(co, "TITLE", "Parcels")
   expect_opt_value(co, "DESCRIPTION", "test")
 })
+
+test_that("fgb builders forward additional options through ...", {
+  oo <- fgb_open_opts(verify_buffers = FALSE, SOME_FUTURE_OPT = "x")
+  expect_opt_value(oo, "VERIFY_BUFFERS", "NO")
+  expect_opt_value(oo, "SOME_FUTURE_OPT", "x")
+})

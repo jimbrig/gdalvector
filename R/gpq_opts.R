@@ -29,12 +29,15 @@
 #'
 #' @examples
 #' gpq_open_opts(crs = "EPSG:4326")
-gpq_open_opts <- function(geom_possible_names = NULL, crs = NULL, lists_as_string_json = NULL, .set_defaults = FALSE) {
+gpq_open_opts <- function(geom_possible_names = NULL, crs = NULL, lists_as_string_json = NULL, ..., .set_defaults = FALSE) {
   .build_gdal_opts(
-    list(
-      GEOM_POSSIBLE_NAMES = geom_possible_names,
-      CRS = crs,
-      LISTS_AS_STRING_JSON = lists_as_string_json
+    c(
+      list(
+        GEOM_POSSIBLE_NAMES = geom_possible_names,
+        CRS = crs,
+        LISTS_AS_STRING_JSON = lists_as_string_json
+      ),
+      rlang::list2(...)
     ),
     channel = "open",
     driver = "Parquet",
@@ -108,25 +111,29 @@ gpq_creation_opts <- function(
   sort_by_bbox = NULL,
   timestamp_with_offset = NULL,
   coordinate_precision = NULL,
+  ...,
   .set_defaults = FALSE
 ) {
   .build_gdal_opts(
-    list(
-      COMPRESSION = compression,
-      COMPRESSION_LEVEL = compression_level,
-      GEOMETRY_ENCODING = geometry_encoding,
-      ROW_GROUP_SIZE = row_group_size,
-      GEOMETRY_NAME = geometry_name,
-      FID = fid,
-      POLYGON_ORIENTATION = polygon_orientation,
-      EDGES = edges,
-      CREATOR = creator,
-      WRITE_COVERING_BBOX = write_covering_bbox,
-      COVERING_BBOX_NAME = covering_bbox_name,
-      USE_PARQUET_GEO_TYPES = use_parquet_geo_types,
-      SORT_BY_BBOX = sort_by_bbox,
-      TIMESTAMP_WITH_OFFSET = timestamp_with_offset,
-      COORDINATE_PRECISION = coordinate_precision
+    c(
+      list(
+        COMPRESSION = compression,
+        COMPRESSION_LEVEL = compression_level,
+        GEOMETRY_ENCODING = geometry_encoding,
+        ROW_GROUP_SIZE = row_group_size,
+        GEOMETRY_NAME = geometry_name,
+        FID = fid,
+        POLYGON_ORIENTATION = polygon_orientation,
+        EDGES = edges,
+        CREATOR = creator,
+        WRITE_COVERING_BBOX = write_covering_bbox,
+        COVERING_BBOX_NAME = covering_bbox_name,
+        USE_PARQUET_GEO_TYPES = use_parquet_geo_types,
+        SORT_BY_BBOX = sort_by_bbox,
+        TIMESTAMP_WITH_OFFSET = timestamp_with_offset,
+        COORDINATE_PRECISION = coordinate_precision
+      ),
+      rlang::list2(...)
     ),
     channel = "creation",
     driver = "Parquet",

@@ -9,6 +9,7 @@ shp_config_opts(
   shape_restore_shx = NULL,
   shape_2gb_limit = NULL,
   shape_encoding = NULL,
+  ...,
   .set_defaults = FALSE
 )
 }
@@ -21,6 +22,10 @@ missing/broken \code{.shx} from the \code{.shp} on open.}
 \item{shape_2gb_limit}{Value for \code{SHAPE_2GB_LIMIT} (logical -> \code{"YES"}/\code{"NO"}).}
 
 \item{shape_encoding}{Value for \code{SHAPE_ENCODING} (override DBF encoding; \code{""} disables recoding).}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

@@ -58,9 +58,9 @@ fgb_config_opts <- function(...) {
 #' fgb_open_opts()
 #' fgb_open_opts(verify_buffers = FALSE)
 #' fgb_open_opts(.set_defaults = TRUE)
-fgb_open_opts <- function(verify_buffers = NULL, .set_defaults = FALSE) {
+fgb_open_opts <- function(verify_buffers = NULL, ..., .set_defaults = FALSE) {
   .build_gdal_opts(
-    list(VERIFY_BUFFERS = verify_buffers),
+    c(list(VERIFY_BUFFERS = verify_buffers), rlang::list2(...)),
     channel = "open",
     driver = "FlatGeobuf",
     .set_defaults = .set_defaults
@@ -97,14 +97,18 @@ fgb_creation_opts <- function(
   temporary_dir = NULL,
   title = NULL,
   description = NULL,
+  ...,
   .set_defaults = FALSE
 ) {
   .build_gdal_opts(
-    list(
-      SPATIAL_INDEX = spatial_index,
-      TEMPORARY_DIR = temporary_dir,
-      TITLE = title,
-      DESCRIPTION = description
+    c(
+      list(
+        SPATIAL_INDEX = spatial_index,
+        TEMPORARY_DIR = temporary_dir,
+        TITLE = title,
+        DESCRIPTION = description
+      ),
+      rlang::list2(...)
     ),
     channel = "creation",
     driver = "FlatGeobuf",

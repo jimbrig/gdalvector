@@ -48,6 +48,14 @@ test_that("numeric and string forms of row_group_size resolve to the same payloa
   )
 })
 
+test_that("gpq_creation_opts forwards additional options through ... and still validates", {
+  co <- gpq_creation_opts(compression = "ZSTD", SOME_FUTURE_OPT = "x")
+  expect_opt_value(co, "COMPRESSION", "ZSTD")
+  expect_opt_value(co, "SOME_FUTURE_OPT", "x")
+  # validated enums supplied via ... are still checked
+  expect_error(gpq_creation_opts(GEOMETRY_ENCODING = "BOGUS"), class = "gdal_check_error")
+})
+
 # workflow --------------------------------------------------------------------------------------------------------
 
 test_that("GPKG -> Parquet convert applies the gpq OGC distribution preset as --lco", {

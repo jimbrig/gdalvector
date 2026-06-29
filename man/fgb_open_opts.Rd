@@ -4,13 +4,17 @@
 \alias{fgb_open_opts}
 \title{FlatGeobuf Open Options}
 \usage{
-fgb_open_opts(verify_buffers = NULL, .set_defaults = FALSE)
+fgb_open_opts(verify_buffers = NULL, ..., .set_defaults = FALSE)
 }
 \arguments{
 \item{verify_buffers}{Value for \code{VERIFY_BUFFERS}. Logical \code{TRUE}/\code{FALSE} (coerced to \code{"YES"}/
 \code{"NO"}) controlling whether flatbuffer integrity is verified on read. \code{"YES"} (the GDAL default)
 guards against corrupt data at a small performance cost; \code{"NO"} is faster but unsafe on
 malformed files. \code{NULL} (default) leaves it unset.}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

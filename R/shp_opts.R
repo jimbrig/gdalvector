@@ -37,14 +37,18 @@ shp_config_opts <- function(
   shape_restore_shx = NULL,
   shape_2gb_limit = NULL,
   shape_encoding = NULL,
+  ...,
   .set_defaults = FALSE
 ) {
   .build_gdal_opts(
-    list(
-      SHAPE_REWIND_ON_WRITE = shape_rewind_on_write,
-      SHAPE_RESTORE_SHX = shape_restore_shx,
-      SHAPE_2GB_LIMIT = shape_2gb_limit,
-      SHAPE_ENCODING = shape_encoding
+    c(
+      list(
+        SHAPE_REWIND_ON_WRITE = shape_rewind_on_write,
+        SHAPE_RESTORE_SHX = shape_restore_shx,
+        SHAPE_2GB_LIMIT = shape_2gb_limit,
+        SHAPE_ENCODING = shape_encoding
+      ),
+      rlang::list2(...)
     ),
     channel = "config",
     driver = "ESRI Shapefile",
@@ -84,19 +88,23 @@ shp_open_opts <- function(
   adjust_geom_type = NULL,
   auto_repack = NULL,
   dbf_eof_char = NULL,
+  ...,
   .set_defaults = FALSE
 ) {
   if (!is.null(dbf_date_last_update)) {
     check_regex(dbf_date_last_update, pattern = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
   }
   .build_gdal_opts(
-    list(
-      ENCODING = encoding,
-      DBF_DATE_LAST_UPDATE = dbf_date_last_update,
-      ADJUST_TYPE = adjust_type,
-      ADJUST_GEOM_TYPE = adjust_geom_type,
-      AUTO_REPACK = auto_repack,
-      DBF_EOF_CHAR = dbf_eof_char
+    c(
+      list(
+        ENCODING = encoding,
+        DBF_DATE_LAST_UPDATE = dbf_date_last_update,
+        ADJUST_TYPE = adjust_type,
+        ADJUST_GEOM_TYPE = adjust_geom_type,
+        AUTO_REPACK = auto_repack,
+        DBF_EOF_CHAR = dbf_eof_char
+      ),
+      rlang::list2(...)
     ),
     channel = "open",
     driver = "ESRI Shapefile",
@@ -140,21 +148,25 @@ shp_creation_opts <- function(
   auto_repack = NULL,
   dbf_date_last_update = NULL,
   dbf_eof_char = NULL,
+  ...,
   .set_defaults = FALSE
 ) {
   if (!is.null(dbf_date_last_update)) {
     check_regex(dbf_date_last_update, pattern = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
   }
   .build_gdal_opts(
-    list(
-      SPATIAL_INDEX = spatial_index,
-      ENCODING = encoding,
-      RESIZE = resize,
-      SHPT = shpt,
-      `2GB_LIMIT` = two_gb_limit,
-      AUTO_REPACK = auto_repack,
-      DBF_DATE_LAST_UPDATE = dbf_date_last_update,
-      DBF_EOF_CHAR = dbf_eof_char
+    c(
+      list(
+        SPATIAL_INDEX = spatial_index,
+        ENCODING = encoding,
+        RESIZE = resize,
+        SHPT = shpt,
+        `2GB_LIMIT` = two_gb_limit,
+        AUTO_REPACK = auto_repack,
+        DBF_DATE_LAST_UPDATE = dbf_date_last_update,
+        DBF_EOF_CHAR = dbf_eof_char
+      ),
+      rlang::list2(...)
     ),
     channel = "creation",
     driver = "ESRI Shapefile",

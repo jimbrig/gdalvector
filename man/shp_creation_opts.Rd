@@ -13,6 +13,7 @@ shp_creation_opts(
   auto_repack = NULL,
   dbf_date_last_update = NULL,
   dbf_eof_char = NULL,
+  ...,
   .set_defaults = FALSE
 )
 }
@@ -32,6 +33,10 @@ shp_creation_opts(
 \item{dbf_date_last_update}{Value for \code{DBF_DATE_LAST_UPDATE} (\code{YYYY-MM-DD}).}
 
 \item{dbf_eof_char}{Value for \code{DBF_EOF_CHAR} (logical -> \code{"YES"}/\code{"NO"}).}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

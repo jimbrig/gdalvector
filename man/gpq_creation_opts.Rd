@@ -20,6 +20,7 @@ gpq_creation_opts(
   sort_by_bbox = NULL,
   timestamp_with_offset = NULL,
   coordinate_precision = NULL,
+  ...,
   .set_defaults = FALSE
 )
 }
@@ -53,6 +54,10 @@ gpq_creation_opts(
 \item{timestamp_with_offset}{Value for \code{TIMESTAMP_WITH_OFFSET}.}
 
 \item{coordinate_precision}{Value for \code{COORDINATE_PRECISION} (only for \code{GEOMETRY_ENCODING=WKT}).}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});

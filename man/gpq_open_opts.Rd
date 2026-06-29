@@ -8,6 +8,7 @@ gpq_open_opts(
   geom_possible_names = NULL,
   crs = NULL,
   lists_as_string_json = NULL,
+  ...,
   .set_defaults = FALSE
 )
 }
@@ -18,6 +19,10 @@ column names).}
 \item{crs}{Value for \code{CRS} (override CRS for geometry columns, e.g. \code{"EPSG:4326"}).}
 
 \item{lists_as_string_json}{Value for \code{LISTS_AS_STRING_JSON} (logical -> \code{"YES"}/\code{"NO"}).}
+
+\item{...}{Additional \code{NAME = value} options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.}
 
 \item{.set_defaults}{Logical. If \code{TRUE}, options left unset (\code{NULL}) are filled with the driver's
 documented GDAL metadata defaults (via the relevant \verb{gdal_vector_driver_*_opts_defaults()});
