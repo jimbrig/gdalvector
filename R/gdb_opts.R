@@ -29,20 +29,18 @@
 #' @examples
 #' gdb_config_opts(default_string_width = 1024L, in_memory_spi = TRUE)
 gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, ..., .set_defaults = FALSE) {
-  opts <- .gdal_opts_normalize(c(
-    list(
-      OPENFILEGDB_DEFAULT_STRING_WIDTH = default_string_width,
-      OPENFILEGDB_IN_MEMORY_SPI = in_memory_spi
+  .build_gdal_opts(
+    c(
+      list(
+        OPENFILEGDB_DEFAULT_STRING_WIDTH = default_string_width,
+        OPENFILEGDB_IN_MEMORY_SPI = in_memory_spi
+      ),
+      rlang::list2(...)
     ),
-    rlang::list2(...)
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_config_opts_values("OpenFileGDB"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_config_opts_defaults("OpenFileGDB")), opts)
-  }
-  new_gdal_config_opts(opts, driver = "OpenFileGDB")
+    channel = "config",
+    driver = "OpenFileGDB",
+    .set_defaults = .set_defaults
+  )
 }
 
 # open ------------------------------------------------------------------------------------------------------------
@@ -64,16 +62,12 @@ gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, .
 #' @examples
 #' gdb_open_opts(list_all_tables = TRUE)
 gdb_open_opts <- function(list_all_tables = NULL, .set_defaults = FALSE) {
-  opts <- .gdal_opts_normalize(list(
-    LIST_ALL_TABLES = list_all_tables
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_open_opts_values("OpenFileGDB"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("OpenFileGDB")), opts)
-  }
-  new_gdal_open_opts(opts, driver = "OpenFileGDB")
+  .build_gdal_opts(
+    list(LIST_ALL_TABLES = list_all_tables),
+    channel = "open",
+    driver = "OpenFileGDB",
+    .set_defaults = .set_defaults
+  )
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -124,31 +118,27 @@ gdb_creation_opts <- function(
   ...,
   .set_defaults = FALSE
 ) {
-  opts <- .gdal_opts_normalize(c(
-    list(
-      FID = fid,
-      GEOMETRY_NAME = geometry_name,
-      GEOMETRY_NULLABLE = geometry_nullable,
-      CONFIGURATION_KEYWORD = configuration_keyword,
-      TARGET_ARCGIS_VERSION = target_arcgis_version,
-      CREATE_MULTIPATCH = create_multipatch,
-      CREATE_SHAPE_AREA_AND_LENGTH_FIELDS = create_shape_area_and_length_fields,
-      TIME_IN_UTC = time_in_utc,
-      COLUMN_TYPES = column_types,
-      FEATURE_DATASET = feature_dataset,
-      LAYER_ALIAS = layer_alias,
-      DOCUMENTATION = documentation
+  .build_gdal_opts(
+    c(
+      list(
+        FID = fid,
+        GEOMETRY_NAME = geometry_name,
+        GEOMETRY_NULLABLE = geometry_nullable,
+        CONFIGURATION_KEYWORD = configuration_keyword,
+        TARGET_ARCGIS_VERSION = target_arcgis_version,
+        CREATE_MULTIPATCH = create_multipatch,
+        CREATE_SHAPE_AREA_AND_LENGTH_FIELDS = create_shape_area_and_length_fields,
+        TIME_IN_UTC = time_in_utc,
+        COLUMN_TYPES = column_types,
+        FEATURE_DATASET = feature_dataset,
+        LAYER_ALIAS = layer_alias,
+        DOCUMENTATION = documentation
+      ),
+      rlang::list2(...)
     ),
-    rlang::list2(...)
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_creation_opts_values("OpenFileGDB", sub_type = "layer"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(
-      as.list(gdal_vector_driver_creation_opts_defaults("OpenFileGDB", sub_type = "layer")),
-      opts
-    )
-  }
-  new_gdal_creation_opts(opts, driver = "OpenFileGDB", level = "layer")
+    channel = "creation",
+    driver = "OpenFileGDB",
+    level = "layer",
+    .set_defaults = .set_defaults
+  )
 }

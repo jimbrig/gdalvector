@@ -30,18 +30,16 @@
 #' @examples
 #' gpq_open_opts(crs = "EPSG:4326")
 gpq_open_opts <- function(geom_possible_names = NULL, crs = NULL, lists_as_string_json = NULL, .set_defaults = FALSE) {
-  opts <- .gdal_opts_normalize(list(
-    GEOM_POSSIBLE_NAMES = geom_possible_names,
-    CRS = crs,
-    LISTS_AS_STRING_JSON = lists_as_string_json
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_open_opts_values("Parquet"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("Parquet")), opts)
-  }
-  new_gdal_open_opts(opts, driver = "Parquet")
+  .build_gdal_opts(
+    list(
+      GEOM_POSSIBLE_NAMES = geom_possible_names,
+      CRS = crs,
+      LISTS_AS_STRING_JSON = lists_as_string_json
+    ),
+    channel = "open",
+    driver = "Parquet",
+    .set_defaults = .set_defaults
+  )
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -112,28 +110,27 @@ gpq_creation_opts <- function(
   coordinate_precision = NULL,
   .set_defaults = FALSE
 ) {
-  opts <- .gdal_opts_normalize(list(
-    COMPRESSION = compression,
-    COMPRESSION_LEVEL = compression_level,
-    GEOMETRY_ENCODING = geometry_encoding,
-    ROW_GROUP_SIZE = row_group_size,
-    GEOMETRY_NAME = geometry_name,
-    FID = fid,
-    POLYGON_ORIENTATION = polygon_orientation,
-    EDGES = edges,
-    CREATOR = creator,
-    WRITE_COVERING_BBOX = write_covering_bbox,
-    COVERING_BBOX_NAME = covering_bbox_name,
-    USE_PARQUET_GEO_TYPES = use_parquet_geo_types,
-    SORT_BY_BBOX = sort_by_bbox,
-    TIMESTAMP_WITH_OFFSET = timestamp_with_offset,
-    COORDINATE_PRECISION = coordinate_precision
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_creation_opts_values("Parquet", sub_type = "layer"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_creation_opts_defaults("Parquet", sub_type = "layer")), opts)
-  }
-  new_gdal_creation_opts(opts, driver = "Parquet", level = "layer")
+  .build_gdal_opts(
+    list(
+      COMPRESSION = compression,
+      COMPRESSION_LEVEL = compression_level,
+      GEOMETRY_ENCODING = geometry_encoding,
+      ROW_GROUP_SIZE = row_group_size,
+      GEOMETRY_NAME = geometry_name,
+      FID = fid,
+      POLYGON_ORIENTATION = polygon_orientation,
+      EDGES = edges,
+      CREATOR = creator,
+      WRITE_COVERING_BBOX = write_covering_bbox,
+      COVERING_BBOX_NAME = covering_bbox_name,
+      USE_PARQUET_GEO_TYPES = use_parquet_geo_types,
+      SORT_BY_BBOX = sort_by_bbox,
+      TIMESTAMP_WITH_OFFSET = timestamp_with_offset,
+      COORDINATE_PRECISION = coordinate_precision
+    ),
+    channel = "creation",
+    driver = "Parquet",
+    level = "layer",
+    .set_defaults = .set_defaults
+  )
 }

@@ -386,11 +386,17 @@ test_that("validate_gdal_opts warns on unknown option names", {
 })
 
 test_that("validate_gdal_opts warns on invalid enumerated values", {
-  expect_warning(
-    res <- validate_gdal_opts(gdal_open_opts(LIST_ALL_TABLES = "MAYBE", driver = "GPKG")),
-    class = "gdal_opts_value_warning"
-  )
+  # build via the (non-validating) coercion path, since the constructors now hard-validate
+  oo <- as_gdal_open_opts(list(LIST_ALL_TABLES = "MAYBE"), driver = "GPKG")
+  expect_warning(res <- validate_gdal_opts(oo), class = "gdal_opts_value_warning")
   expect_false(res)
+})
+
+test_that("generic constructors hard-validate enumerated values when a driver is supplied", {
+  expect_error(gdal_open_opts(LIST_ALL_TABLES = "MAYBE", driver = "GPKG"), class = "gdal_check_error")
+  expect_no_error(gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet"))
+  # an unknown driver is rejected
+  expect_error(gdal_open_opts(LIST_ALL_TABLES = "NO", driver = "NOPE"), class = "gdal_check_error")
 })
 
 test_that("free-string options (no enumerated set) are not flagged", {

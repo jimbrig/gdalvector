@@ -39,19 +39,17 @@ shp_config_opts <- function(
   shape_encoding = NULL,
   .set_defaults = FALSE
 ) {
-  opts <- .gdal_opts_normalize(list(
-    SHAPE_REWIND_ON_WRITE = shape_rewind_on_write,
-    SHAPE_RESTORE_SHX = shape_restore_shx,
-    SHAPE_2GB_LIMIT = shape_2gb_limit,
-    SHAPE_ENCODING = shape_encoding
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_config_opts_values("ESRI Shapefile"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_config_opts_defaults("ESRI Shapefile")), opts)
-  }
-  new_gdal_config_opts(opts, driver = "ESRI Shapefile")
+  .build_gdal_opts(
+    list(
+      SHAPE_REWIND_ON_WRITE = shape_rewind_on_write,
+      SHAPE_RESTORE_SHX = shape_restore_shx,
+      SHAPE_2GB_LIMIT = shape_2gb_limit,
+      SHAPE_ENCODING = shape_encoding
+    ),
+    channel = "config",
+    driver = "ESRI Shapefile",
+    .set_defaults = .set_defaults
+  )
 }
 
 # open ------------------------------------------------------------------------------------------------------------
@@ -91,21 +89,19 @@ shp_open_opts <- function(
   if (!is.null(dbf_date_last_update)) {
     check_regex(dbf_date_last_update, pattern = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
   }
-  opts <- .gdal_opts_normalize(list(
-    ENCODING = encoding,
-    DBF_DATE_LAST_UPDATE = dbf_date_last_update,
-    ADJUST_TYPE = adjust_type,
-    ADJUST_GEOM_TYPE = adjust_geom_type,
-    AUTO_REPACK = auto_repack,
-    DBF_EOF_CHAR = dbf_eof_char
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_open_opts_values("ESRI Shapefile"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("ESRI Shapefile")), opts)
-  }
-  new_gdal_open_opts(opts, driver = "ESRI Shapefile")
+  .build_gdal_opts(
+    list(
+      ENCODING = encoding,
+      DBF_DATE_LAST_UPDATE = dbf_date_last_update,
+      ADJUST_TYPE = adjust_type,
+      ADJUST_GEOM_TYPE = adjust_geom_type,
+      AUTO_REPACK = auto_repack,
+      DBF_EOF_CHAR = dbf_eof_char
+    ),
+    channel = "open",
+    driver = "ESRI Shapefile",
+    .set_defaults = .set_defaults
+  )
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -149,24 +145,20 @@ shp_creation_opts <- function(
   if (!is.null(dbf_date_last_update)) {
     check_regex(dbf_date_last_update, pattern = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
   }
-  opts <- .gdal_opts_normalize(list(
-    SPATIAL_INDEX = spatial_index,
-    ENCODING = encoding,
-    RESIZE = resize,
-    SHPT = shpt,
-    `2GB_LIMIT` = two_gb_limit,
-    AUTO_REPACK = auto_repack,
-    DBF_DATE_LAST_UPDATE = dbf_date_last_update,
-    DBF_EOF_CHAR = dbf_eof_char
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_creation_opts_values("ESRI Shapefile", sub_type = "layer"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(
-      as.list(gdal_vector_driver_creation_opts_defaults("ESRI Shapefile", sub_type = "layer")),
-      opts
-    )
-  }
-  new_gdal_creation_opts(opts, driver = "ESRI Shapefile", level = "layer")
+  .build_gdal_opts(
+    list(
+      SPATIAL_INDEX = spatial_index,
+      ENCODING = encoding,
+      RESIZE = resize,
+      SHPT = shpt,
+      `2GB_LIMIT` = two_gb_limit,
+      AUTO_REPACK = auto_repack,
+      DBF_DATE_LAST_UPDATE = dbf_date_last_update,
+      DBF_EOF_CHAR = dbf_eof_char
+    ),
+    channel = "creation",
+    driver = "ESRI Shapefile",
+    level = "layer",
+    .set_defaults = .set_defaults
+  )
 }

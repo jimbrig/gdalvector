@@ -95,11 +95,7 @@ new_gdal_opts <- function(x = list(), subclass, driver = NULL, level = NULL, vsi
 #' @examples
 #' gdal_config_opts(CPL_DEBUG = "ON", GDAL_NUM_THREADS = "ALL_CPUS")
 gdal_config_opts <- function(..., driver = NULL, .set_defaults = FALSE) {
-  opts <- rlang::list2(...)
-  if (isTRUE(.set_defaults) && !is.null(driver)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_config_opts_defaults(driver)), opts)
-  }
-  as_gdal_config_opts(opts, driver = driver)
+  .build_gdal_opts(rlang::list2(...), channel = "config", driver = driver, .set_defaults = .set_defaults)
 }
 
 #' @keywords internal
@@ -237,11 +233,7 @@ as_gdal_open_opts.tbl_df <- function(x, ..., driver = NULL, call = rlang::caller
 #' @examples
 #' gdal_open_opts(LIST_ALL_TABLES = FALSE, driver = "GPKG")
 gdal_open_opts <- function(..., driver = NULL, .set_defaults = FALSE) {
-  opts <- rlang::list2(...)
-  if (isTRUE(.set_defaults) && !is.null(driver)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults(driver)), opts)
-  }
-  as_gdal_open_opts(opts, driver = driver)
+  .build_gdal_opts(rlang::list2(...), channel = "open", driver = driver, .set_defaults = .set_defaults)
 }
 
 # creation options ------------------------------------------------------------------------------------------------
@@ -358,12 +350,13 @@ as_gdal_creation_opts.tbl_df <- function(
 #' @examples
 #' gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet")
 gdal_creation_opts <- function(..., driver = NULL, level = c("layer", "dataset"), .set_defaults = FALSE) {
-  level <- rlang::arg_match(level)
-  opts <- rlang::list2(...)
-  if (isTRUE(.set_defaults) && !is.null(driver)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_creation_opts_defaults(driver, sub_type = level)), opts)
-  }
-  as_gdal_creation_opts(opts, driver = driver, level = level)
+  .build_gdal_opts(
+    rlang::list2(...),
+    channel = "creation",
+    driver = driver,
+    level = rlang::arg_match(level),
+    .set_defaults = .set_defaults
+  )
 }
 
 # vsi options -----------------------------------------------------------------------------------------------------
@@ -858,6 +851,53 @@ gdal_opts_cmd_inline <- function(x) {
     vals <- vals[!duplicated(names(vals), fromLast = TRUE)]
   }
   vals
+}
+
+# craft a driver-aware options object end to end: normalize the supplied NAME = value pairs, then
+# (when a driver is known) check the driver name, validate enumerated values against the driver
+# registry, and optionally fill documented metadata defaults, before constructing the classed
+# object. the single crafting/validating point shared by the generic constructors and the typed
+# per-driver builders.
+#' @keywords internal
+#' @noRd
+.build_gdal_opts <- function(
+  args,
+  channel = c("config", "open", "creation"),
+  driver = NULL,
+  level = c("layer", "dataset"),
+  .set_defaults = FALSE,
+  call = rlang::caller_env()
+) {
+  channel <- rlang::arg_match(channel)
+  level <- rlang::arg_match(level)
+  opts <- .gdal_opts_normalize(args, call = call)
+  if (!is.null(driver)) {
+    check_gdal_driver_name(driver, call = call)
+    if (length(opts) > 0L) {
+      values <- switch(
+        channel,
+        config = gdal_vector_driver_config_opts_values(driver),
+        open = gdal_vector_driver_open_opts_values(driver),
+        creation = gdal_vector_driver_creation_opts_values(driver, sub_type = level)
+      )
+      check_gdal_opts(opts, values, call = call)
+    }
+    if (isTRUE(.set_defaults)) {
+      defaults <- switch(
+        channel,
+        config = gdal_vector_driver_config_opts_defaults(driver),
+        open = gdal_vector_driver_open_opts_defaults(driver),
+        creation = gdal_vector_driver_creation_opts_defaults(driver, sub_type = level)
+      )
+      opts <- utils::modifyList(as.list(defaults), opts)
+    }
+  }
+  switch(
+    channel,
+    config = new_gdal_config_opts(opts, driver = driver),
+    open = new_gdal_open_opts(opts, driver = driver),
+    creation = new_gdal_creation_opts(opts, driver = driver, level = level)
+  )
 }
 
 # coerce a single R value to its GDAL string form (scientific-notation safe for numerics; logical
