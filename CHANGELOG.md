@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## Bug Fixes
+
+- Fix initialization ([20f2bad](https://github.com/jimbrig/gdalvector/commit/20f2badfea891c446083d34177841ccb288318b4))  - (Jimmy Briggs)
+
 ## Configuration
 
 - **ci:** Standardize and streamline GitHub Actions workflows ([40b431f](https://github.com/jimbrig/gdalvector/commit/40b431fed3b4086752d8d985574a8d11b3f30408))  - (Jimmy Briggs)
@@ -16,6 +20,7 @@
 
 ## DevOps
 
+- Remove Windows from R CMD CHECK matrix ([b771416](https://github.com/jimbrig/gdalvector/commit/b77141643f5226e22269e4f158a82bddfbaee243))  - (Jimmy Briggs)
 - **github-actions:** Add core workflows for R package CI ([d76bd6a](https://github.com/jimbrig/gdalvector/commit/d76bd6aa8302df93bd62f1d9fbf113362e719a6f))  - (Jimmy Briggs)
 
 ## Documentation
