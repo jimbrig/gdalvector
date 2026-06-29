@@ -18,6 +18,12 @@ sql_has_spatial_index <- function(layer, geom_col, as = NULL) {
 #'
 #' @description
 #' Constructs a SQL `PRAGMA` statement for a given name and optional value.
+#'
+#' @param name The pragma name.
+#' @param value Optional pragma value. When supplied, builds a `PRAGMA name = value` assignment.
+#'
+#' @keywords internal
+#' @noRd
 sql_pragma <- function(name, value = NULL) {
   hold <- glue::glue("PRAGMA {name}")
   if (!is.null(value)) {
@@ -41,8 +47,10 @@ sql_pragma <- function(name, value = NULL) {
 #' @keywords internal
 #'
 #' @examples
+#' \dontrun{
 #' non_conus_state_fips <- c("02", "15", "60", "66", "69", "72", "74", "78")
 #' sql_in(field = "STATEFP", values = non_conus_state_fips, negate = TRUE)
+#' }
 sql_in <- function(field, values, negate = FALSE) {
   check_string(field)
   values <- as.character(values)

@@ -15,6 +15,8 @@
 #' @description
 #' Creates a session-wide, global GDAL Configuration object of class `"gdal_config"`.
 #'
+#' @param ... Configuration options as named `KEY = value` pairs.
+#'
 #' @returns
 #' gdal_config
 #'

@@ -21,10 +21,10 @@ This is used to categorize the options based on their applicability to different
 \item{driver}{The name of the GDAL driver for which the options are being parsed.
 This is used for labeling purposes in the resulting tibble. Defaults to \code{NULL}.}
 
-\item{call}{The calling function, used for error handling and messaging.}
-
-\item{opt_type}{The type of options being parsed, such as "config", "open", or "creation".
+\item{type}{The type of options being parsed, such as "config", "open", or "creation".
 This is used for labeling purposes in the resulting tibble. Defaults to "config".}
+
+\item{call}{The calling function, used for error handling and messaging.}
 }
 \value{
 A tibble with columns for \code{name}, \code{description}, \code{scope}, \code{default}, and \code{values}

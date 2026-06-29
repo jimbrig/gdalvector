@@ -20,7 +20,9 @@ A character string containing the SQL clause.
 Constructs a SQL \code{IN} or \verb{NOT IN} clause for a given field and set of values.
 }
 \examples{
+\dontrun{
 non_conus_state_fips <- c("02", "15", "60", "66", "69", "72", "74", "78")
 sql_in(field = "STATEFP", values = non_conus_state_fips, negate = TRUE)
+}
 }
 \keyword{internal}

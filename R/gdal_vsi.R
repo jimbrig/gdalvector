@@ -132,6 +132,8 @@ vsi_sync <- function(src, dst, ...) {
 #' Strip the Outermost VSI Handler
 #'
 #' @param path Path to strip.
+#' @param recurse Logical; if `TRUE` (default), strips all nested VSI handlers,
+#'   otherwise only the outermost one.
 #'
 #' @return Character vector with the outermost VSI handler removed.
 #' @export
@@ -245,7 +247,6 @@ vsi_zip_curl <- function(url, inner = NULL) {
 vsi_azure <- function(container, blob) {
   check_string(container)
   check_string(blob)
-  check_gdal_azure_config()
   path <- paste0("/vsiaz/", container, "/", blob)
   if (is_zip(blob)) {
     return(vsi_zip(path))

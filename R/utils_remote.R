@@ -254,7 +254,7 @@ local_hash <- function(path, algo = "md5") {
 #' @param url Character string specifying the URL of the remote file.
 #' @param destfile Character string specifying the destination path.
 #' @param timeout Numeric value specifying HTTP request timeout in seconds. Defaults to `600L`.
-#' #' @param max_tries Integer; maximum number of download attempts on failure. Defaults to `3L`.
+#' @param max_tries Integer; maximum number of download attempts on failure. Defaults to `3L`.
 #' @param extract Logical; if `TRUE` and the file is a ZIP, extracts it after download.
 #' @param force Logical; if `TRUE`, always download regardless of cache state.
 #' @param algo Character string specifying hash algorithm ("md5", "sha1", "sha256", "sha512").
@@ -267,6 +267,7 @@ local_hash <- function(path, algo = "md5") {
 #'
 #' @importFrom cli cli_alert_info cli_alert_success cli_alert_warning cli_alert_danger cli_abort
 #' @importFrom httr2 request req_timeout req_perform resp_is_error resp_status
+#' @importFrom utils unzip
 remote_download <- function(
   url,
   destfile,
@@ -320,7 +321,7 @@ remote_download <- function(
   }
   req <- httr2::request(url) |>
     httr2::req_timeout(timeout) |>
-    httr2::req_retry(max_tries = 3L) |>
+    httr2::req_retry(max_tries = max_tries) |>
     httr2::req_progress(type = "down") |>
     httr2::req_options(followlocation = TRUE, maxredirs = 10L)
   resp <- httr2::req_perform(req, path = destfile)

@@ -21,8 +21,9 @@ remote_download(
 
 \item{extract}{Logical; if \code{TRUE} and the file is a ZIP, extracts it after download.}
 
-\item{timeout}{Numeric value specifying HTTP request timeout in seconds. Defaults to \code{600L}.
-#' @param max_tries Integer; maximum number of download attempts on failure. Defaults to \code{3L}.}
+\item{timeout}{Numeric value specifying HTTP request timeout in seconds. Defaults to \code{600L}.}
+
+\item{max_tries}{Integer; maximum number of download attempts on failure. Defaults to \code{3L}.}
 
 \item{force}{Logical; if \code{TRUE}, always download regardless of cache state.}
 

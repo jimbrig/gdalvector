@@ -8,6 +8,9 @@ vsi_strip(path, recurse = TRUE)
 }
 \arguments{
 \item{path}{Path to strip.}
+
+\item{recurse}{Logical; if \code{TRUE} (default), strips all nested VSI handlers,
+otherwise only the outermost one.}
 }
 \value{
 Character vector with the outermost VSI handler removed.
