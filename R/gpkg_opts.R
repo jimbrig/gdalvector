@@ -1,4 +1,3 @@
-
 #  ------------------------------------------------------------------------
 #
 # Title : GeoPackage (GPKG) Options
@@ -35,14 +34,14 @@
 #' @examples
 #' gpkg_config_opts(sqlite_synchronous = "OFF", use_ogr_vfs = TRUE, num_threads = "ALL_CPUS")
 gpkg_config_opts <- function(
-    sqlite_cache = NULL,
-    sqlite_journal = NULL,
-    sqlite_synchronous = NULL,
-    sqlite_pragma = NULL,
-    use_ogr_vfs = NULL,
-    num_threads = NULL,
-    ...,
-    .set_defaults = FALSE
+  sqlite_cache = NULL,
+  sqlite_journal = NULL,
+  sqlite_synchronous = NULL,
+  sqlite_pragma = NULL,
+  use_ogr_vfs = NULL,
+  num_threads = NULL,
+  ...,
+  .set_defaults = FALSE
 ) {
   opts <- .gdal_opts_normalize(c(
     list(
@@ -127,11 +126,11 @@ gpkg_config_opts <- function(
 #' prelude <- gpkg_prelude_pragmas(cache_size = -4000000, temp_store = "MEMORY")
 #' gpkg_open_opts(list_all_tables = FALSE, prelude_statements = prelude)
 gpkg_open_opts <- function(
-    list_all_tables = NULL,
-    prelude_statements = NULL,
-    nolock = NULL,
-    immutable = NULL,
-    .set_defaults = FALSE
+  list_all_tables = NULL,
+  prelude_statements = NULL,
+  nolock = NULL,
+  immutable = NULL,
+  .set_defaults = FALSE
 ) {
   opts <- .gdal_opts_normalize(list(
     LIST_ALL_TABLES = as_gdal_boolean(list_all_tables),
@@ -183,17 +182,17 @@ gpkg_open_opts <- function(
 #' gpkg_creation_opts(geometry_name = "geom", spatial_index = TRUE)
 #' gpkg_creation_opts(VERSION = "1.4", level = "dataset")
 gpkg_creation_opts <- function(
-    fid = NULL,
-    geometry_name = NULL,
-    geometry_nullable = NULL,
-    spatial_index = NULL,
-    identifier = NULL,
-    description = NULL,
-    launder = NULL,
-    overwrite = NULL,
-    ...,
-    level = c("layer", "dataset"),
-    .set_defaults = FALSE
+  fid = NULL,
+  geometry_name = NULL,
+  geometry_nullable = NULL,
+  spatial_index = NULL,
+  identifier = NULL,
+  description = NULL,
+  launder = NULL,
+  overwrite = NULL,
+  ...,
+  level = c("layer", "dataset"),
+  .set_defaults = FALSE
 ) {
   level <- rlang::arg_match(level)
   opts <- .gdal_opts_normalize(c(
@@ -277,4 +276,3 @@ gpkg_prelude_pragmas <- function(cache_size = NULL, temp_store = NULL, mmap_size
   }
   paste(pragmas, collapse = "")
 }
-
