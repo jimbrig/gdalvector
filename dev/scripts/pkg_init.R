@@ -49,6 +49,7 @@ if (FALSE) {
   attachment::att_amend_desc()
   fs::file_create("AGENTS.md")
   fs::file_create("CHANGELOG.md")
+  usethis::use_build_ignore("CHANGELOG.md")
 }
 
 
