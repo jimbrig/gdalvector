@@ -25,7 +25,7 @@ gdalvector v0.0.1 - Modern Package for GDAL Vector Data
 
 > [!NOTE]
 > `gdalvector` is a modern-focused R package for working with cloud native geospatial vector data via bindings to GDAL 
-> from the exceptional `[gdalraster](https://github.com/firelab/gdalraster)` package. This package offers a more focused
+> from the exceptional [gdalraster](https://github.com/firelab/gdalraster) package. This package offers a more focused
 > intent on the vector side of what the underlying GDAL bindings provide and can be thought of as an extension of `gdalraster`
 > that is also orthogonal and focused on vector specific data operations and modern GDAL algorithmic api focused workflows.
 
