@@ -8,6 +8,7 @@
 
 ## Configuration
 
+- **ci:** Standardize and streamline GitHub Actions workflows ([40b431f](https://github.com/jimbrig/gdalvector/commit/40b431fed3b4086752d8d985574a8d11b3f30408))  - (Jimmy Briggs)
 - **dev:** Automate changelog generation and ignore during build ([1f444a4](https://github.com/jimbrig/gdalvector/commit/1f444a424e56ceec0a695d4a6e829bd3d04cc67c))  - (Jimmy Briggs)
 - **dev:** Ensure .gitignore ends with a newline ([dbcd5e0](https://github.com/jimbrig/gdalvector/commit/dbcd5e0790d97962ac9d5430791070990fe8396d))  - (Jimmy Briggs)
 - **vscode:** Configure workspace for R and Quarto formatting ([8cdf74d](https://github.com/jimbrig/gdalvector/commit/8cdf74de8fe78317a4c0f3bb5ef27173266f3b64))  - (Jimmy Briggs)
@@ -25,6 +26,10 @@
 
 - **gdal:** Standardize object formatting and streamline internal utilities ([cdfa33b](https://github.com/jimbrig/gdalvector/commit/cdfa33b5f7cdd629f09d728ea298553b379bab22))  - (Jimmy Briggs)
 - **gdal-options:** Standardize option normalization and boolean coercion ([8c00bf5](https://github.com/jimbrig/gdalvector/commit/8c00bf5716ae2ac473d7abbe7619f391066ba5ff))  - (Jimmy Briggs)
+
+## Styling
+
+- Standardize code formatting and improve readability ([6af5f13](https://github.com/jimbrig/gdalvector/commit/6af5f13f4b32c4366f7186e316a5df561aaf2d92))  - (Jimmy Briggs)
 
 ## Testing
 
