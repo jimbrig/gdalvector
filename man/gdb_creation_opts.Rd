@@ -66,4 +66,13 @@ gdb_creation_opts(geometry_name = "SHAPE", target_arcgis_version = "ALL")
 }
 \seealso{
 \code{\link[=gdb_open_opts]{gdb_open_opts()}}, \code{\link[=gdal_creation_opts]{gdal_creation_opts()}}
+\itemize{
+\item \href{https://gdal.org/en/stable/drivers/vector/openfilegdb.html}{OpenFileGDB GDAL Driver}
+\itemize{
+\item \href{https://gdal.org/en/stable/drivers/vector/openfilegdb.html#open-options}{OpenFileGDB GDAL Open Options}
+\item \href{https://gdal.org/en/stable/drivers/vector/openfilegdb.html#layer-creation-options}{OpenFileGDB GDAL Layer Creation Options}
+\item \href{https://gdal.org/en/stable/drivers/vector/openfilegdb.html#configuration-options}{OpenFileGDB GDAL Configuration Options}
+}
+\item \href{https://desktop.arcgis.com/en/arcmap/latest/manage-data/administer-file-gdbs/file-geodatabases.htm}{ESRI File Geodatabase (.gdb) Format}
+}
 }

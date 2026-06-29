@@ -26,6 +26,9 @@
 #'
 #' @seealso [gdb_open_opts()], [gdb_creation_opts()], [gdal_config_opts()]
 #'
+#' ```{r child = "man/fragments/gdb_links.md"}
+#' ```
+#'
 #' @examples
 #' gdb_config_opts(default_string_width = 1024L, in_memory_spi = TRUE)
 gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, ..., .set_defaults = FALSE) {
@@ -58,6 +61,9 @@ gdb_config_opts <- function(default_string_width = NULL, in_memory_spi = NULL, .
 #' @export
 #'
 #' @seealso [gdb_creation_opts()], [gdal_open_opts()]
+#'
+#' ```{r child = "man/fragments/gdb_links.md"}
+#' ```
 #'
 #' @examples
 #' gdb_open_opts(list_all_tables = TRUE)
@@ -99,6 +105,9 @@ gdb_open_opts <- function(list_all_tables = NULL, .set_defaults = FALSE) {
 #' @export
 #'
 #' @seealso [gdb_open_opts()], [gdal_creation_opts()]
+#'
+#' ```{r child = "man/fragments/gdb_links.md"}
+#' ```
 #'
 #' @examples
 #' gdb_creation_opts(geometry_name = "SHAPE", target_arcgis_version = "ALL")
