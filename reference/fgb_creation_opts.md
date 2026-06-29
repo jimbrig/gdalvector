@@ -13,6 +13,7 @@ fgb_creation_opts(
   temporary_dir = NULL,
   title = NULL,
   description = NULL,
+  ...,
   .set_defaults = FALSE
 )
 ```
@@ -23,19 +24,30 @@ fgb_creation_opts(
 
   Value for `SPATIAL_INDEX`. Logical `TRUE`/`FALSE` (coerced to
   `"YES"`/`"NO"`) controlling whether a packed Hilbert R-tree spatial
-  index is written. GDAL defaults to `"YES"`.
+  index is written. GDAL default `"YES"`.
 
 - temporary_dir:
 
-  Directory for temporary files during write (`TEMPORARY_DIR`).
+  Value for `TEMPORARY_DIR` (path to an existing directory for temporary
+  files; only used when `SPATIAL_INDEX = TRUE`. `"/vsimem/"` may be used
+  for in-memory temporaries).
 
 - title:
 
-  Layer title (`TITLE`).
+  Value for `TITLE` (GDAL \>= 3.9); dataset title (should be relatively
+  short).
 
 - description:
 
-  Layer description (`DESCRIPTION`).
+  Value for `DESCRIPTION` (GDAL \>= 3.9); dataset description (free-form
+  long text).
+
+- ...:
+
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - .set_defaults:
 

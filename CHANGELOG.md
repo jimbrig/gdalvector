@@ -41,6 +41,9 @@
 
 ## Documentation
 
+- **articles:** Remove driver and concept documentation
+  ([1a4330a](https://github.com/jimbrig/gdalvector/commit/1a4330aa0178c87f20e3be7807b291cda2611f98)) -
+  (Jimmy Briggs)
 - Improve link formatting in README
   ([c653244](https://github.com/jimbrig/gdalvector/commit/c6532448e4dbbf4bf5291d39d2b72762ea94ec15)) -
   (Jimmy Briggs)

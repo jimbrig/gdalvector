@@ -50,6 +50,7 @@ configuration options applied to the process (via <code><a href="https://firelab
 <span>  shape_restore_shx <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shape_2gb_limit <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shape_encoding <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  .set_defaults <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -59,20 +60,30 @@ configuration options applied to the process (via <code><a href="https://firelab
 
 
 <dl><dt id="arg-shape-rewind-on-write">shape_rewind_on_write<a class="anchor" aria-label="anchor" href="#arg-shape-rewind-on-write"></a></dt>
-<dd><p>Value for <code>SHAPE_REWIND_ON_WRITE</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>SHAPE_REWIND_ON_WRITE</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); whether
+to correct the winding order of exterior/interior rings on write. Since GDAL 3.7 the default for
+Polygon/MultiPolygon is <code>"NO"</code>.</p></dd>
 
 
 <dt id="arg-shape-restore-shx">shape_restore_shx<a class="anchor" aria-label="anchor" href="#arg-shape-restore-shx"></a></dt>
 <dd><p>Value for <code>SHAPE_RESTORE_SHX</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); restore a
-missing/broken <code>.shx</code> from the <code>.shp</code> on open.</p></dd>
+missing/broken <code>.shx</code> from the <code>.shp</code> on open. GDAL default <code>"NO"</code>.</p></dd>
 
 
 <dt id="arg-shape-gb-limit">shape_2gb_limit<a class="anchor" aria-label="anchor" href="#arg-shape-gb-limit"></a></dt>
-<dd><p>Value for <code>SHAPE_2GB_LIMIT</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>SHAPE_2GB_LIMIT</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); strictly enforce
+the 2 GB <code>.shp</code>/<code>.dbf</code> size limit when updating.</p></dd>
 
 
 <dt id="arg-shape-encoding">shape_encoding<a class="anchor" aria-label="anchor" href="#arg-shape-encoding"></a></dt>
-<dd><p>Value for <code>SHAPE_ENCODING</code> (override DBF encoding; <code>""</code> disables recoding).</p></dd>
+<dd><p>Value for <code>SHAPE_ENCODING</code> (override DBF encoding with any <code>CPLRecode()</code>
+encoding; <code>""</code> disables recoding).</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>

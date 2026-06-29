@@ -11,6 +11,7 @@ gpq_open_opts(
   geom_possible_names = NULL,
   crs = NULL,
   lists_as_string_json = NULL,
+  ...,
   .set_defaults = FALSE
 )
 ```
@@ -19,17 +20,29 @@ gpq_open_opts(
 
 - geom_possible_names:
 
-  Value for `GEOM_POSSIBLE_NAMES` (comma-separated candidate geometry
-  column names).
+  Value for `GEOM_POSSIBLE_NAMES` (GDAL \>= 3.8). Comma-separated list
+  of candidate geometry column names, used only for files without
+  GeoParquet metadata. GDAL default
+  `"geometry,wkb_geometry,wkt_geometry"`.
 
 - crs:
 
-  Value for `CRS` (override CRS for geometry columns, e.g.
-  `"EPSG:4326"`).
+  Value for `CRS` (GDAL \>= 3.8). Set or override the CRS of geometry
+  columns, typically `"AUTH:CODE"` (e.g. `"EPSG:4326"`), or a PROJ/WKT
+  CRS string.
 
 - lists_as_string_json:
 
-  Value for `LISTS_AS_STRING_JSON` (logical -\> `"YES"`/`"NO"`).
+  Value for `LISTS_AS_STRING_JSON` (GDAL \>= 3.12.1; logical -\>
+  `"YES"`/`"NO"`). Report lists of strings/integers/reals as
+  `String(JSON)` fields. GDAL default `"NO"`.
+
+- ...:
+
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - .set_defaults:
 
@@ -67,6 +80,6 @@ object for the `Parquet` driver.
 
 ``` r
 gpq_open_opts(crs = "EPSG:4326")
-#> Error in gdal_vector_driver_opts(driver, type = "open"): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
+#> Error in gpq_open_opts(crs = "EPSG:4326"): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
 #> available options.
 ```

@@ -8,7 +8,7 @@ values are validated against the driver's registered metadata.
 ## Usage
 
 ``` r
-fgb_open_opts(verify_buffers = NULL, .set_defaults = FALSE)
+fgb_open_opts(verify_buffers = NULL, ..., .set_defaults = FALSE)
 ```
 
 ## Arguments
@@ -20,6 +20,13 @@ fgb_open_opts(verify_buffers = NULL, .set_defaults = FALSE)
   on read. `"YES"` (the GDAL default) guards against corrupt data at a
   small performance cost; `"NO"` is faster but unsafe on malformed
   files. `NULL` (default) leaves it unset.
+
+- ...:
+
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - .set_defaults:
 

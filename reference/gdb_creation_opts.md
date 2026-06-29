@@ -31,32 +31,39 @@ gdb_creation_opts(
 
 - fid:
 
-  Name of the OID column (`FID`). GDAL default `"OBJECTID"`.
+  Value for `FID` (name of the OID column). GDAL default `"OBJECTID"`.
 
 - geometry_name:
 
-  Name of the geometry column (`GEOMETRY_NAME`). GDAL default `"SHAPE"`.
+  Value for `GEOMETRY_NAME`. GDAL default `"SHAPE"`.
 
 - geometry_nullable:
 
-  Value for `GEOMETRY_NULLABLE` (logical -\> `"YES"`/`"NO"`).
+  Value for `GEOMETRY_NULLABLE` (logical -\> `"YES"`/`"NO"`). GDAL
+  default `"YES"`.
 
 - configuration_keyword:
 
-  Value for `CONFIGURATION_KEYWORD` (storage configuration).
+  Value for `CONFIGURATION_KEYWORD`. One of `DEFAULTS`/
+  `MAX_FILE_SIZE_4GB`/`MAX_FILE_SIZE_256TB`. GDAL default `"DEFAULTS"`
+  (UTF-8 text, up to 1 TB).
 
 - target_arcgis_version:
 
-  Value for `TARGET_ARCGIS_VERSION`.
+  Value for `TARGET_ARCGIS_VERSION` (GDAL \>= 3.9). One of `ALL`/
+  `ARCGIS_PRO_3_2_OR_LATER` (the latter required to create
+  `Integer64`/`Date`/`Time` fields). GDAL default `"ALL"`.
 
 - create_multipatch:
 
-  Value for `CREATE_MULTIPATCH` (logical -\> `"YES"`/`"NO"`).
+  Value for `CREATE_MULTIPATCH` (logical -\> `"YES"`/`"NO"`); write
+  MultiPolygon layers as MultiPatch.
 
 - create_shape_area_and_length_fields:
 
   Value for `CREATE_SHAPE_AREA_AND_LENGTH_FIELDS` (logical -\>
-  `"YES"`/`"NO"`).
+  `"YES"`/`"NO"`); auto-populated `Shape_Area`/`Shape_Length` fields.
+  GDAL default `"NO"`.
 
 - time_in_utc:
 
@@ -64,15 +71,17 @@ gdb_creation_opts(
 
 - column_types:
 
-  Value for `COLUMN_TYPES` (e.g. `"field=fgdb_type,..."`).
+  Value for `COLUMN_TYPES` (`"field_name=fgdb_field_type,..."`) forcing
+  FileGDB field types.
 
 - feature_dataset:
 
-  Value for `FEATURE_DATASET`.
+  Value for `FEATURE_DATASET` (FeatureDataset folder for the new layer;
+  created if it does not exist).
 
 - layer_alias:
 
-  Value for `LAYER_ALIAS`.
+  Value for `LAYER_ALIAS` (layer-name alias).
 
 - documentation:
 
@@ -80,8 +89,10 @@ gdb_creation_opts(
 
 - ...:
 
-  Additional `NAME = value` layer-creation options (e.g. coordinate-grid
-  options).
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - .set_defaults:
 
@@ -100,6 +111,21 @@ object for the `OpenFileGDB` driver.
 
 [`gdb_open_opts()`](http://docs.jimbrig.com/gdalvector/reference/gdb_open_opts.md),
 [`gdal_creation_opts()`](http://docs.jimbrig.com/gdalvector/reference/gdal_creation_opts.md)
+
+- [OpenFileGDB GDAL
+  Driver](https://gdal.org/en/stable/drivers/vector/openfilegdb.html)
+
+  - [OpenFileGDB GDAL Open
+    Options](https://gdal.org/en/stable/drivers/vector/openfilegdb.html#open-options)
+
+  - [OpenFileGDB GDAL Layer Creation
+    Options](https://gdal.org/en/stable/drivers/vector/openfilegdb.html#layer-creation-options)
+
+  - [OpenFileGDB GDAL Configuration
+    Options](https://gdal.org/en/stable/drivers/vector/openfilegdb.html#configuration-options)
+
+- [ESRI File Geodatabase (.gdb)
+  Format](https://desktop.arcgis.com/en/arcmap/latest/manage-data/administer-file-gdbs/file-geodatabases.htm)
 
 ## Examples
 

@@ -25,6 +25,7 @@ gpq_creation_opts(
   sort_by_bbox = NULL,
   timestamp_with_offset = NULL,
   coordinate_precision = NULL,
+  ...,
   .set_defaults = FALSE
 )
 ```
@@ -33,63 +34,89 @@ gpq_creation_opts(
 
 - compression:
 
-  Value for `COMPRESSION` (e.g. `"ZSTD"`, `"SNAPPY"`).
+  Value for `COMPRESSION`. One of
+  `NONE`/`SNAPPY`/`GZIP`/`BROTLI`/`ZSTD`/ `LZ4_RAW`/`LZ4_HADOOP`
+  (available values depend on how the Parquet library was built). GDAL
+  default `"SNAPPY"` when available, otherwise `NONE`.
 
 - compression_level:
 
-  Value for `COMPRESSION_LEVEL` (codec-dependent integer).
+  Value for `COMPRESSION_LEVEL` (GDAL \>= 3.12). Codec-dependent
+  integer.
 
 - geometry_encoding:
 
-  Value for `GEOMETRY_ENCODING` (e.g. `"WKB"`, `"GEOARROW"`).
+  Value for `GEOMETRY_ENCODING`. One of `WKB`/`WKT`/`GEOARROW`/
+  `GEOARROW_INTERLEAVED`. GDAL default `"WKB"` (recommended for
+  interoperability).
 
 - row_group_size:
 
-  Value for `ROW_GROUP_SIZE` (max rows per group).
+  Value for `ROW_GROUP_SIZE` (maximum rows per group). GDAL default
+  `65536`.
 
 - geometry_name:
 
-  Value for `GEOMETRY_NAME`.
+  Value for `GEOMETRY_NAME`. GDAL default `"geometry"`.
 
 - fid:
 
-  Value for `FID`.
+  Value for `FID` (name of the FID column to create; if unset, no FID
+  column is created).
 
 - polygon_orientation:
 
-  Value for `POLYGON_ORIENTATION`.
+  Value for `POLYGON_ORIENTATION`. One of `COUNTERCLOCKWISE`/
+  `UNMODIFIED`. GDAL default `"COUNTERCLOCKWISE"`.
 
 - edges:
 
-  Value for `EDGES` (`"PLANAR"`/`"SPHERICAL"`).
+  Value for `EDGES`. One of `PLANAR`/`SPHERICAL`. GDAL default
+  `"PLANAR"`.
 
 - creator:
 
-  Value for `CREATOR`.
+  Value for `CREATOR` (name of the creating application).
 
 - write_covering_bbox:
 
-  Value for `WRITE_COVERING_BBOX` (logical -\> `"YES"`/`"NO"`).
+  Value for `WRITE_COVERING_BBOX` (GDAL \>= 3.9). One of
+  `AUTO`/`YES`/`NO` (logical coerced); write per-row
+  `xmin/ymin/xmax/ymax` bounding-box columns for faster spatial
+  filtering. GDAL default `"AUTO"`.
 
 - covering_bbox_name:
 
-  Value for `COVERING_BBOX_NAME`.
+  Value for `COVERING_BBOX_NAME` (GDAL \>= 3.13). Defaults to the
+  geometry column name suffixed with `_bbox`.
 
 - use_parquet_geo_types:
 
-  Value for `USE_PARQUET_GEO_TYPES`.
+  Value for `USE_PARQUET_GEO_TYPES` (GDAL \>= 3.12; requires libarrow
+  \>= 21). One of `YES`/`NO`/`ONLY`. GDAL default `"NO"`.
 
 - sort_by_bbox:
 
-  Value for `SORT_BY_BBOX` (logical -\> `"YES"`/`"NO"`).
+  Value for `SORT_BY_BBOX` (GDAL \>= 3.9; logical -\> `"YES"`/`"NO"`).
+  Spatially order features (via a temporary GeoPackage) for faster
+  spatial filtering. GDAL default `"NO"`.
 
 - timestamp_with_offset:
 
-  Value for `TIMESTAMP_WITH_OFFSET`.
+  Value for `TIMESTAMP_WITH_OFFSET` (GDAL \>= 3.13). One of
+  `AUTO`/`YES`/`NO`. GDAL default `"AUTO"`.
 
 - coordinate_precision:
 
-  Value for `COORDINATE_PRECISION` (only for `GEOMETRY_ENCODING=WKT`).
+  Value for `COORDINATE_PRECISION` (number of decimals for coordinates;
+  only for `GEOMETRY_ENCODING=WKT`).
+
+- ...:
+
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - .set_defaults:
 
@@ -142,6 +169,6 @@ columns enabled, and spatially ordered features:
 
 ``` r
 gpq_creation_opts(compression = "ZSTD", geometry_encoding = "WKB")
-#> Error in gdal_vector_driver_opts(driver, type = "creation", sub_type = sub_type): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
+#> Error in gpq_creation_opts(compression = "ZSTD", geometry_encoding = "WKB"): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
 #> available options.
 ```

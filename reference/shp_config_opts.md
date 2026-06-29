@@ -15,6 +15,7 @@ shp_config_opts(
   shape_restore_shx = NULL,
   shape_2gb_limit = NULL,
   shape_encoding = NULL,
+  ...,
   .set_defaults = FALSE
 )
 ```
@@ -23,21 +24,31 @@ shp_config_opts(
 
 - shape_rewind_on_write:
 
-  Value for `SHAPE_REWIND_ON_WRITE` (logical -\> `"YES"`/`"NO"`).
+  Value for `SHAPE_REWIND_ON_WRITE` (logical -\> `"YES"`/`"NO"`);
+  whether to correct the winding order of exterior/interior rings on
+  write. Since GDAL 3.7 the default for Polygon/MultiPolygon is `"NO"`.
 
 - shape_restore_shx:
 
   Value for `SHAPE_RESTORE_SHX` (logical -\> `"YES"`/`"NO"`); restore a
-  missing/broken `.shx` from the `.shp` on open.
+  missing/broken `.shx` from the `.shp` on open. GDAL default `"NO"`.
 
 - shape_2gb_limit:
 
-  Value for `SHAPE_2GB_LIMIT` (logical -\> `"YES"`/`"NO"`).
+  Value for `SHAPE_2GB_LIMIT` (logical -\> `"YES"`/`"NO"`); strictly
+  enforce the 2 GB `.shp`/`.dbf` size limit when updating.
 
 - shape_encoding:
 
-  Value for `SHAPE_ENCODING` (override DBF encoding; `""` disables
-  recoding).
+  Value for `SHAPE_ENCODING` (override DBF encoding with any
+  `CPLRecode()` encoding; `""` disables recoding).
+
+- ...:
+
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - .set_defaults:
 

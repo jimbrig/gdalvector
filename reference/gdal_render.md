@@ -37,5 +37,6 @@ no options.
 
 ``` r
 gdal_render(gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet"), shell = "bash")
-#> [1] "--output-format 'Parquet' \\\n--layer-creation-option 'COMPRESSION=ZSTD'"
+#> Error in gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet"): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
+#> available options.
 ```

@@ -14,6 +14,7 @@ shp_open_opts(
   adjust_geom_type = NULL,
   auto_repack = NULL,
   dbf_eof_char = NULL,
+  ...,
   .set_defaults = FALSE
 )
 ```
@@ -22,27 +23,42 @@ shp_open_opts(
 
 - encoding:
 
-  Value for `ENCODING` (override DBF encoding).
+  Value for `ENCODING` (override DBF encoding with any `CPLRecode()`
+  encoding; `""` avoids recoding).
 
 - dbf_date_last_update:
 
-  Value for `DBF_DATE_LAST_UPDATE` (`YYYY-MM-DD`).
+  Value for `DBF_DATE_LAST_UPDATE` (`YYYY-MM-DD`); modification date
+  written in the DBF header. Defaults to the current date.
 
 - adjust_type:
 
-  Value for `ADJUST_TYPE` (logical -\> `"YES"`/`"NO"`).
+  Value for `ADJUST_TYPE` (logical -\> `"YES"`/`"NO"`); read the whole
+  `.dbf` to refine ambiguous `Real`/`Integer`/`Integer64` field types.
+  GDAL default `"NO"`.
 
 - adjust_geom_type:
 
-  Value for `ADJUST_GEOM_TYPE` (e.g. `"FIRST_SHAPE"`).
+  Value for `ADJUST_GEOM_TYPE`. One of `NO`/`FIRST_SHAPE`/`ALL_SHAPES`;
+  how the layer geometry type (notably the `M` dimension) is determined.
+  GDAL default `"FIRST_SHAPE"`.
 
 - auto_repack:
 
-  Value for `AUTO_REPACK` (logical -\> `"YES"`/`"NO"`).
+  Value for `AUTO_REPACK` (logical -\> `"YES"`/`"NO"`); auto-repack the
+  shapefile when needed. GDAL default `"YES"`.
 
 - dbf_eof_char:
 
-  Value for `DBF_EOF_CHAR` (logical -\> `"YES"`/`"NO"`).
+  Value for `DBF_EOF_CHAR` (logical -\> `"YES"`/`"NO"`); write the
+  `0x1A` end-of-file character in the `.dbf`. GDAL default `"YES"`.
+
+- ...:
+
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - .set_defaults:
 

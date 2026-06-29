@@ -43,6 +43,7 @@
 <span>  geom_possible_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  crs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  lists_as_string_json <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  .set_defaults <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -52,16 +53,26 @@
 
 
 <dl><dt id="arg-geom-possible-names">geom_possible_names<a class="anchor" aria-label="anchor" href="#arg-geom-possible-names"></a></dt>
-<dd><p>Value for <code>GEOM_POSSIBLE_NAMES</code> (comma-separated candidate geometry
-column names).</p></dd>
+<dd><p>Value for <code>GEOM_POSSIBLE_NAMES</code> (GDAL &gt;= 3.8). Comma-separated list of
+candidate geometry column names, used only for files without GeoParquet metadata. GDAL default
+<code>"geometry,wkb_geometry,wkt_geometry"</code>.</p></dd>
 
 
 <dt id="arg-crs">crs<a class="anchor" aria-label="anchor" href="#arg-crs"></a></dt>
-<dd><p>Value for <code>CRS</code> (override CRS for geometry columns, e.g. <code>"EPSG:4326"</code>).</p></dd>
+<dd><p>Value for <code>CRS</code> (GDAL &gt;= 3.8). Set or override the CRS of geometry columns, typically
+<code>"AUTH:CODE"</code> (e.g. <code>"EPSG:4326"</code>), or a PROJ/WKT CRS string.</p></dd>
 
 
 <dt id="arg-lists-as-string-json">lists_as_string_json<a class="anchor" aria-label="anchor" href="#arg-lists-as-string-json"></a></dt>
-<dd><p>Value for <code>LISTS_AS_STRING_JSON</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>LISTS_AS_STRING_JSON</code> (GDAL &gt;= 3.12.1; logical -&gt;
+<code>"YES"</code>/<code>"NO"</code>). Report lists of strings/integers/reals as <code>String(JSON)</code> fields. GDAL default
+<code>"NO"</code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>
@@ -87,7 +98,7 @@ user-supplied values always take precedence. Defaults to <code>FALSE</code>.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">gpq_open_opts</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gdal_vector_driver_opts(driver, type = "open"):</span> `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gpq_open_opts(crs = "EPSG:4326"):</span> `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> available options.</span>
 </code></pre></div>
     </div>

@@ -16,6 +16,7 @@ shp_creation_opts(
   auto_repack = NULL,
   dbf_date_last_update = NULL,
   dbf_eof_char = NULL,
+  ...,
   .set_defaults = FALSE
 )
 ```
@@ -24,37 +25,51 @@ shp_creation_opts(
 
 - spatial_index:
 
-  Value for `SPATIAL_INDEX` (logical -\> `"YES"`/`"NO"`).
+  Value for `SPATIAL_INDEX` (logical -\> `"YES"`/`"NO"`); create a
+  `.qix` spatial index. GDAL default `"NO"`.
 
 - encoding:
 
-  Value for `ENCODING` (DBF encoding).
+  Value for `ENCODING` (DBF encoding written to the `.cpg`/header). GDAL
+  default `"LDID/87"`.
 
 - resize:
 
   Value for `RESIZE` (logical -\> `"YES"`/`"NO"`); resize fields to
-  optimal size.
+  their optimal size. GDAL default `"NO"`.
 
 - shpt:
 
-  Value for `SHPT` (shape type, e.g. `"POLYGON"`).
+  Value for `SHPT` (shape type override): one of
+  `NULL`/`POINT`/`ARC`/`POLYGON`/ `MULTIPOINT` (2D), the `*Z`/`*M`/`*ZM`
+  measured/3D variants, or `MULTIPATCH`.
 
 - two_gb_limit:
 
-  Value for `2GB_LIMIT` (logical -\> `"YES"`/`"NO"`); restrict
-  `.shp`/`.dbf` to 2 GB.
+  Value for `2GB_LIMIT` (logical -\> `"YES"`/`"NO"`); enforce the 2 GB
+  `.shp`/`.dbf` size limit. GDAL default `"NO"`.
 
 - auto_repack:
 
-  Value for `AUTO_REPACK` (logical -\> `"YES"`/`"NO"`).
+  Value for `AUTO_REPACK` (logical -\> `"YES"`/`"NO"`); auto-repack when
+  needed. GDAL default `"YES"`.
 
 - dbf_date_last_update:
 
-  Value for `DBF_DATE_LAST_UPDATE` (`YYYY-MM-DD`).
+  Value for `DBF_DATE_LAST_UPDATE` (`YYYY-MM-DD`); modification date
+  written in the DBF header. Defaults to the current date.
 
 - dbf_eof_char:
 
-  Value for `DBF_EOF_CHAR` (logical -\> `"YES"`/`"NO"`).
+  Value for `DBF_EOF_CHAR` (logical -\> `"YES"`/`"NO"`); write the
+  `0x1A` end-of-file character in the `.dbf`. GDAL default `"YES"`.
+
+- ...:
+
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - .set_defaults:
 

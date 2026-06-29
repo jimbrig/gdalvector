@@ -92,20 +92,23 @@ with <code>level = "dataset"</code>.</p>
 
 
 <dt id="arg-launder">launder<a class="anchor" aria-label="anchor" href="#arg-launder"></a></dt>
-<dd><p>Value for <code>LAUNDER</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>LAUNDER</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>). GDAL default <code>"NO"</code>.</p></dd>
 
 
 <dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>
-<dd><p>Value for <code>OVERWRITE</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>OVERWRITE</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>). GDAL default <code>"NO"</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional <code>NAME = value</code> creation options (dataset-level options when
-<code>level = "dataset"</code>).</p></dd>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg-level">level<a class="anchor" aria-label="anchor" href="#arg-level"></a></dt>
-<dd><p>Creation-option level, <code>"layer"</code> (default) or <code>"dataset"</code>.</p></dd>
+<dd><p>Creation-option level, <code>"layer"</code> (default, <code>--lco</code>) or <code>"dataset"</code> (<code>--co</code>).
+Dataset-level options (e.g. <code>VERSION</code>, <code>METADATA_TABLES</code>, <code>ADD_GPKG_OGR_CONTENTS</code>) are supplied
+through <code>...</code> with <code>level = "dataset"</code>.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>

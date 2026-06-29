@@ -72,7 +72,8 @@ rendered; the base <code>gdal</code> invocation and datasets are not included.</
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">gdal_render</span><span class="op">(</span><span class="fu"><a href="gdal_creation_opts.html">gdal_creation_opts</a></span><span class="op">(</span>COMPRESSION <span class="op">=</span> <span class="st">"ZSTD"</span>, driver <span class="op">=</span> <span class="st">"Parquet"</span><span class="op">)</span>, shell <span class="op">=</span> <span class="st">"bash"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "--output-format 'Parquet' \\\n--layer-creation-option 'COMPRESSION=ZSTD'"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet"):</span> `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> available options.</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

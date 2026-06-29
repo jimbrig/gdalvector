@@ -54,20 +54,26 @@ gpkg_creation_opts(
 
 - launder:
 
-  Value for `LAUNDER` (logical -\> `"YES"`/`"NO"`).
+  Value for `LAUNDER` (logical -\> `"YES"`/`"NO"`). GDAL default `"NO"`.
 
 - overwrite:
 
-  Value for `OVERWRITE` (logical -\> `"YES"`/`"NO"`).
+  Value for `OVERWRITE` (logical -\> `"YES"`/`"NO"`). GDAL default
+  `"NO"`.
 
 - ...:
 
-  Additional `NAME = value` creation options (dataset-level options when
-  `level = "dataset"`).
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - level:
 
-  Creation-option level, `"layer"` (default) or `"dataset"`.
+  Creation-option level, `"layer"` (default, `--lco`) or `"dataset"`
+  (`--co`). Dataset-level options (e.g. `VERSION`, `METADATA_TABLES`,
+  `ADD_GPKG_OGR_CONTENTS`) are supplied through `...` with
+  `level = "dataset"`.
 
 - .set_defaults:
 

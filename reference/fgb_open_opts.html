@@ -42,7 +42,7 @@ emitted; values are validated against the driver's registered metadata.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fgb_open_opts</span><span class="op">(</span>verify_buffers <span class="op">=</span> <span class="cn">NULL</span>, .set_defaults <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fgb_open_opts</span><span class="op">(</span>verify_buffers <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, .set_defaults <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -54,6 +54,12 @@ emitted; values are validated against the driver's registered metadata.</p>
 <code>"NO"</code>) controlling whether flatbuffer integrity is verified on read. <code>"YES"</code> (the GDAL default)
 guards against corrupt data at a small performance cost; <code>"NO"</code> is faster but unsafe on
 malformed files. <code>NULL</code> (default) leaves it unset.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>

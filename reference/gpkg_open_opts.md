@@ -12,6 +12,7 @@ gpkg_open_opts(
   prelude_statements = NULL,
   nolock = NULL,
   immutable = NULL,
+  ...,
   .set_defaults = FALSE
 )
 ```
@@ -39,6 +40,13 @@ gpkg_open_opts(
 
   Value for `IMMUTABLE` (logical -\> `"YES"`/`"NO"`); declare the
   database immutable. Only when the file genuinely cannot change.
+
+- ...:
+
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - .set_defaults:
 

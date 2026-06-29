@@ -65,7 +65,9 @@ string fields created when the requested width is the unspecified value <code>0<
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional <code>NAME = value</code> configuration options passed through after coercion.</p></dd>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>
@@ -80,7 +82,12 @@ user-supplied values always take precedence. Defaults to <code>FALSE</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="gdb_open_opts.html">gdb_open_opts()</a></code>, <code><a href="gdb_creation_opts.html">gdb_creation_opts()</a></code>, <code><a href="gdal_config_opts.html">gdal_config_opts()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="gdb_open_opts.html">gdb_open_opts()</a></code>, <code><a href="gdb_creation_opts.html">gdb_creation_opts()</a></code>, <code><a href="gdal_config_opts.html">gdal_config_opts()</a></code></p><ul><li><p><a href="https://gdal.org/en/stable/drivers/vector/openfilegdb.html" class="external-link">OpenFileGDB GDAL Driver</a></p><ul><li><p><a href="https://gdal.org/en/stable/drivers/vector/openfilegdb.html#open-options" class="external-link">OpenFileGDB GDAL Open Options</a></p></li>
+<li><p><a href="https://gdal.org/en/stable/drivers/vector/openfilegdb.html#layer-creation-options" class="external-link">OpenFileGDB GDAL Layer Creation Options</a></p></li>
+<li><p><a href="https://gdal.org/en/stable/drivers/vector/openfilegdb.html#configuration-options" class="external-link">OpenFileGDB GDAL Configuration Options</a></p></li>
+</ul></li>
+<li><p><a href="https://desktop.arcgis.com/en/arcmap/latest/manage-data/administer-file-gdbs/file-geodatabases.htm" class="external-link">ESRI File Geodatabase (.gdb) Format</a></p></li>
+</ul></div>
     </div>
 
     <div class="section level2">

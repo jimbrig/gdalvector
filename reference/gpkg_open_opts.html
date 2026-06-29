@@ -44,6 +44,7 @@
 <span>  prelude_statements <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nolock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  immutable <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  .set_defaults <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -70,6 +71,12 @@ locking; only safe for read-only access to media nothing else can write).</p></d
 <dt id="arg-immutable">immutable<a class="anchor" aria-label="anchor" href="#arg-immutable"></a></dt>
 <dd><p>Value for <code>IMMUTABLE</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); declare the database
 immutable. Only when the file genuinely cannot change.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>

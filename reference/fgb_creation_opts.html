@@ -47,6 +47,7 @@ you supply are emitted; values are validated against the driver's registered met
 <span>  temporary_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  description <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  .set_defaults <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -57,19 +58,26 @@ you supply are emitted; values are validated against the driver's registered met
 
 <dl><dt id="arg-spatial-index">spatial_index<a class="anchor" aria-label="anchor" href="#arg-spatial-index"></a></dt>
 <dd><p>Value for <code>SPATIAL_INDEX</code>. Logical <code>TRUE</code>/<code>FALSE</code> (coerced to <code>"YES"</code>/<code>"NO"</code>)
-controlling whether a packed Hilbert R-tree spatial index is written. GDAL defaults to <code>"YES"</code>.</p></dd>
+controlling whether a packed Hilbert R-tree spatial index is written. GDAL default <code>"YES"</code>.</p></dd>
 
 
 <dt id="arg-temporary-dir">temporary_dir<a class="anchor" aria-label="anchor" href="#arg-temporary-dir"></a></dt>
-<dd><p>Directory for temporary files during write (<code>TEMPORARY_DIR</code>).</p></dd>
+<dd><p>Value for <code>TEMPORARY_DIR</code> (path to an existing directory for temporary files;
+only used when <code>SPATIAL_INDEX = TRUE</code>. <code>"/vsimem/"</code> may be used for in-memory temporaries).</p></dd>
 
 
 <dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
-<dd><p>Layer title (<code>TITLE</code>).</p></dd>
+<dd><p>Value for <code>TITLE</code> (GDAL &gt;= 3.9); dataset title (should be relatively short).</p></dd>
 
 
 <dt id="arg-description">description<a class="anchor" aria-label="anchor" href="#arg-description"></a></dt>
-<dd><p>Layer description (<code>DESCRIPTION</code>).</p></dd>
+<dd><p>Value for <code>DESCRIPTION</code> (GDAL &gt;= 3.9); dataset description (free-form long text).</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>

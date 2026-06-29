@@ -45,8 +45,6 @@ A `gdal_creation_opts()` object.
 
 ``` r
 gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet")
-#> <gdal_creation_opts/gdal_opts>
-#> ℹ Driver: Parquet
-#> ℹ Creation Options: COMPRESSION=ZSTD
-#> ℹ Command Line: --output-format 'Parquet' --layer-creation-option 'COMPRESSION=ZSTD'
+#> Error in gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet"): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
+#> available options.
 ```

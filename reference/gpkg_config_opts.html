@@ -79,11 +79,14 @@ applied to the GDAL process.</p>
 
 
 <dt id="arg-num-threads">num_threads<a class="anchor" aria-label="anchor" href="#arg-num-threads"></a></dt>
-<dd><p>Value for <code>OGR_GPKG_NUM_THREADS</code> (integer or <code>"ALL_CPUS"</code>).</p></dd>
+<dd><p>Value for <code>OGR_GPKG_NUM_THREADS</code> (GDAL &gt;= 3.8.3); an integer or <code>"ALL_CPUS"</code>.
+Threads used when reading tables through the ArrowArray interface. GDAL default is <code>min(4, nCPU)</code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional <code>NAME = value</code> configuration options passed through after coercion.</p></dd>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>

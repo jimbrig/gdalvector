@@ -68,32 +68,36 @@ arguments cover the common layer options; advanced coordinate-precision grid opt
 
 
 <dl><dt id="arg-fid">fid<a class="anchor" aria-label="anchor" href="#arg-fid"></a></dt>
-<dd><p>Name of the OID column (<code>FID</code>). GDAL default <code>"OBJECTID"</code>.</p></dd>
+<dd><p>Value for <code>FID</code> (name of the OID column). GDAL default <code>"OBJECTID"</code>.</p></dd>
 
 
 <dt id="arg-geometry-name">geometry_name<a class="anchor" aria-label="anchor" href="#arg-geometry-name"></a></dt>
-<dd><p>Name of the geometry column (<code>GEOMETRY_NAME</code>). GDAL default <code>"SHAPE"</code>.</p></dd>
+<dd><p>Value for <code>GEOMETRY_NAME</code>. GDAL default <code>"SHAPE"</code>.</p></dd>
 
 
 <dt id="arg-geometry-nullable">geometry_nullable<a class="anchor" aria-label="anchor" href="#arg-geometry-nullable"></a></dt>
-<dd><p>Value for <code>GEOMETRY_NULLABLE</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>GEOMETRY_NULLABLE</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>). GDAL default <code>"YES"</code>.</p></dd>
 
 
 <dt id="arg-configuration-keyword">configuration_keyword<a class="anchor" aria-label="anchor" href="#arg-configuration-keyword"></a></dt>
-<dd><p>Value for <code>CONFIGURATION_KEYWORD</code> (storage configuration).</p></dd>
+<dd><p>Value for <code>CONFIGURATION_KEYWORD</code>. One of <code>DEFAULTS</code>/
+<code>MAX_FILE_SIZE_4GB</code>/<code>MAX_FILE_SIZE_256TB</code>. GDAL default <code>"DEFAULTS"</code> (UTF-8 text, up to 1 TB).</p></dd>
 
 
 <dt id="arg-target-arcgis-version">target_arcgis_version<a class="anchor" aria-label="anchor" href="#arg-target-arcgis-version"></a></dt>
-<dd><p>Value for <code>TARGET_ARCGIS_VERSION</code>.</p></dd>
+<dd><p>Value for <code>TARGET_ARCGIS_VERSION</code> (GDAL &gt;= 3.9). One of <code>ALL</code>/
+<code>ARCGIS_PRO_3_2_OR_LATER</code> (the latter required to create <code>Integer64</code>/<code>Date</code>/<code>Time</code> fields). GDAL
+default <code>"ALL"</code>.</p></dd>
 
 
 <dt id="arg-create-multipatch">create_multipatch<a class="anchor" aria-label="anchor" href="#arg-create-multipatch"></a></dt>
-<dd><p>Value for <code>CREATE_MULTIPATCH</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>CREATE_MULTIPATCH</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); write
+MultiPolygon layers as MultiPatch.</p></dd>
 
 
 <dt id="arg-create-shape-area-and-length-fields">create_shape_area_and_length_fields<a class="anchor" aria-label="anchor" href="#arg-create-shape-area-and-length-fields"></a></dt>
 <dd><p>Value for <code>CREATE_SHAPE_AREA_AND_LENGTH_FIELDS</code>
-(logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+(logical -&gt; <code>"YES"</code>/<code>"NO"</code>); auto-populated <code>Shape_Area</code>/<code>Shape_Length</code> fields. GDAL default <code>"NO"</code>.</p></dd>
 
 
 <dt id="arg-time-in-utc">time_in_utc<a class="anchor" aria-label="anchor" href="#arg-time-in-utc"></a></dt>
@@ -101,15 +105,17 @@ arguments cover the common layer options; advanced coordinate-precision grid opt
 
 
 <dt id="arg-column-types">column_types<a class="anchor" aria-label="anchor" href="#arg-column-types"></a></dt>
-<dd><p>Value for <code>COLUMN_TYPES</code> (e.g. <code>"field=fgdb_type,..."</code>).</p></dd>
+<dd><p>Value for <code>COLUMN_TYPES</code> (<code>"field_name=fgdb_field_type,..."</code>) forcing FileGDB
+field types.</p></dd>
 
 
 <dt id="arg-feature-dataset">feature_dataset<a class="anchor" aria-label="anchor" href="#arg-feature-dataset"></a></dt>
-<dd><p>Value for <code>FEATURE_DATASET</code>.</p></dd>
+<dd><p>Value for <code>FEATURE_DATASET</code> (FeatureDataset folder for the new layer;
+created if it does not exist).</p></dd>
 
 
 <dt id="arg-layer-alias">layer_alias<a class="anchor" aria-label="anchor" href="#arg-layer-alias"></a></dt>
-<dd><p>Value for <code>LAYER_ALIAS</code>.</p></dd>
+<dd><p>Value for <code>LAYER_ALIAS</code> (layer-name alias).</p></dd>
 
 
 <dt id="arg-documentation">documentation<a class="anchor" aria-label="anchor" href="#arg-documentation"></a></dt>
@@ -117,7 +123,9 @@ arguments cover the common layer options; advanced coordinate-precision grid opt
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional <code>NAME = value</code> layer-creation options (e.g. coordinate-grid options).</p></dd>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>
@@ -132,7 +140,12 @@ user-supplied values always take precedence. Defaults to <code>FALSE</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="gdb_open_opts.html">gdb_open_opts()</a></code>, <code><a href="gdal_creation_opts.html">gdal_creation_opts()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="gdb_open_opts.html">gdb_open_opts()</a></code>, <code><a href="gdal_creation_opts.html">gdal_creation_opts()</a></code></p><ul><li><p><a href="https://gdal.org/en/stable/drivers/vector/openfilegdb.html" class="external-link">OpenFileGDB GDAL Driver</a></p><ul><li><p><a href="https://gdal.org/en/stable/drivers/vector/openfilegdb.html#open-options" class="external-link">OpenFileGDB GDAL Open Options</a></p></li>
+<li><p><a href="https://gdal.org/en/stable/drivers/vector/openfilegdb.html#layer-creation-options" class="external-link">OpenFileGDB GDAL Layer Creation Options</a></p></li>
+<li><p><a href="https://gdal.org/en/stable/drivers/vector/openfilegdb.html#configuration-options" class="external-link">OpenFileGDB GDAL Configuration Options</a></p></li>
+</ul></li>
+<li><p><a href="https://desktop.arcgis.com/en/arcmap/latest/manage-data/administer-file-gdbs/file-geodatabases.htm" class="external-link">ESRI File Geodatabase (.gdb) Format</a></p></li>
+</ul></div>
     </div>
 
     <div class="section level2">

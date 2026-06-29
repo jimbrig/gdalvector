@@ -58,6 +58,7 @@ options you supply are emitted; enumerated values are validated against the driv
 <span>  sort_by_bbox <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  timestamp_with_offset <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  coordinate_precision <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  .set_defaults <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -67,63 +68,80 @@ options you supply are emitted; enumerated values are validated against the driv
 
 
 <dl><dt id="arg-compression">compression<a class="anchor" aria-label="anchor" href="#arg-compression"></a></dt>
-<dd><p>Value for <code>COMPRESSION</code> (e.g. <code>"ZSTD"</code>, <code>"SNAPPY"</code>).</p></dd>
+<dd><p>Value for <code>COMPRESSION</code>. One of <code>NONE</code>/<code>SNAPPY</code>/<code>GZIP</code>/<code>BROTLI</code>/<code>ZSTD</code>/
+<code>LZ4_RAW</code>/<code>LZ4_HADOOP</code> (available values depend on how the Parquet library was built). GDAL
+default <code>"SNAPPY"</code> when available, otherwise <code>NONE</code>.</p></dd>
 
 
 <dt id="arg-compression-level">compression_level<a class="anchor" aria-label="anchor" href="#arg-compression-level"></a></dt>
-<dd><p>Value for <code>COMPRESSION_LEVEL</code> (codec-dependent integer).</p></dd>
+<dd><p>Value for <code>COMPRESSION_LEVEL</code> (GDAL &gt;= 3.12). Codec-dependent integer.</p></dd>
 
 
 <dt id="arg-geometry-encoding">geometry_encoding<a class="anchor" aria-label="anchor" href="#arg-geometry-encoding"></a></dt>
-<dd><p>Value for <code>GEOMETRY_ENCODING</code> (e.g. <code>"WKB"</code>, <code>"GEOARROW"</code>).</p></dd>
+<dd><p>Value for <code>GEOMETRY_ENCODING</code>. One of <code>WKB</code>/<code>WKT</code>/<code>GEOARROW</code>/
+<code>GEOARROW_INTERLEAVED</code>. GDAL default <code>"WKB"</code> (recommended for interoperability).</p></dd>
 
 
 <dt id="arg-row-group-size">row_group_size<a class="anchor" aria-label="anchor" href="#arg-row-group-size"></a></dt>
-<dd><p>Value for <code>ROW_GROUP_SIZE</code> (max rows per group).</p></dd>
+<dd><p>Value for <code>ROW_GROUP_SIZE</code> (maximum rows per group). GDAL default <code>65536</code>.</p></dd>
 
 
 <dt id="arg-geometry-name">geometry_name<a class="anchor" aria-label="anchor" href="#arg-geometry-name"></a></dt>
-<dd><p>Value for <code>GEOMETRY_NAME</code>.</p></dd>
+<dd><p>Value for <code>GEOMETRY_NAME</code>. GDAL default <code>"geometry"</code>.</p></dd>
 
 
 <dt id="arg-fid">fid<a class="anchor" aria-label="anchor" href="#arg-fid"></a></dt>
-<dd><p>Value for <code>FID</code>.</p></dd>
+<dd><p>Value for <code>FID</code> (name of the FID column to create; if unset, no FID column is created).</p></dd>
 
 
 <dt id="arg-polygon-orientation">polygon_orientation<a class="anchor" aria-label="anchor" href="#arg-polygon-orientation"></a></dt>
-<dd><p>Value for <code>POLYGON_ORIENTATION</code>.</p></dd>
+<dd><p>Value for <code>POLYGON_ORIENTATION</code>. One of <code>COUNTERCLOCKWISE</code>/
+<code>UNMODIFIED</code>. GDAL default <code>"COUNTERCLOCKWISE"</code>.</p></dd>
 
 
 <dt id="arg-edges">edges<a class="anchor" aria-label="anchor" href="#arg-edges"></a></dt>
-<dd><p>Value for <code>EDGES</code> (<code>"PLANAR"</code>/<code>"SPHERICAL"</code>).</p></dd>
+<dd><p>Value for <code>EDGES</code>. One of <code>PLANAR</code>/<code>SPHERICAL</code>. GDAL default <code>"PLANAR"</code>.</p></dd>
 
 
 <dt id="arg-creator">creator<a class="anchor" aria-label="anchor" href="#arg-creator"></a></dt>
-<dd><p>Value for <code>CREATOR</code>.</p></dd>
+<dd><p>Value for <code>CREATOR</code> (name of the creating application).</p></dd>
 
 
 <dt id="arg-write-covering-bbox">write_covering_bbox<a class="anchor" aria-label="anchor" href="#arg-write-covering-bbox"></a></dt>
-<dd><p>Value for <code>WRITE_COVERING_BBOX</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>WRITE_COVERING_BBOX</code> (GDAL &gt;= 3.9). One of <code>AUTO</code>/<code>YES</code>/<code>NO</code>
+(logical coerced); write per-row <code>xmin/ymin/xmax/ymax</code> bounding-box columns for faster spatial
+filtering. GDAL default <code>"AUTO"</code>.</p></dd>
 
 
 <dt id="arg-covering-bbox-name">covering_bbox_name<a class="anchor" aria-label="anchor" href="#arg-covering-bbox-name"></a></dt>
-<dd><p>Value for <code>COVERING_BBOX_NAME</code>.</p></dd>
+<dd><p>Value for <code>COVERING_BBOX_NAME</code> (GDAL &gt;= 3.13). Defaults to the geometry
+column name suffixed with <code>_bbox</code>.</p></dd>
 
 
 <dt id="arg-use-parquet-geo-types">use_parquet_geo_types<a class="anchor" aria-label="anchor" href="#arg-use-parquet-geo-types"></a></dt>
-<dd><p>Value for <code>USE_PARQUET_GEO_TYPES</code>.</p></dd>
+<dd><p>Value for <code>USE_PARQUET_GEO_TYPES</code> (GDAL &gt;= 3.12; requires
+libarrow &gt;= 21). One of <code>YES</code>/<code>NO</code>/<code>ONLY</code>. GDAL default <code>"NO"</code>.</p></dd>
 
 
 <dt id="arg-sort-by-bbox">sort_by_bbox<a class="anchor" aria-label="anchor" href="#arg-sort-by-bbox"></a></dt>
-<dd><p>Value for <code>SORT_BY_BBOX</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>SORT_BY_BBOX</code> (GDAL &gt;= 3.9; logical -&gt; <code>"YES"</code>/<code>"NO"</code>). Spatially
+order features (via a temporary GeoPackage) for faster spatial filtering. GDAL default <code>"NO"</code>.</p></dd>
 
 
 <dt id="arg-timestamp-with-offset">timestamp_with_offset<a class="anchor" aria-label="anchor" href="#arg-timestamp-with-offset"></a></dt>
-<dd><p>Value for <code>TIMESTAMP_WITH_OFFSET</code>.</p></dd>
+<dd><p>Value for <code>TIMESTAMP_WITH_OFFSET</code> (GDAL &gt;= 3.13). One of
+<code>AUTO</code>/<code>YES</code>/<code>NO</code>. GDAL default <code>"AUTO"</code>.</p></dd>
 
 
 <dt id="arg-coordinate-precision">coordinate_precision<a class="anchor" aria-label="anchor" href="#arg-coordinate-precision"></a></dt>
-<dd><p>Value for <code>COORDINATE_PRECISION</code> (only for <code>GEOMETRY_ENCODING=WKT</code>).</p></dd>
+<dd><p>Value for <code>COORDINATE_PRECISION</code> (number of decimals for coordinates;
+only for <code>GEOMETRY_ENCODING=WKT</code>).</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>
@@ -164,7 +182,7 @@ bounding-box covering columns enabled, and spatially ordered features:</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">gpq_creation_opts</span><span class="op">(</span>compression <span class="op">=</span> <span class="st">"ZSTD"</span>, geometry_encoding <span class="op">=</span> <span class="st">"WKB"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gdal_vector_driver_opts(driver, type = "creation", sub_type = sub_type):</span> `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gpq_creation_opts(compression = "ZSTD", geometry_encoding = "WKB"):</span> `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> available options.</span>
 </code></pre></div>
     </div>

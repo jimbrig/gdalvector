@@ -50,6 +50,12 @@ Common, shared parameters that can be inherited by other functions in the packag
 documented GDAL metadata defaults (via the relevant <code>gdal_vector_driver_*_opts_defaults()</code>);
 user-supplied values always take precedence. Defaults to <code>FALSE</code>.</p></dd>
 
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
+
 </dl></div>
 
   </main></div>

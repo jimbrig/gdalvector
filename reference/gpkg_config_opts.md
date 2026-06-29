@@ -44,12 +44,16 @@ gpkg_config_opts(
 
 - num_threads:
 
-  Value for `OGR_GPKG_NUM_THREADS` (integer or `"ALL_CPUS"`).
+  Value for `OGR_GPKG_NUM_THREADS` (GDAL \>= 3.8.3); an integer or
+  `"ALL_CPUS"`. Threads used when reading tables through the ArrowArray
+  interface. GDAL default is `min(4, nCPU)`.
 
 - ...:
 
-  Additional `NAME = value` configuration options passed through after
-  coercion.
+  Additional `NAME = value` options passed through verbatim alongside
+  the typed arguments. They are coerced and validated against the driver
+  metadata in the same way, and take precedence over a typed argument
+  that sets the same option.
 
 - .set_defaults:
 

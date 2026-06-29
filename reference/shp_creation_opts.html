@@ -48,6 +48,7 @@
 <span>  auto_repack <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dbf_date_last_update <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dbf_eof_char <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  .set_defaults <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -57,35 +58,49 @@
 
 
 <dl><dt id="arg-spatial-index">spatial_index<a class="anchor" aria-label="anchor" href="#arg-spatial-index"></a></dt>
-<dd><p>Value for <code>SPATIAL_INDEX</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>SPATIAL_INDEX</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); create a <code>.qix</code>
+spatial index. GDAL default <code>"NO"</code>.</p></dd>
 
 
 <dt id="arg-encoding">encoding<a class="anchor" aria-label="anchor" href="#arg-encoding"></a></dt>
-<dd><p>Value for <code>ENCODING</code> (DBF encoding).</p></dd>
+<dd><p>Value for <code>ENCODING</code> (DBF encoding written to the <code>.cpg</code>/header). GDAL default
+<code>"LDID/87"</code>.</p></dd>
 
 
 <dt id="arg-resize">resize<a class="anchor" aria-label="anchor" href="#arg-resize"></a></dt>
-<dd><p>Value for <code>RESIZE</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); resize fields to optimal size.</p></dd>
+<dd><p>Value for <code>RESIZE</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); resize fields to their optimal size.
+GDAL default <code>"NO"</code>.</p></dd>
 
 
 <dt id="arg-shpt">shpt<a class="anchor" aria-label="anchor" href="#arg-shpt"></a></dt>
-<dd><p>Value for <code>SHPT</code> (shape type, e.g. <code>"POLYGON"</code>).</p></dd>
+<dd><p>Value for <code>SHPT</code> (shape type override): one of <code>NULL</code>/<code>POINT</code>/<code>ARC</code>/<code>POLYGON</code>/
+<code>MULTIPOINT</code> (2D), the <code>*Z</code>/<code>*M</code>/<code>*ZM</code> measured/3D variants, or <code>MULTIPATCH</code>.</p></dd>
 
 
 <dt id="arg-two-gb-limit">two_gb_limit<a class="anchor" aria-label="anchor" href="#arg-two-gb-limit"></a></dt>
-<dd><p>Value for <code>2GB_LIMIT</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); restrict <code>.shp</code>/<code>.dbf</code> to 2 GB.</p></dd>
+<dd><p>Value for <code>2GB_LIMIT</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); enforce the 2 GB <code>.shp</code>/<code>.dbf</code>
+size limit. GDAL default <code>"NO"</code>.</p></dd>
 
 
 <dt id="arg-auto-repack">auto_repack<a class="anchor" aria-label="anchor" href="#arg-auto-repack"></a></dt>
-<dd><p>Value for <code>AUTO_REPACK</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>AUTO_REPACK</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); auto-repack when needed.
+GDAL default <code>"YES"</code>.</p></dd>
 
 
 <dt id="arg-dbf-date-last-update">dbf_date_last_update<a class="anchor" aria-label="anchor" href="#arg-dbf-date-last-update"></a></dt>
-<dd><p>Value for <code>DBF_DATE_LAST_UPDATE</code> (<code>YYYY-MM-DD</code>).</p></dd>
+<dd><p>Value for <code>DBF_DATE_LAST_UPDATE</code> (<code>YYYY-MM-DD</code>); modification date
+written in the DBF header. Defaults to the current date.</p></dd>
 
 
 <dt id="arg-dbf-eof-char">dbf_eof_char<a class="anchor" aria-label="anchor" href="#arg-dbf-eof-char"></a></dt>
-<dd><p>Value for <code>DBF_EOF_CHAR</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>).</p></dd>
+<dd><p>Value for <code>DBF_EOF_CHAR</code> (logical -&gt; <code>"YES"</code>/<code>"NO"</code>); write the <code>0x1A</code>
+end-of-file character in the <code>.dbf</code>. GDAL default <code>"YES"</code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Additional <code>NAME = value</code> options passed through verbatim alongside the typed
+arguments. They are coerced and validated against the driver metadata in the same way, and
+take precedence over a typed argument that sets the same option.</p></dd>
 
 
 <dt id="arg--set-defaults">.set_defaults<a class="anchor" aria-label="anchor" href="#arg--set-defaults"></a></dt>
