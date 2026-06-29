@@ -45,15 +45,15 @@ xml_parse_gdal_driver_config_opts(
   This is used for labeling purposes in the resulting tibble. Defaults
   to `NULL`.
 
-- call:
-
-  The calling function, used for error handling and messaging.
-
-- opt_type:
+- type:
 
   The type of options being parsed, such as "config", "open", or
   "creation". This is used for labeling purposes in the resulting
   tibble. Defaults to "config".
+
+- call:
+
+  The calling function, used for error handling and messaging.
 
 ## Value
 

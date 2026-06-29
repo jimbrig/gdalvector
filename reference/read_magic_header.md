@@ -31,6 +31,7 @@ A `magic_header` list containing `path`, `raw`, and `str` elements.
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 read_magic_header(pkg_sys_extdata("gpkg/cb_2025_us_all_20m.gpkg"), n = 15L)
-#> Error in read_magic_header(pkg_sys_extdata("gpkg/cb_2025_us_all_20m.gpkg"),     n = 15L): could not find function "read_magic_header"
+} # }
 ```

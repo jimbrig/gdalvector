@@ -2,6 +2,8 @@
 <url><loc>http://docs.jimbrig.com/gdalvector/404.html</loc></url>
 <url><loc>http://docs.jimbrig.com/gdalvector/AGENTS.html</loc></url>
 <url><loc>http://docs.jimbrig.com/gdalvector/CHANGELOG.html</loc></url>
+<url><loc>http://docs.jimbrig.com/gdalvector/LICENSE-text.html</loc></url>
+<url><loc>http://docs.jimbrig.com/gdalvector/LICENSE.html</loc></url>
 <url><loc>http://docs.jimbrig.com/gdalvector/articles/gdalvector.html</loc></url>
 <url><loc>http://docs.jimbrig.com/gdalvector/articles/index.html</loc></url>
 <url><loc>http://docs.jimbrig.com/gdalvector/authors.html</loc></url>
@@ -65,7 +67,6 @@
 <url><loc>http://docs.jimbrig.com/gdalvector/reference/shp_creation_opts.html</loc></url>
 <url><loc>http://docs.jimbrig.com/gdalvector/reference/shp_open_opts.html</loc></url>
 <url><loc>http://docs.jimbrig.com/gdalvector/reference/sql_in.html</loc></url>
-<url><loc>http://docs.jimbrig.com/gdalvector/reference/sql_pragma.html</loc></url>
 <url><loc>http://docs.jimbrig.com/gdalvector/reference/sql_where_valid_geom.html</loc></url>
 <url><loc>http://docs.jimbrig.com/gdalvector/reference/sys_available_ram.html</loc></url>
 <url><loc>http://docs.jimbrig.com/gdalvector/reference/sys_error_code.html</loc></url>

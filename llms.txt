@@ -241,9 +241,6 @@ gdalraster::gdal_global_reg_names()
 - [`shp_open_opts()`](http://docs.jimbrig.com/gdalvector/reference/shp_open_opts.md)
   : ESRI Shapefile Open Options
 
-- [`sql_pragma()`](http://docs.jimbrig.com/gdalvector/reference/sql_pragma.md)
-  : SQL Pragma Builder
-
 - [`sql_where_valid_geom()`](http://docs.jimbrig.com/gdalvector/reference/sql_where_valid_geom.md)
   :
 

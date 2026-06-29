@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">gdalvector</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +42,9 @@
 </div>
 <div class="section level2">
 <h2 id="bug-fixes">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes"></a></h2>
-<ul><li>Fix initialization (<a href="https://github.com/jimbrig/gdalvector/commit/20f2badfea891c446083d34177841ccb288318b4" class="external-link">20f2bad</a>) - (Jimmy Briggs)</li>
+<ul><li>
+<strong>opts:</strong> Address review feedback on PR #5 (<a href="https://github.com/jimbrig/gdalvector/issues/2" class="external-link">#2</a>) (<a href="https://github.com/jimbrig/gdalvector/commit/438eaa6521ef968e19d1013a9130c9cf0f108334" class="external-link">438eaa6</a>) - (Jimmy Briggs)</li>
+<li>Fix initialization (<a href="https://github.com/jimbrig/gdalvector/commit/20f2badfea891c446083d34177841ccb288318b4" class="external-link">20f2bad</a>) - (Jimmy Briggs)</li>
 </ul></div>
 <div class="section level2">
 <h2 id="configuration">Configuration<a class="anchor" aria-label="anchor" href="#configuration"></a></h2>
@@ -65,6 +67,12 @@
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a></h2>
 <ul><li>
+<strong>design:</strong> Add comprehensive architecture and usage documentation (<a href="https://github.com/jimbrig/gdalvector/commit/d12a5da293afdd5ddb15460ce90714e6eedb0766" class="external-link">d12a5da</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>opts:</strong> Align builder roxygen with GDAL driver docs (<a href="https://github.com/jimbrig/gdalvector/issues/3" class="external-link">#3</a>) (<a href="https://github.com/jimbrig/gdalvector/commit/4d7fd3a3c29773c80bff6215316f19904a9a6ecc" class="external-link">4d7fd3a</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>opts:</strong> Add OpenFileGDB links fragment to gdb builders (<a href="https://github.com/jimbrig/gdalvector/issues/3" class="external-link">#3</a>) (<a href="https://github.com/jimbrig/gdalvector/commit/2327a420a1cd0d2b46a189d5cbff8a618c4ad073" class="external-link">2327a42</a>) - (Jimmy Briggs)</li>
+<li>
 <strong>articles:</strong> Remove driver and concept documentation (<a href="https://github.com/jimbrig/gdalvector/commit/1a4330aa0178c87f20e3be7807b291cda2611f98" class="external-link">1a4330a</a>) - (Jimmy Briggs)</li>
 <li>Improve link formatting in README (<a href="https://github.com/jimbrig/gdalvector/commit/c6532448e4dbbf4bf5291d39d2b72762ea94ec15" class="external-link">c653244</a>) - (Jimmy Briggs)</li>
 <li>Add project banner to README (<a href="https://github.com/jimbrig/gdalvector/commit/c0c8c4833af93d60fb21dfb48d1274a25e70ddd5" class="external-link">c0c8c48</a>) - (Jimmy Briggs)</li>
@@ -79,6 +87,10 @@
 <div class="section level2">
 <h2 id="refactoring">Refactoring<a class="anchor" aria-label="anchor" href="#refactoring"></a></h2>
 <ul><li>
+<strong>opts:</strong> Add consistent ... pass-through to all typed builders (<a href="https://github.com/jimbrig/gdalvector/issues/2" class="external-link">#2</a>) (<a href="https://github.com/jimbrig/gdalvector/commit/fa3ac9c88bcef0fae56c8875934cfd0282172c23" class="external-link">fa3ac9c</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>opts:</strong> Route option builders through shared .build_gdal_opts() (<a href="https://github.com/jimbrig/gdalvector/issues/1" class="external-link">#1</a>) (<a href="https://github.com/jimbrig/gdalvector/commit/1a7f4a5c18dd858a98c745caf08be8da75f621f4" class="external-link">1a7f4a5</a>) - (Jimmy Briggs)</li>
+<li>
 <strong>gdal_opts:</strong> Remove obsolete as_gdal_boolean helper (<a href="https://github.com/jimbrig/gdalvector/commit/37aed58121e8ce23914caf4ac2461d33ae0a87c6" class="external-link">37aed58</a>) - (Jimmy Briggs)</li>
 <li>
 <strong>gdal_opts:</strong> Remove redundant boolean conversion (<a href="https://github.com/jimbrig/gdalvector/commit/785b11ee5af2c91c49fcc85a1037182d0ac4229c" class="external-link">785b11e</a>) - (Jimmy Briggs)</li>
@@ -96,6 +108,8 @@
 <div class="section level2">
 <h2 id="testing">Testing<a class="anchor" aria-label="anchor" href="#testing"></a></h2>
 <ul><li>
+<strong>opts:</strong> Require testthat (&gt;= 3.1.0) and use expect_no_error() (<a href="https://github.com/jimbrig/gdalvector/issues/2" class="external-link">#2</a>) (<a href="https://github.com/jimbrig/gdalvector/commit/1216bd47af6c925b2a2a689303480326f3c546bb" class="external-link">1216bd4</a>) - (Jimmy Briggs)</li>
+<li>
 <strong>options:</strong> Refactor and expand GDAL options test suite (<a href="https://github.com/jimbrig/gdalvector/commit/aa7cbd9d56cd9141563fa33fd53e174427b25d68" class="external-link">aa7cbd9</a>) - (Jimmy Briggs)</li>
 </ul><hr><p><em>Changelog generated by <a href="https://github.com/orhun/git-cliff" class="external-link">git-cliff</a>.</em> ***</p>
 </div>

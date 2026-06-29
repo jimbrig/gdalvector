@@ -8,6 +8,10 @@
 
 ## Bug Fixes
 
+- **opts:** Address review feedback on PR \#5
+  ([\#2](https://github.com/jimbrig/gdalvector/issues/2))
+  ([438eaa6](https://github.com/jimbrig/gdalvector/commit/438eaa6521ef968e19d1013a9130c9cf0f108334)) -
+  (Jimmy Briggs)
 - Fix initialization
   ([20f2bad](https://github.com/jimbrig/gdalvector/commit/20f2badfea891c446083d34177841ccb288318b4)) -
   (Jimmy Briggs)
@@ -41,6 +45,17 @@
 
 ## Documentation
 
+- **design:** Add comprehensive architecture and usage documentation
+  ([d12a5da](https://github.com/jimbrig/gdalvector/commit/d12a5da293afdd5ddb15460ce90714e6eedb0766)) -
+  (Jimmy Briggs)
+- **opts:** Align builder roxygen with GDAL driver docs
+  ([\#3](https://github.com/jimbrig/gdalvector/issues/3))
+  ([4d7fd3a](https://github.com/jimbrig/gdalvector/commit/4d7fd3a3c29773c80bff6215316f19904a9a6ecc)) -
+  (Jimmy Briggs)
+- **opts:** Add OpenFileGDB links fragment to gdb builders
+  ([\#3](https://github.com/jimbrig/gdalvector/issues/3))
+  ([2327a42](https://github.com/jimbrig/gdalvector/commit/2327a420a1cd0d2b46a189d5cbff8a618c4ad073)) -
+  (Jimmy Briggs)
 - **articles:** Remove driver and concept documentation
   ([1a4330a](https://github.com/jimbrig/gdalvector/commit/1a4330aa0178c87f20e3be7807b291cda2611f98)) -
   (Jimmy Briggs)
@@ -65,6 +80,14 @@
 
 ## Refactoring
 
+- **opts:** Add consistent ... pass-through to all typed builders
+  ([\#2](https://github.com/jimbrig/gdalvector/issues/2))
+  ([fa3ac9c](https://github.com/jimbrig/gdalvector/commit/fa3ac9c88bcef0fae56c8875934cfd0282172c23)) -
+  (Jimmy Briggs)
+- **opts:** Route option builders through shared .build_gdal_opts()
+  ([\#1](https://github.com/jimbrig/gdalvector/issues/1))
+  ([1a7f4a5](https://github.com/jimbrig/gdalvector/commit/1a7f4a5c18dd858a98c745caf08be8da75f621f4)) -
+  (Jimmy Briggs)
 - **gdal_opts:** Remove obsolete as_gdal_boolean helper
   ([37aed58](https://github.com/jimbrig/gdalvector/commit/37aed58121e8ce23914caf4ac2461d33ae0a87c6)) -
   (Jimmy Briggs)
@@ -91,6 +114,10 @@
 
 ## Testing
 
+- **opts:** Require testthat (\>= 3.1.0) and use expect_no_error()
+  ([\#2](https://github.com/jimbrig/gdalvector/issues/2))
+  ([1216bd4](https://github.com/jimbrig/gdalvector/commit/1216bd47af6c925b2a2a689303480326f3c546bb)) -
+  (Jimmy Briggs)
 - **options:** Refactor and expand GDAL options test suite
   ([aa7cbd9](https://github.com/jimbrig/gdalvector/commit/aa7cbd9d56cd9141563fa33fd53e174427b25d68)) -
   (Jimmy Briggs)

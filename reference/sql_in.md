@@ -30,7 +30,8 @@ A character string containing the SQL clause.
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 non_conus_state_fips <- c("02", "15", "60", "66", "69", "72", "74", "78")
 sql_in(field = "STATEFP", values = non_conus_state_fips, negate = TRUE)
-#> Error in sql_in(field = "STATEFP", values = non_conus_state_fips, negate = TRUE): could not find function "sql_in"
+} # }
 ```

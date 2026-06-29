@@ -13,7 +13,7 @@ DMD_OPENOPTIONLIST, DMD_CREATIONOPTIONLIST, and DS_LAYER_CREATIONOPTIONLIST."></
 
     <a class="navbar-brand me-2" href="../index.html">gdalvector</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,11 +66,19 @@ XML metadata structures from GDAL's registered (vector) driver's metadata:
 <dd><p>The XML to be parsed. Must be either a valid XML character string or an <code>xml2::xml_document</code> object.</p></dd>
 
 
-<dt id="arg-driver-opt-type">driver, opt_type<a class="anchor" aria-label="anchor" href="#arg-driver-opt-type"></a></dt>
-<dd><p>(Optional) Additional values that can be added to the resulting <code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble::tibble()</a></code>. Useful
-for when merging options across multiple drivers or option types. Defaults to <code>NULL</code> and the columns
-will only be included in the output when provided. These values are also not properly validated against
-the GDAL drivers or option types, so they should be used with caution and primarily for internal use.</p></dd>
+<dt id="arg-driver">driver<a class="anchor" aria-label="anchor" href="#arg-driver"></a></dt>
+<dd><p>(Optional) GDAL driver name added to the resulting <code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble::tibble()</a></code>. Useful
+for when merging options across multiple drivers. Defaults to <code>NA</code> and is not validated against
+the registered GDAL drivers, so it should be used with caution and primarily for internal use.</p></dd>
+
+
+<dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
+<dd><p>The option type being parsed, one of <code>"config"</code>, <code>"open"</code>, or <code>"creation"</code>.</p></dd>
+
+
+<dt id="arg-sub-type">sub_type<a class="anchor" aria-label="anchor" href="#arg-sub-type"></a></dt>
+<dd><p>For <code>type = "creation"</code>, the creation option level, one of <code>"dataset"</code> or <code>"layer"</code>.
+Ignored (forced to <code>NA</code>) for other types.</p></dd>
 
 
 <dt id="arg-scope">scope<a class="anchor" aria-label="anchor" href="#arg-scope"></a></dt>
@@ -100,17 +108,44 @@ when working with drivers supporting both raster and vector data.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># parse DS_LAYER_CREATIONOPTIONLIST</span></span></span>
 <span class="r-in"><span><span class="fu">gdalraster</span><span class="fu">::</span><span class="fu"><a href="https://firelab.github.io/gdalraster/reference/gdal_get_driver_md.html" class="external-link">gdal_get_driver_md</a></span><span class="op">(</span><span class="st">"GPKG"</span>, mdi_name <span class="op">=</span> <span class="st">"DS_LAYER_CREATIONOPTIONLIST"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">xml_parse_gdal_options</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> `driver` must be a string, not a character `NA`.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 11 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    driver type   sub_type name        description scope default values data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       GEOMETRY_N… Name of ge… all   geom    <span style="color: #949494;">&lt;chr&gt;</span>  string   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       GEOMETRY_N… Whether th… all   YES     <span style="color: #949494;">&lt;chr&gt;</span>  boolean  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       FID         Name of th… all   fid     <span style="color: #949494;">&lt;chr&gt;</span>  string   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       OVERWRITE   Whether to… all   NO      <span style="color: #949494;">&lt;chr&gt;</span>  boolean  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       PRECISION   Whether te… all   YES     <span style="color: #949494;">&lt;chr&gt;</span>  boolean  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       TRUNCATE_F… Whether to… all   NO      <span style="color: #949494;">&lt;chr&gt;</span>  boolean  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       SPATIAL_IN… Whether to… all   YES     <span style="color: #949494;">&lt;chr&gt;</span>  boolean  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       IDENTIFIER  Identifier… all   <span style="color: #BB0000;">NA</span>      <span style="color: #949494;">&lt;chr&gt;</span>  string   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       DESCRIPTION Descriptio… all   <span style="color: #BB0000;">NA</span>      <span style="color: #949494;">&lt;chr&gt;</span>  string   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       ASPATIAL_V… How to reg… all   GPKG_A… <span style="color: #949494;">&lt;chr&gt;</span>  string-s…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       DATETIME_P… Number of … all   AUTO    <span style="color: #949494;">&lt;chr&gt;</span>  string-s…</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># parse DMD_CREATIONOPTIONLIST</span></span></span>
 <span class="r-in"><span><span class="fu">gdalraster</span><span class="fu">::</span><span class="fu"><a href="https://firelab.github.io/gdalraster/reference/gdal_get_driver_md.html" class="external-link">gdal_get_driver_md</a></span><span class="op">(</span><span class="st">"GPKG"</span>, mdi_name <span class="op">=</span> <span class="st">"DMD_CREATIONOPTIONLIST"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">xml_parse_gdal_options</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> `driver` must be a string, not a character `NA`.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   driver type   sub_type name         description scope default values data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       VERSION      Set GeoPac… all   AUTO    <span style="color: #949494;">&lt;chr&gt;</span>  string-s…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       DATETIME_FO… How to enc… all   WITH_TZ <span style="color: #949494;">&lt;chr&gt;</span>  string-s…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       ADD_GPKG_OG… Whether to… all   YES     <span style="color: #949494;">&lt;chr&gt;</span>  boolean  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       CRS_WKT_EXT… Whether to… all   <span style="color: #BB0000;">NA</span>      <span style="color: #949494;">&lt;chr&gt;</span>  boolean  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       METADATA_TA… Whether to… all   <span style="color: #BB0000;">NA</span>      <span style="color: #949494;">&lt;chr&gt;</span>  boolean  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># parse DMD_OPENOPTIONLIST</span></span></span>
 <span class="r-in"><span><span class="fu">gdalraster</span><span class="fu">::</span><span class="fu"><a href="https://firelab.github.io/gdalraster/reference/gdal_get_driver_md.html" class="external-link">gdal_get_driver_md</a></span><span class="op">(</span><span class="st">"GPKG"</span>, mdi_name <span class="op">=</span> <span class="st">"DMD_OPENOPTIONLIST"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">xml_parse_gdal_options</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> `driver` must be a string, not a character `NA`.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   driver type   sub_type name         description scope default values data_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       LIST_ALL_TA… Whether al… vect… AUTO    <span style="color: #949494;">&lt;chr&gt;</span>  string-s…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       PRELUDE_STA… SQL statem… rast… <span style="color: #BB0000;">NA</span>      <span style="color: #949494;">&lt;chr&gt;</span>  string   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       NOLOCK       Whether th… all   <span style="color: #BB0000;">NA</span>      <span style="color: #949494;">&lt;chr&gt;</span>  boolean  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> <span style="color: #BB0000;">NA</span>     config <span style="color: #BB0000;">NA</span>       IMMUTABLE    Whether th… all   <span style="color: #BB0000;">NA</span>      <span style="color: #949494;">&lt;chr&gt;</span>  boolean  </span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

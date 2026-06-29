@@ -28,15 +28,23 @@ xml_parse_gdal_options(
   The XML to be parsed. Must be either a valid XML character string or
   an `xml2::xml_document` object.
 
-- driver, opt_type:
+- driver:
 
-  (Optional) Additional values that can be added to the resulting
+  (Optional) GDAL driver name added to the resulting
   [`tibble::tibble()`](https://tibble.tidyverse.org/reference/tibble.html).
-  Useful for when merging options across multiple drivers or option
-  types. Defaults to `NULL` and the columns will only be included in the
-  output when provided. These values are also not properly validated
-  against the GDAL drivers or option types, so they should be used with
-  caution and primarily for internal use.
+  Useful for when merging options across multiple drivers. Defaults to
+  `NA` and is not validated against the registered GDAL drivers, so it
+  should be used with caution and primarily for internal use.
+
+- type:
+
+  The option type being parsed, one of `"config"`, `"open"`, or
+  `"creation"`.
+
+- sub_type:
+
+  For `type = "creation"`, the creation option level, one of `"dataset"`
+  or `"layer"`. Ignored (forced to `NA`) for other types.
 
 - scope:
 
@@ -74,15 +82,41 @@ parameters are provided.
 # parse DS_LAYER_CREATIONOPTIONLIST
 gdalraster::gdal_get_driver_md("GPKG", mdi_name = "DS_LAYER_CREATIONOPTIONLIST") |>
   xml_parse_gdal_options()
-#> Error: `driver` must be a string, not a character `NA`.
+#> # A tibble: 11 × 9
+#>    driver type   sub_type name        description scope default values data_type
+#>    <chr>  <chr>  <chr>    <chr>       <chr>       <chr> <chr>   <list> <chr>    
+#>  1 NA     config NA       GEOMETRY_N… Name of ge… all   geom    <chr>  string   
+#>  2 NA     config NA       GEOMETRY_N… Whether th… all   YES     <chr>  boolean  
+#>  3 NA     config NA       FID         Name of th… all   fid     <chr>  string   
+#>  4 NA     config NA       OVERWRITE   Whether to… all   NO      <chr>  boolean  
+#>  5 NA     config NA       PRECISION   Whether te… all   YES     <chr>  boolean  
+#>  6 NA     config NA       TRUNCATE_F… Whether to… all   NO      <chr>  boolean  
+#>  7 NA     config NA       SPATIAL_IN… Whether to… all   YES     <chr>  boolean  
+#>  8 NA     config NA       IDENTIFIER  Identifier… all   NA      <chr>  string   
+#>  9 NA     config NA       DESCRIPTION Descriptio… all   NA      <chr>  string   
+#> 10 NA     config NA       ASPATIAL_V… How to reg… all   GPKG_A… <chr>  string-s…
+#> 11 NA     config NA       DATETIME_P… Number of … all   AUTO    <chr>  string-s…
 
 # parse DMD_CREATIONOPTIONLIST
 gdalraster::gdal_get_driver_md("GPKG", mdi_name = "DMD_CREATIONOPTIONLIST") |>
   xml_parse_gdal_options()
-#> Error: `driver` must be a string, not a character `NA`.
+#> # A tibble: 5 × 9
+#>   driver type   sub_type name         description scope default values data_type
+#>   <chr>  <chr>  <chr>    <chr>        <chr>       <chr> <chr>   <list> <chr>    
+#> 1 NA     config NA       VERSION      Set GeoPac… all   AUTO    <chr>  string-s…
+#> 2 NA     config NA       DATETIME_FO… How to enc… all   WITH_TZ <chr>  string-s…
+#> 3 NA     config NA       ADD_GPKG_OG… Whether to… all   YES     <chr>  boolean  
+#> 4 NA     config NA       CRS_WKT_EXT… Whether to… all   NA      <chr>  boolean  
+#> 5 NA     config NA       METADATA_TA… Whether to… all   NA      <chr>  boolean  
 
 # parse DMD_OPENOPTIONLIST
 gdalraster::gdal_get_driver_md("GPKG", mdi_name = "DMD_OPENOPTIONLIST") |>
   xml_parse_gdal_options()
-#> Error: `driver` must be a string, not a character `NA`.
+#> # A tibble: 4 × 9
+#>   driver type   sub_type name         description scope default values data_type
+#>   <chr>  <chr>  <chr>    <chr>        <chr>       <chr> <chr>   <list> <chr>    
+#> 1 NA     config NA       LIST_ALL_TA… Whether al… vect… AUTO    <chr>  string-s…
+#> 2 NA     config NA       PRELUDE_STA… SQL statem… rast… NA      <chr>  string   
+#> 3 NA     config NA       NOLOCK       Whether th… all   NA      <chr>  boolean  
+#> 4 NA     config NA       IMMUTABLE    Whether th… all   NA      <chr>  boolean  
 ```

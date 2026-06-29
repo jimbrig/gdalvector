@@ -14,6 +14,11 @@ vsi_strip(path, recurse = TRUE)
 
   Path to strip.
 
+- recurse:
+
+  Logical; if `TRUE` (default), strips all nested VSI handlers,
+  otherwise only the outermost one.
+
 ## Value
 
 Character vector with the outermost VSI handler removed.

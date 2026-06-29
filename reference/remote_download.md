@@ -35,8 +35,12 @@ remote_download(
 - timeout:
 
   Numeric value specifying HTTP request timeout in seconds. Defaults to
-  `600L`. \#' @param max_tries Integer; maximum number of download
-  attempts on failure. Defaults to `3L`.
+  `600L`.
+
+- max_tries:
+
+  Integer; maximum number of download attempts on failure. Defaults to
+  `3L`.
 
 - force:
 
