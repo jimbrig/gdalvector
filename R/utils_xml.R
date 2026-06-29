@@ -318,34 +318,3 @@ xml_validate_ogr_vrt_xml <- function(xml, schema = pkg_sys_schemas("ogrvrt.xsd")
   out <- dplyr::bind_rows(dplyr::filter(df, .data$data_type != "boolean"), bools)
   out[match(df$name, out$name), ]
 }
-
-# named character vector of name -> default for options that declare a default,
-# optionally filtered to a subset of (case-insensitive) option names.
-#' @keywords internal
-#' @noRd
-#' @importFrom dplyr filter
-#' @importFrom rlang .data .env
-#' @importFrom stats setNames
-.opts_defaults <- function(md, filter = NULL) {
-  hold <- dplyr::filter(md, !is.na(.data$default))
-  if (!is.null(filter)) {
-    hold <- dplyr::filter(hold, .data$name %in% toupper(.env$filter))
-  }
-  stats::setNames(hold[["default"]], hold[["name"]])
-}
-
-# named list of name -> allowed values (booleans expanded to c("YES", "NO")),
-# optionally filtered to a subset of (case-insensitive) option names.
-#' @keywords internal
-#' @noRd
-#' @importFrom dplyr filter
-#' @importFrom rlang .data .env
-#' @importFrom stats setNames
-.opts_values <- function(md, filter = NULL) {
-  hold <- md
-  if (!is.null(filter)) {
-    hold <- dplyr::filter(hold, .data$name %in% toupper(.env$filter))
-  }
-  hold <- .replace_boolean_values(hold)
-  stats::setNames(hold[["values"]], hold[["name"]])
-}

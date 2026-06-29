@@ -198,6 +198,23 @@ test_that("gdal_vector_driver_capabilities() returns a named logical vector of D
 
 # internal helpers ------------------------------------------------------------------------------------------------
 
+test_that(".opt_lookup returns name->col maps, single values, and unwraps list-cols", {
+  hold <- tibble::tibble(
+    name = c("A", "B", "C"),
+    default = c("1", NA_character_, "3"),
+    values = list(c("1", "2"), NA_character_, c("3", "4")),
+    data_type = c("string-select", "string", "string-select")
+  )
+  # all-case: only rows with a non-NA value, deframed
+  expect_identical(.opt_lookup(hold, "default"), c(A = "1", C = "3"))
+  # single-option scalar lookup
+  expect_identical(.opt_lookup(hold, "default", "A"), "1")
+  # single-option list-column lookup is unwrapped to a bare vector
+  expect_setequal(.opt_lookup(hold, "values", "A"), c("1", "2"))
+  # unknown option name errors via arg_match
+  expect_error(.opt_lookup(hold, "default", "NOPE"))
+})
+
 test_that(".split_words splits whitespace and handles the empty string", {
   expect_identical(.split_words("a b   c"), c("a", "b", "c"))
   expect_identical(.split_words(""), character())

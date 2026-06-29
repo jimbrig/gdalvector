@@ -130,18 +130,3 @@ test_that(".replace_boolean_values rewrites boolean rows to c('YES','NO') and pr
   expect_setequal(out$values[[1]], c("YES", "NO"))
   expect_setequal(out$values[[2]], c("ON", "OFF"))
 })
-
-test_that(".opts_defaults and .opts_values summarize a metadata tibble", {
-  md <- tibble::tibble(
-    name = c("A", "B", "C"),
-    default = c("1", NA_character_, "3"),
-    values = list(c("1", "2"), NA_character_, c("3", "4")),
-    data_type = c("string-select", "string", "string-select")
-  )
-  defs <- .opts_defaults(md)
-  expect_identical(defs, c(A = "1", C = "3"))
-
-  vals <- .opts_values(md)
-  expect_named(vals, c("A", "B", "C"))
-  expect_setequal(vals[["A"]], c("1", "2"))
-})

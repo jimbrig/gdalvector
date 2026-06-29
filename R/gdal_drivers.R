@@ -119,28 +119,19 @@ gdal_vector_driver_opts <- function(driver = NULL, type = NULL, sub_type = NULL,
 #' @rdname gdal_vector_driver_opts
 #' @export
 gdal_vector_driver_opt_defaults <- function(driver, type = NULL, sub_type = NULL, scope = NULL) {
-  gdal_vector_driver_opts(driver, type = type, sub_type = sub_type, scope = scope) |>
-    dplyr::select("name", "default") |>
-    dplyr::filter(!is.na(.data$default)) |>
-    tibble::deframe()
+  .opt_lookup(gdal_vector_driver_opts(driver, type = type, sub_type = sub_type, scope = scope), "default")
 }
 
 #' @rdname gdal_vector_driver_opts
 #' @export
 gdal_vector_driver_opt_values <- function(driver, type = NULL, sub_type = NULL, scope = NULL) {
-  gdal_vector_driver_opts(driver, type = type, sub_type = sub_type, scope = scope) |>
-    dplyr::select("name", "values") |>
-    dplyr::filter(!is.na(.data$values)) |>
-    tibble::deframe()
+  .opt_lookup(gdal_vector_driver_opts(driver, type = type, sub_type = sub_type, scope = scope), "values")
 }
 
 #' @rdname gdal_vector_driver_opts
 #' @export
 gdal_vector_driver_opt_types <- function(driver, type = NULL, sub_type = NULL, scope = NULL) {
-  gdal_vector_driver_opts(driver, type = type, sub_type = sub_type, scope = scope) |>
-    dplyr::select("name", "data_type") |>
-    dplyr::filter(!is.na(.data$data_type)) |>
-    tibble::deframe()
+  .opt_lookup(gdal_vector_driver_opts(driver, type = type, sub_type = sub_type, scope = scope), "data_type")
 }
 
 # config options --------------------------------------------------------------------------------------------------
@@ -176,27 +167,13 @@ gdal_vector_driver_config_opts <- function(driver) {
 #' @rdname gdal_vector_driver_config_opts
 #' @export
 gdal_vector_driver_config_opts_defaults <- function(driver, opt_name = NULL) {
-  hold <- gdal_vector_driver_config_opts(driver)
-  if (is.null(opt_name)) {
-    return(
-      hold |> dplyr::select("name", "default") |> dplyr::filter(!is.na(.data$default)) |> tibble::deframe()
-    )
-  }
-  opt_name <- rlang::arg_match(opt_name, hold$name)
-  hold |> dplyr::filter(.data$name == .env$opt_name) |> dplyr::pull("default")
+  .opt_lookup(gdal_vector_driver_config_opts(driver), "default", opt_name)
 }
 
 #' @rdname gdal_vector_driver_config_opts
 #' @export
 gdal_vector_driver_config_opts_values <- function(driver, opt_name = NULL) {
-  hold <- gdal_vector_driver_config_opts(driver)
-  if (is.null(opt_name)) {
-    return(
-      hold |> dplyr::select("name", "values") |> dplyr::filter(!is.na(.data$values)) |> tibble::deframe()
-    )
-  }
-  opt_name <- rlang::arg_match(opt_name, hold$name)
-  hold |> dplyr::filter(.data$name == .env$opt_name) |> dplyr::pull(.data$values) |> purrr::pluck(1L)
+  .opt_lookup(gdal_vector_driver_config_opts(driver), "values", opt_name)
 }
 
 #' @rdname gdal_vector_driver_config_opts
@@ -236,27 +213,13 @@ gdal_vector_driver_open_opts <- function(driver) {
 #' @rdname gdal_vector_driver_open_opts
 #' @export
 gdal_vector_driver_open_opts_defaults <- function(driver, opt_name = NULL) {
-  hold <- gdal_vector_driver_open_opts(driver = driver)
-  if (is.null(opt_name)) {
-    return(
-      hold |> dplyr::select("name", "default") |> dplyr::filter(!is.na(.data$default)) |> tibble::deframe()
-    )
-  }
-  opt_name <- rlang::arg_match(opt_name, hold$name)
-  hold |> dplyr::filter(.data$name == .env$opt_name) |> dplyr::pull(.data$default)
+  .opt_lookup(gdal_vector_driver_open_opts(driver), "default", opt_name)
 }
 
 #' @rdname gdal_vector_driver_open_opts
 #' @export
 gdal_vector_driver_open_opts_values <- function(driver, opt_name = NULL) {
-  hold <- gdal_vector_driver_open_opts(driver = driver)
-  if (is.null(opt_name)) {
-    return(
-      hold |> dplyr::select("name", "values") |> dplyr::filter(!is.na(.data$values)) |> tibble::deframe()
-    )
-  }
-  opt_name <- rlang::arg_match(opt_name, hold$name)
-  hold |> dplyr::filter(.data$name == .env$opt_name) |> dplyr::pull(.data$values) |> purrr::pluck(1L)
+  .opt_lookup(gdal_vector_driver_open_opts(driver), "values", opt_name)
 }
 
 #' @rdname gdal_vector_driver_open_opts
@@ -298,27 +261,13 @@ gdal_vector_driver_creation_opts <- function(driver, sub_type = NULL) {
 #' @rdname gdal_vector_driver_creation_opts
 #' @export
 gdal_vector_driver_creation_opts_defaults <- function(driver, opt_name = NULL, sub_type = NULL) {
-  hold <- gdal_vector_driver_creation_opts(driver = driver, sub_type = sub_type)
-  if (is.null(opt_name)) {
-    return(
-      hold |> dplyr::select("name", "default") |> dplyr::filter(!is.na(.data$default)) |> tibble::deframe()
-    )
-  }
-  opt_name <- rlang::arg_match(opt_name, hold$name)
-  hold |> dplyr::filter(.data$name == .env$opt_name) |> dplyr::pull(.data$default)
+  .opt_lookup(gdal_vector_driver_creation_opts(driver, sub_type = sub_type), "default", opt_name)
 }
 
 #' @rdname gdal_vector_driver_creation_opts
 #' @export
 gdal_vector_driver_creation_opts_values <- function(driver, opt_name = NULL, sub_type = NULL) {
-  hold <- gdal_vector_driver_creation_opts(driver = driver, sub_type = sub_type)
-  if (is.null(opt_name)) {
-    return(
-      hold |> dplyr::select("name", "values") |> dplyr::filter(!is.na(.data$values)) |> tibble::deframe()
-    )
-  }
-  opt_name <- rlang::arg_match(opt_name, hold$name)
-  hold |> dplyr::filter(.data$name == .env$opt_name) |> dplyr::pull(.data$values) |> purrr::pluck(1L)
+  .opt_lookup(gdal_vector_driver_creation_opts(driver, sub_type = sub_type), "values", opt_name)
 }
 
 #' @rdname gdal_vector_driver_creation_opts
@@ -374,6 +323,22 @@ gdal_drivers_init <- function(refresh = FALSE) {
 }
 
 # internal --------------------------------------------------------------------------------------------------------
+
+# extract a `name -> <col>` mapping from an already (type/sub_type/scope-)filtered option tibble.
+# returns the full set (rows with a non-NA value) when `opt_name` is NULL, or the single value for
+# `opt_name` otherwise. transparently unwraps the `values` list-column.
+#' @keywords internal
+#' @noRd
+.opt_lookup <- function(hold, col, opt_name = NULL) {
+  if (is.null(opt_name)) {
+    return(
+      hold |> dplyr::select("name", dplyr::all_of(col)) |> dplyr::filter(!is.na(.data[[col]])) |> tibble::deframe()
+    )
+  }
+  opt_name <- rlang::arg_match(opt_name, hold$name)
+  out <- hold |> dplyr::filter(.data$name == .env$opt_name) |> dplyr::pull(.data[[col]])
+  if (is.list(out)) purrr::pluck(out, 1L) else out
+}
 
 # assemble the single merged option table: curated config opts + parsed open opts + parsed
 # dataset/layer creation opts, for the core vector drivers, ordered for stable lookup.
