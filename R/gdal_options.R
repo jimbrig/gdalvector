@@ -822,25 +822,6 @@ gdal_opts_cmd_inline <- function(x) {
   paste(rendered, collapse = " ")
 }
 
-# utilities -------------------------------------------------------------------------------------------------------
-
-# coerce a logical/character to GDAL's "YES"/"NO" boolean form (NULL/NA/empty -> NULL so the option
-# is dropped). the single coercion driver builders apply to boolean arguments.
-#' @keywords internal
-#' @noRd
-as_gdal_boolean <- function(x) {
-  if (is.null(x)) {
-    return(NULL)
-  }
-  if (length(x) == 1L && (is.na(x) || !nzchar(as.character(x)))) {
-    return(NULL)
-  }
-  if (is.logical(x)) {
-    return(if (isTRUE(x)) "YES" else "NO")
-  }
-  as.character(x)
-}
-
 # internal --------------------------------------------------------------------------------------------------------
 
 # normalize an arbitrary named list/character into the canonical payload: a named list of length-1

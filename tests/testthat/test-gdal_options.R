@@ -112,18 +112,6 @@ test_that("a list, a KEY=VALUE character vector, and dots produce equivalent ope
   expect_opts_equivalent(from_chr, from_dots)
 })
 
-# as_gdal_boolean -------------------------------------------------------------------------------------------------
-
-test_that("as_gdal_boolean coerces logicals and drops empty-ish values", {
-  expect_identical(as_gdal_boolean(TRUE), "YES")
-  expect_identical(as_gdal_boolean(FALSE), "NO")
-  expect_null(as_gdal_boolean(NULL))
-  expect_null(as_gdal_boolean(NA))
-  expect_null(as_gdal_boolean(""))
-  # already-stringified GDAL values pass through unchanged
-  expect_identical(as_gdal_boolean("AUTO"), "AUTO")
-})
-
 # coercion --------------------------------------------------------------------------------------------------------
 
 test_that("as_gdal_*_opts coerces lists, KEY=VALUE characters, and self", {
