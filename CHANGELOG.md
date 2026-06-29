@@ -25,6 +25,7 @@
 
 ## Documentation
 
+- **articles:** Remove driver and concept documentation ([1a4330a](https://github.com/jimbrig/gdalvector/commit/1a4330aa0178c87f20e3be7807b291cda2611f98))  - (Jimmy Briggs)
 - Improve link formatting in README ([c653244](https://github.com/jimbrig/gdalvector/commit/c6532448e4dbbf4bf5291d39d2b72762ea94ec15))  - (Jimmy Briggs)
 - Add project banner to README ([c0c8c48](https://github.com/jimbrig/gdalvector/commit/c0c8c4833af93d60fb21dfb48d1274a25e70ddd5))  - (Jimmy Briggs)
 - Remove .github/README.md ([64c9973](https://github.com/jimbrig/gdalvector/commit/64c99739eba43c8307f2f02395a6a15b14dccedd))  - (Jimmy Briggs)
