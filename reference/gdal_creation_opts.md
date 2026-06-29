@@ -45,6 +45,6 @@ A `gdal_creation_opts()` object.
 
 ``` r
 gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet")
-#> Error in gdal_creation_opts(COMPRESSION = "ZSTD", driver = "Parquet"): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
+#> Error in gdal_vector_driver_opts(driver, type = "creation", sub_type = sub_type): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
 #> available options.
 ```

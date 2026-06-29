@@ -80,6 +80,6 @@ object for the `Parquet` driver.
 
 ``` r
 gpq_open_opts(crs = "EPSG:4326")
-#> Error in gpq_open_opts(crs = "EPSG:4326"): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
+#> Error in gdal_vector_driver_opts(driver, type = "open"): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
 #> available options.
 ```

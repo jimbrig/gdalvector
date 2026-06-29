@@ -29,7 +29,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>GeoParquet Open Options</h1>
-      <small class="dont-index">Source: <a href="https://github.com/jimbrig/gdalvector/blob/v0.0.3/R/gpq_opts.R" class="external-link"><code>R/gpq_opts.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jimbrig/gdalvector/blob/main/R/gpq_opts.R" class="external-link"><code>R/gpq_opts.R</code></a></small>
       <div class="d-none name"><code>gpq_open_opts.Rd</code></div>
     </div>
 
@@ -98,7 +98,7 @@ user-supplied values always take precedence. Defaults to <code>FALSE</code>.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">gpq_open_opts</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gpq_open_opts(crs = "EPSG:4326"):</span> `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gdal_vector_driver_opts(driver, type = "open"):</span> `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> available options.</span>
 </code></pre></div>
     </div>

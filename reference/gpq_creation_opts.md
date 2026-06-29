@@ -169,6 +169,6 @@ columns enabled, and spatially ordered features:
 
 ``` r
 gpq_creation_opts(compression = "ZSTD", geometry_encoding = "WKB")
-#> Error in gpq_creation_opts(compression = "ZSTD", geometry_encoding = "WKB"): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
+#> Error in gdal_vector_driver_opts(driver, type = "creation", sub_type = sub_type): `driver` must be a valid GDAL driver. Run `gdal_drivers_list()` for
 #> available options.
 ```
