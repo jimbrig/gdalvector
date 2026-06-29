@@ -33,7 +33,13 @@
 #'
 #' @examples
 #' gpq_open_opts(crs = "EPSG:4326")
-gpq_open_opts <- function(geom_possible_names = NULL, crs = NULL, lists_as_string_json = NULL, ..., .set_defaults = FALSE) {
+gpq_open_opts <- function(
+  geom_possible_names = NULL,
+  crs = NULL,
+  lists_as_string_json = NULL,
+  ...,
+  .set_defaults = FALSE
+) {
   .build_gdal_opts(
     c(
       list(
