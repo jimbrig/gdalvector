@@ -2,7 +2,7 @@
 % Please edit documentation in R/gpkg_opts.R
 \name{gpkg_open_opts}
 \alias{gpkg_open_opts}
-\title{GeoPackage Open Options}
+\title{GeoPackage GDAL Open Options}
 \usage{
 gpkg_open_opts(
   list_all_tables = NULL,
@@ -33,10 +33,35 @@ user-supplied values always take precedence. Defaults to \code{FALSE}.}
 A \code{\link[=gdal_open_opts]{gdal_open_opts()}} object for the \code{GPKG} driver.
 }
 \description{
-Construct a \code{\link[=gdal_open_opts]{gdal_open_opts()}} object for the \code{GPKG} driver. Because a GeoPackage is a SQLite
-database, several open options carry performance and safety implications - in particular
-\code{PRELUDE_STATEMENTS}, a SQLite \code{PRAGMA} payload run before any other query (build it with
-\code{\link[=gpkg_prelude_pragmas]{gpkg_prelude_pragmas()}}).
+Construct a \code{\link[=gdal_open_opts]{gdal_open_opts()}} object for the \code{GPKG} (GeoPackage) driver.
+}
+\details{
+Because a GeoPackage is a SQLite database, several open options carry performance and safety implications.
+Of note is the \code{PRELUDE_STATEMENTS} open option, which allows you to specify arbitrary SQL statements that will
+run before any other queries once connected to the SQLite3 connection is established. This is commonly used to
+\href{https://www.sqlite.org/lang_attach.html}{attach another database} and issue cross-database requests, but
+we use it more commonly here to set \code{PRAGMA} statements to optimize performance and avoid the global configuration
+\verb{OGR_SQLITE_*} options.
+
+Each open option is enumerated and described below:
+\itemize{
+\item \verb{LIST_ALL_TABLES=[AUTO/YES/NO]}: Defaults to \code{AUTO}. Whether all tables, including those not listed in \code{gpkg_contents},
+should be listed. If \code{AUTO}, all tables including those not listed in \code{gpkg_contents} will be listed, except if
+the \code{aspatial} extension is found or a table is registered as 'attributes' in \code{gpkg_contents}. If \code{YES},
+all tables including those not listed in \code{gpkg_contents} will be listed, in all cases. If \code{NO}, only tables
+registered as \code{'features'}, \code{'attributes'} or \code{'aspatial'} will be listed.
+\item \verb{PRELUDE_STATEMENTS=[SQL]}: (GDAL >= 3.2) SQL statement(s) to send on the SQLite3 connection before any other ones.
+In case of several statements, they must be separated with the semicolon (\verb{;}) sign. This option may be useful to
+attach another database to the current one and issue cross-database requests.
+\item \verb{NOLOCK=[YES/NO]}: (GDAL >= 3.4.2) Defaults to \code{NO}. Whether the database should be used without doing any file
+locking. Setting it to \code{YES} will only be honored when opening in read-only mode and if the journal mode is not \code{WAL}.
+This corresponds to the \code{nolock=1} query parameter described at \url{https://www.sqlite.org/uri.html}.
+\item \verb{IMMUTABLE=[YES/NO]}: (GDAL >= 3.5.3) Whether the database should be opened by assuming that the file cannot be
+modified by another process. This will skip any checks for change detection. This can be useful for \code{WAL}
+enabled files on read-only storage. GDAL will automatically try to turn it on when not being able to open in
+read-only mode a WAL enabled file. This corresponds to the immutable=1 query parameter described at
+\url{https://www.sqlite.org/uri.html}.
+}
 }
 \examples{
 gpkg_open_opts(list_all_tables = FALSE, nolock = TRUE)

@@ -82,8 +82,8 @@ gdal_sitrep_versions <- function() {
   )
 }
 
-gdal_sitrep_version_check <- function(major = 13L, minor = 11L, patch = 0L) {
-  gdalraster::gdal_version_num() >= gdalraster::gdal_compute_version(major, minor, patch)
+gdal_sitrep_version_check <- function(major = 3L, minor = 11L, patch = 0L) {
+  gdal_version_num() >= gdalraster::gdal_compute_version(major, minor, patch)
 }
 
 gdal_sitrep_alg_check <- function() {

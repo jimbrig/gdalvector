@@ -72,6 +72,36 @@ new_gdal_opts <- function(x = list(), subclass, driver = NULL, level = NULL, vsi
 
 # config options --------------------------------------------------------------------------------------------------
 
+#' GDAL Configuration Options
+#'
+#' @description
+#' Construct a [gdal_config_opts()] object from `NAME = value` pairs. Configuration options are
+#' global, stateful settings applied to the GDAL process (via [gdalraster::set_config_option()] /
+#' the CLI `--config` flag), and are *not* algorithm arguments. When `driver` is supplied, values
+#' for boolean options are validated against the driver metadata.
+#'
+#' @param ... Named configuration options as `KEY=VALUE` pairs.
+#' @param driver Optional GDAL driver short name (e.g. `"GPKG"`) to associate.
+#' @inheritParams .shared_params
+#'
+#' @returns
+#' A [gdal_config_opts()] object.
+#'
+#' @export
+#'
+#' @importFrom rlang list2
+#' @importFrom utils modifyList
+#'
+#' @examples
+#' gdal_config_opts(CPL_DEBUG = "ON", GDAL_NUM_THREADS = "ALL_CPUS")
+gdal_config_opts <- function(..., driver = NULL, .set_defaults = FALSE) {
+  opts <- rlang::list2(...)
+  if (isTRUE(.set_defaults) && !is.null(driver)) {
+    opts <- utils::modifyList(as.list(gdal_vector_driver_config_opts_defaults(driver)), opts)
+  }
+  as_gdal_config_opts(opts, driver = driver)
+}
+
 #' @keywords internal
 #' @noRd
 new_gdal_config_opts <- function(x = list(), driver = NULL) {
@@ -130,32 +160,6 @@ as_gdal_config_opts.character <- function(x, ..., driver = NULL, call = rlang::c
 #' @export
 as_gdal_config_opts.tbl_df <- function(x, ..., driver = NULL, call = rlang::caller_env()) {
   new_gdal_config_opts(.gdal_opts_from_md(x), driver = driver)
-}
-
-#' GDAL Configuration Options
-#'
-#' @description
-#' Construct a [gdal_config_opts()] object from `NAME = value` pairs. Configuration options are
-#' global, stateful settings applied to the GDAL process (via [gdalraster::set_config_option()] /
-#' the CLI `--config` flag), and are *not* algorithm arguments. When `driver` is supplied, values
-#' for boolean options are validated against the driver metadata.
-#'
-#' @param ... Named configuration options (`NAME = value`). Logical values are coerced to
-#'   `"YES"`/`"NO"`.
-#' @param driver Optional GDAL driver short name (e.g. `"GPKG"`) to associate.
-#' @inheritParams .shared_params
-#'
-#' @returns A [gdal_config_opts()] object.
-#' @export
-#'
-#' @examples
-#' gdal_config_opts(CPL_DEBUG = "ON", GDAL_NUM_THREADS = "ALL_CPUS")
-gdal_config_opts <- function(..., driver = NULL, .set_defaults = FALSE) {
-  opts <- rlang::list2(...)
-  if (isTRUE(.set_defaults) && !is.null(driver)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_config_opts_defaults(driver)), opts)
-  }
-  as_gdal_config_opts(opts, driver = driver)
 }
 
 # open options ----------------------------------------------------------------------------------------------------

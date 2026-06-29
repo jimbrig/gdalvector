@@ -2,7 +2,7 @@
 % Please edit documentation in R/gpkg_opts.R
 \name{gpkg_prelude_pragmas}
 \alias{gpkg_prelude_pragmas}
-\title{GeoPackage Prelude PRAGMA Statements}
+\title{GeoPackage Prelude \code{PRAGMA} Statements}
 \usage{
 gpkg_prelude_pragmas(
   cache_size = NULL,
@@ -30,9 +30,9 @@ integer \code{0L}/\code{1L}/\code{2L}).}
 A length-1 character string of semicolon-separated \code{PRAGMA} statements (or \code{""}).
 }
 \description{
-Build a \code{PRELUDE_STATEMENTS} string of SQLite \code{PRAGMA} directives for use as a GPKG/SQLite open
-option. The result is a single semicolon-separated string; because it embeds \verb{;} (and possibly
-\verb{,}), it is carried as one open-option value and rendered as a single \code{--open-option} token.
+Build a \code{PRELUDE_STATEMENTS} string of SQLite \code{PRAGMA} directives for use as a GPKG/SQLite open option.
+The result is a single semicolon-separated string. Because it embeds \verb{;} (and possibly \verb{,}), it is carried
+as single \code{--open-option} value and rendered as such.
 }
 \examples{
 gpkg_prelude_pragmas(cache_size = -4000000, temp_store = "MEMORY", journal_mode = "WAL")

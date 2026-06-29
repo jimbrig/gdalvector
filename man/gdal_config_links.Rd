@@ -13,5 +13,5 @@ Links to the official GDAL Configuration Documentation.
 }
 }
 \seealso{
-\code{\link[=gdal_config]{gdal_config()}}
+\code{\link[=gdal_config_opts]{gdal_config_opts()}}
 }

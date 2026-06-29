@@ -28,7 +28,8 @@ gpkg_pragma <- function(gpkg_conn, pragma_name) {
   DBI::dbGetQuery(gpkg_conn, sql_pragma(pragma_name))[[1]]
 }
 
-gpkg_list_pragmas <- function(gpkg_conn) {
+gpkg_list_pragmas <- function(gpkg_conn = NULL) {
+  if (is.null(gpkg_conn)) gpkg_conn <- gpkg_connect(":memory:")
   check_conn_sqlite(gpkg_conn)
   DBI::dbGetQuery(gpkg_conn, sql_pragma("pragma_list"))$name
 }

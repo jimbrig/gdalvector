@@ -38,9 +38,8 @@ user-supplied values always take precedence. Defaults to \code{FALSE}.}
 A \code{\link[=gdal_config_opts]{gdal_config_opts()}} object for the \code{GPKG} driver.
 }
 \description{
-Construct a \code{\link[=gdal_config_opts]{gdal_config_opts()}} object for the \code{GPKG} driver. These are global SQLite/GPKG
-configuration options applied to the GDAL process (via \code{\link[gdalraster:set_config_option]{gdalraster::set_config_option()}} /
-\code{--config}). Only options you supply are emitted; boolean values are validated against metadata.
+Construct a \code{\link[=gdal_config_opts]{gdal_config_opts()}} object for the \code{GPKG} driver. These are global configuration options
+applied to the GDAL process.
 }
 \examples{
 gpkg_config_opts(sqlite_synchronous = "OFF", use_ogr_vfs = TRUE, num_threads = "ALL_CPUS")

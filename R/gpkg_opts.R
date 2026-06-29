@@ -1,3 +1,4 @@
+
 #  ------------------------------------------------------------------------
 #
 # Title : GeoPackage (GPKG) Options
@@ -6,73 +7,13 @@
 #
 #  ------------------------------------------------------------------------
 
-# prelude pragmas -------------------------------------------------------------------------------------------------
-
-#' GeoPackage Prelude PRAGMA Statements
-#'
-#' @description
-#' Build a `PRELUDE_STATEMENTS` string of SQLite `PRAGMA` directives for use as a GPKG/SQLite open
-#' option. The result is a single semicolon-separated string; because it embeds `;` (and possibly
-#' `,`), it is carried as one open-option value and rendered as a single `--open-option` token.
-#'
-#' @param cache_size Integer page cache size. Negative values are in kibibytes (e.g. `-4000000` is
-#'   roughly 4 GB).
-#' @param temp_store Where temporary tables live: `"DEFAULT"`, `"FILE"`, or `"MEMORY"` (also accepts
-#'   integer `0L`/`1L`/`2L`).
-#' @param mmap_size Maximum bytes for memory-mapped I/O.
-#' @param journal_mode SQLite journal mode: `"DELETE"`, `"WAL"`, `"TRUNCATE"`, `"PERSIST"`,
-#'   `"MEMORY"`, or `"OFF"`.
-#' @param ... Additional raw `PRAGMA ...;` statement strings appended verbatim.
-#'
-#' @returns A length-1 character string of semicolon-separated `PRAGMA` statements (or `""`).
-#' @export
-#'
-#' @seealso [gpkg_open_opts()]
-#'
-#' @examples
-#' gpkg_prelude_pragmas(cache_size = -4000000, temp_store = "MEMORY", journal_mode = "WAL")
-gpkg_prelude_pragmas <- function(cache_size = NULL, temp_store = NULL, mmap_size = NULL, journal_mode = NULL, ...) {
-  pragmas <- character()
-  if (!is.null(cache_size)) {
-    pragmas <- c(
-      pragmas,
-      paste0("PRAGMA cache_size=", format(as.integer(cache_size), scientific = FALSE, trim = TRUE), ";")
-    )
-  }
-  if (!is.null(temp_store)) {
-    if (is.numeric(temp_store)) {
-      temp_store <- switch(as.character(as.integer(temp_store)), "0" = "DEFAULT", "1" = "FILE", "2" = "MEMORY", "")
-    }
-    if (nzchar(temp_store)) {
-      temp_store <- rlang::arg_match(temp_store, c("DEFAULT", "FILE", "MEMORY"))
-      pragmas <- c(pragmas, paste0("PRAGMA temp_store=", temp_store, ";"))
-    }
-  }
-  if (!is.null(mmap_size)) {
-    pragmas <- c(
-      pragmas,
-      paste0("PRAGMA mmap_size=", format(as.numeric(mmap_size), scientific = FALSE, trim = TRUE), ";")
-    )
-  }
-  if (!is.null(journal_mode)) {
-    journal_mode <- rlang::arg_match(journal_mode, c("DELETE", "WAL", "TRUNCATE", "PERSIST", "MEMORY", "OFF"))
-    pragmas <- c(pragmas, paste0("PRAGMA journal_mode=", journal_mode, ";"))
-  }
-  extra <- unlist(rlang::list2(...), use.names = FALSE)
-  if (length(extra) > 0L) {
-    pragmas <- c(pragmas, as.character(extra))
-  }
-  paste(pragmas, collapse = "")
-}
-
 # config ----------------------------------------------------------------------------------------------------------
 
 #' GeoPackage Configuration Options
 #'
 #' @description
-#' Construct a [gdal_config_opts()] object for the `GPKG` driver. These are global SQLite/GPKG
-#' configuration options applied to the GDAL process (via [gdalraster::set_config_option()] /
-#' `--config`). Only options you supply are emitted; boolean values are validated against metadata.
+#' Construct a [gdal_config_opts()] object for the `GPKG` driver. These are global configuration options
+#' applied to the GDAL process.
 #'
 #' @param sqlite_cache Value for `OGR_SQLITE_CACHE` (SQLite page cache, in MB).
 #' @param sqlite_journal Value for `OGR_SQLITE_JOURNAL` (journal mode).
@@ -94,14 +35,14 @@ gpkg_prelude_pragmas <- function(cache_size = NULL, temp_store = NULL, mmap_size
 #' @examples
 #' gpkg_config_opts(sqlite_synchronous = "OFF", use_ogr_vfs = TRUE, num_threads = "ALL_CPUS")
 gpkg_config_opts <- function(
-  sqlite_cache = NULL,
-  sqlite_journal = NULL,
-  sqlite_synchronous = NULL,
-  sqlite_pragma = NULL,
-  use_ogr_vfs = NULL,
-  num_threads = NULL,
-  ...,
-  .set_defaults = FALSE
+    sqlite_cache = NULL,
+    sqlite_journal = NULL,
+    sqlite_synchronous = NULL,
+    sqlite_pragma = NULL,
+    use_ogr_vfs = NULL,
+    num_threads = NULL,
+    ...,
+    .set_defaults = FALSE
 ) {
   opts <- .gdal_opts_normalize(c(
     list(
@@ -125,13 +66,40 @@ gpkg_config_opts <- function(
 
 # open ------------------------------------------------------------------------------------------------------------
 
-#' GeoPackage Open Options
+#' GeoPackage GDAL Open Options
 #'
 #' @description
-#' Construct a [gdal_open_opts()] object for the `GPKG` driver. Because a GeoPackage is a SQLite
-#' database, several open options carry performance and safety implications - in particular
-#' `PRELUDE_STATEMENTS`, a SQLite `PRAGMA` payload run before any other query (build it with
-#' [gpkg_prelude_pragmas()]).
+#' Construct a [gdal_open_opts()] object for the `GPKG` (GeoPackage) driver.
+#'
+#' @details
+#' Because a GeoPackage is a SQLite database, several open options carry performance and safety implications.
+#' Of note is the `PRELUDE_STATEMENTS` open option, which allows you to specify arbitrary SQL statements that will
+#' run before any other queries once connected to the SQLite3 connection is established. This is commonly used to
+#' [attach another database](https://www.sqlite.org/lang_attach.html) and issue cross-database requests, but
+#' we use it more commonly here to set `PRAGMA` statements to optimize performance and avoid the global configuration
+#' `OGR_SQLITE_*` options.
+#'
+#' Each open option is enumerated and described below:
+#'
+#' - `LIST_ALL_TABLES=[AUTO/YES/NO]`: Defaults to `AUTO`. Whether all tables, including those not listed in `gpkg_contents`,
+#'   should be listed. If `AUTO`, all tables including those not listed in `gpkg_contents` will be listed, except if
+#'   the `aspatial` extension is found or a table is registered as 'attributes' in `gpkg_contents`. If `YES`,
+#'   all tables including those not listed in `gpkg_contents` will be listed, in all cases. If `NO`, only tables
+#'   registered as `'features'`, `'attributes'` or `'aspatial'` will be listed.
+#'
+#' - `PRELUDE_STATEMENTS=[SQL]`: (GDAL >= 3.2) SQL statement(s) to send on the SQLite3 connection before any other ones.
+#'   In case of several statements, they must be separated with the semicolon (`;`) sign. This option may be useful to
+#'   attach another database to the current one and issue cross-database requests.
+#'
+#' - `NOLOCK=[YES/NO]`: (GDAL >= 3.4.2) Defaults to `NO`. Whether the database should be used without doing any file
+#'   locking. Setting it to `YES` will only be honored when opening in read-only mode and if the journal mode is not `WAL`.
+#'   This corresponds to the `nolock=1` query parameter described at <https://www.sqlite.org/uri.html>.
+#'
+#' - `IMMUTABLE=[YES/NO]`: (GDAL >= 3.5.3) Whether the database should be opened by assuming that the file cannot be
+#'   modified by another process. This will skip any checks for change detection. This can be useful for `WAL`
+#'   enabled files on read-only storage. GDAL will automatically try to turn it on when not being able to open in
+#'   read-only mode a WAL enabled file. This corresponds to the immutable=1 query parameter described at
+#'   <https://www.sqlite.org/uri.html>.
 #'
 #' @param list_all_tables Value for `LIST_ALL_TABLES` (`"AUTO"`/`"YES"`/`"NO"`; logical coerced).
 #'   Whether to list tables not registered in `gpkg_contents`. GDAL default `"AUTO"`.
@@ -143,7 +111,9 @@ gpkg_config_opts <- function(
 #'   immutable. Only when the file genuinely cannot change.
 #' @inheritParams .shared_params
 #'
-#' @returns A [gdal_open_opts()] object for the `GPKG` driver.
+#' @returns
+#' A [gdal_open_opts()] object for the `GPKG` driver.
+#'
 #' @export
 #'
 #' @seealso [gpkg_prelude_pragmas()], [gpkg_creation_opts()], [gdal_open_opts()]
@@ -157,11 +127,11 @@ gpkg_config_opts <- function(
 #' prelude <- gpkg_prelude_pragmas(cache_size = -4000000, temp_store = "MEMORY")
 #' gpkg_open_opts(list_all_tables = FALSE, prelude_statements = prelude)
 gpkg_open_opts <- function(
-  list_all_tables = NULL,
-  prelude_statements = NULL,
-  nolock = NULL,
-  immutable = NULL,
-  .set_defaults = FALSE
+    list_all_tables = NULL,
+    prelude_statements = NULL,
+    nolock = NULL,
+    immutable = NULL,
+    .set_defaults = FALSE
 ) {
   opts <- .gdal_opts_normalize(list(
     LIST_ALL_TABLES = as_gdal_boolean(list_all_tables),
@@ -213,17 +183,17 @@ gpkg_open_opts <- function(
 #' gpkg_creation_opts(geometry_name = "geom", spatial_index = TRUE)
 #' gpkg_creation_opts(VERSION = "1.4", level = "dataset")
 gpkg_creation_opts <- function(
-  fid = NULL,
-  geometry_name = NULL,
-  geometry_nullable = NULL,
-  spatial_index = NULL,
-  identifier = NULL,
-  description = NULL,
-  launder = NULL,
-  overwrite = NULL,
-  ...,
-  level = c("layer", "dataset"),
-  .set_defaults = FALSE
+    fid = NULL,
+    geometry_name = NULL,
+    geometry_nullable = NULL,
+    spatial_index = NULL,
+    identifier = NULL,
+    description = NULL,
+    launder = NULL,
+    overwrite = NULL,
+    ...,
+    level = c("layer", "dataset"),
+    .set_defaults = FALSE
 ) {
   level <- rlang::arg_match(level)
   opts <- .gdal_opts_normalize(c(
@@ -247,3 +217,64 @@ gpkg_creation_opts <- function(
   }
   new_gdal_creation_opts(opts, driver = "GPKG", level = level)
 }
+
+
+# prelude pragmas -------------------------------------------------------------------------------------------------
+
+#' GeoPackage Prelude `PRAGMA` Statements
+#'
+#' @description
+#' Build a `PRELUDE_STATEMENTS` string of SQLite `PRAGMA` directives for use as a GPKG/SQLite open option.
+#' The result is a single semicolon-separated string. Because it embeds `;` (and possibly `,`), it is carried
+#' as single `--open-option` value and rendered as such.
+#'
+#' @param cache_size Integer page cache size. Negative values are in kibibytes (e.g. `-4000000` is
+#'   roughly 4 GB).
+#' @param temp_store Where temporary tables live: `"DEFAULT"`, `"FILE"`, or `"MEMORY"` (also accepts
+#'   integer `0L`/`1L`/`2L`).
+#' @param mmap_size Maximum bytes for memory-mapped I/O.
+#' @param journal_mode SQLite journal mode: `"DELETE"`, `"WAL"`, `"TRUNCATE"`, `"PERSIST"`,
+#'   `"MEMORY"`, or `"OFF"`.
+#' @param ... Additional raw `PRAGMA ...;` statement strings appended verbatim.
+#'
+#' @returns A length-1 character string of semicolon-separated `PRAGMA` statements (or `""`).
+#' @export
+#'
+#' @seealso [gpkg_open_opts()]
+#'
+#' @examples
+#' gpkg_prelude_pragmas(cache_size = -4000000, temp_store = "MEMORY", journal_mode = "WAL")
+gpkg_prelude_pragmas <- function(cache_size = NULL, temp_store = NULL, mmap_size = NULL, journal_mode = NULL, ...) {
+  pragmas <- character()
+  if (!is.null(cache_size)) {
+    pragmas <- c(
+      pragmas,
+      paste0("PRAGMA cache_size=", format(as.integer(cache_size), scientific = FALSE, trim = TRUE), ";")
+    )
+  }
+  if (!is.null(temp_store)) {
+    if (is.numeric(temp_store)) {
+      temp_store <- switch(as.character(as.integer(temp_store)), "0" = "DEFAULT", "1" = "FILE", "2" = "MEMORY", "")
+    }
+    if (nzchar(temp_store)) {
+      temp_store <- rlang::arg_match(temp_store, c("DEFAULT", "FILE", "MEMORY"))
+      pragmas <- c(pragmas, paste0("PRAGMA temp_store=", temp_store, ";"))
+    }
+  }
+  if (!is.null(mmap_size)) {
+    pragmas <- c(
+      pragmas,
+      paste0("PRAGMA mmap_size=", format(as.numeric(mmap_size), scientific = FALSE, trim = TRUE), ";")
+    )
+  }
+  if (!is.null(journal_mode)) {
+    journal_mode <- rlang::arg_match(journal_mode, c("DELETE", "WAL", "TRUNCATE", "PERSIST", "MEMORY", "OFF"))
+    pragmas <- c(pragmas, paste0("PRAGMA journal_mode=", journal_mode, ";"))
+  }
+  extra <- unlist(rlang::list2(...), use.names = FALSE)
+  if (length(extra) > 0L) {
+    pragmas <- c(pragmas, as.character(extra))
+  }
+  paste(pragmas, collapse = "")
+}
+

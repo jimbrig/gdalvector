@@ -109,7 +109,7 @@ NULL
 #' ```{r child = "man/fragments/gdal_config_links.md"}
 #' ```
 #'
-#' @seealso [gdal_config()]
+#' @seealso [gdal_config_opts()]
 NULL
 
 # avoid backtraces ------------------------------------------------------------------------------------------------

@@ -11,14 +11,14 @@ gdal_vector_driver_creation_opts(driver, sub_type = NULL)
 
 gdal_vector_driver_creation_opts_defaults(
   driver,
-  sub_type = NULL,
-  opt_name = NULL
+  opt_name = NULL,
+  sub_type = NULL
 )
 
 gdal_vector_driver_creation_opts_values(
   driver,
-  sub_type = NULL,
-  opt_name = NULL
+  opt_name = NULL,
+  sub_type = NULL
 )
 
 gdal_vector_driver_creation_opts_types(driver, sub_type = NULL)

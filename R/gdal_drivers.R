@@ -297,7 +297,7 @@ gdal_vector_driver_creation_opts <- function(driver, sub_type = NULL) {
 
 #' @rdname gdal_vector_driver_creation_opts
 #' @export
-gdal_vector_driver_creation_opts_defaults <- function(driver, sub_type = NULL, opt_name = NULL) {
+gdal_vector_driver_creation_opts_defaults <- function(driver, opt_name = NULL, sub_type = NULL) {
   hold <- gdal_vector_driver_creation_opts(driver = driver, sub_type = sub_type)
   if (is.null(opt_name)) {
     return(
@@ -310,7 +310,7 @@ gdal_vector_driver_creation_opts_defaults <- function(driver, sub_type = NULL, o
 
 #' @rdname gdal_vector_driver_creation_opts
 #' @export
-gdal_vector_driver_creation_opts_values <- function(driver, sub_type = NULL, opt_name = NULL) {
+gdal_vector_driver_creation_opts_values <- function(driver, opt_name = NULL, sub_type = NULL) {
   hold <- gdal_vector_driver_creation_opts(driver = driver, sub_type = sub_type)
   if (is.null(opt_name)) {
     return(

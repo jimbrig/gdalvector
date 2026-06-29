@@ -7,8 +7,7 @@
 gdal_config_opts(..., driver = NULL, .set_defaults = FALSE)
 }
 \arguments{
-\item{...}{Named configuration options (\code{NAME = value}). Logical values are coerced to
-\code{"YES"}/\code{"NO"}.}
+\item{...}{Named configuration options as \code{KEY=VALUE} pairs.}
 
 \item{driver}{Optional GDAL driver short name (e.g. \code{"GPKG"}) to associate.}
 
