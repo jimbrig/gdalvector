@@ -59,16 +59,12 @@ fgb_config_opts <- function(...) {
 #' fgb_open_opts(verify_buffers = FALSE)
 #' fgb_open_opts(.set_defaults = TRUE)
 fgb_open_opts <- function(verify_buffers = NULL, .set_defaults = FALSE) {
-  opts <- .gdal_opts_normalize(list(
-    VERIFY_BUFFERS = verify_buffers
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_open_opts_values("FlatGeobuf"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(as.list(gdal_vector_driver_open_opts_defaults("FlatGeobuf")), opts)
-  }
-  new_gdal_open_opts(opts, driver = "FlatGeobuf")
+  .build_gdal_opts(
+    list(VERIFY_BUFFERS = verify_buffers),
+    channel = "open",
+    driver = "FlatGeobuf",
+    .set_defaults = .set_defaults
+  )
 }
 
 # creation --------------------------------------------------------------------------------------------------------
@@ -103,20 +99,16 @@ fgb_creation_opts <- function(
   description = NULL,
   .set_defaults = FALSE
 ) {
-  opts <- .gdal_opts_normalize(list(
-    SPATIAL_INDEX = spatial_index,
-    TEMPORARY_DIR = temporary_dir,
-    TITLE = title,
-    DESCRIPTION = description
-  ))
-  if (length(opts) > 0L) {
-    check_gdal_opts(opts, gdal_vector_driver_creation_opts_values("FlatGeobuf", sub_type = "layer"))
-  }
-  if (isTRUE(.set_defaults)) {
-    opts <- utils::modifyList(
-      as.list(gdal_vector_driver_creation_opts_defaults("FlatGeobuf", sub_type = "layer")),
-      opts
-    )
-  }
-  new_gdal_creation_opts(opts, driver = "FlatGeobuf", level = "layer")
+  .build_gdal_opts(
+    list(
+      SPATIAL_INDEX = spatial_index,
+      TEMPORARY_DIR = temporary_dir,
+      TITLE = title,
+      DESCRIPTION = description
+    ),
+    channel = "creation",
+    driver = "FlatGeobuf",
+    level = "layer",
+    .set_defaults = .set_defaults
+  )
 }
