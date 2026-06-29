@@ -177,6 +177,7 @@ if (FALSE) {
   fs::file_create(".github/README.md")
   fs::file_create(".github/dependabot.yml")
   # fs::file_create(".github/FUNDING.yml")
+  usethis::use_r_universe_badge()
 }
 
 # inst ------------------------------------------------------------------------------------------------------------
