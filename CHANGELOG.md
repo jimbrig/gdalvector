@@ -36,6 +36,8 @@
 
 ## Refactoring
 
+- **gdal_opts:** Remove obsolete as_gdal_boolean helper ([37aed58](https://github.com/jimbrig/gdalvector/commit/37aed58121e8ce23914caf4ac2461d33ae0a87c6))  - (Jimmy Briggs)
+- **gdal_opts:** Remove redundant boolean conversion ([785b11e](https://github.com/jimbrig/gdalvector/commit/785b11ee5af2c91c49fcc85a1037182d0ac4229c))  - (Jimmy Briggs)
 - **gdal_drivers:** Consolidate option lookup logic ([2f6c33c](https://github.com/jimbrig/gdalvector/commit/2f6c33ca41dfac16f5074ed13d2287b386da2b63))  - (Jimmy Briggs)
 - **gdal:** Standardize object formatting and streamline internal utilities ([cdfa33b](https://github.com/jimbrig/gdalvector/commit/cdfa33b5f7cdd629f09d728ea298553b379bab22))  - (Jimmy Briggs)
 - **gdal-options:** Standardize option normalization and boolean coercion ([8c00bf5](https://github.com/jimbrig/gdalvector/commit/8c00bf5716ae2ac473d7abbe7619f391066ba5ff))  - (Jimmy Briggs)
