@@ -383,12 +383,16 @@ gdal_drivers_init <- function(refresh = FALSE) {
   dplyr::bind_rows(
     gdal_vector_driver_config_opts_tbl,
     purrr::map_dfr(GDAL_VECTOR_DRIVERS, function(driver) {
-      if (!gdal_sitrep_driver_check(driver)) return(tibble::tibble())
+      if (!gdal_sitrep_driver_check(driver)) {
+        return(tibble::tibble())
+      }
       open_opts_xml <- gdalraster::gdal_get_driver_md(driver, mdi_name = "DMD_OPENOPTIONLIST")
       xml_parse_gdal_options(open_opts_xml, driver = driver, type = "open", scope = "vector")
     }),
     purrr::map_dfr(GDAL_VECTOR_DRIVERS, function(driver) {
-      if (!gdal_sitrep_driver_check(driver)) return(tibble::tibble())
+      if (!gdal_sitrep_driver_check(driver)) {
+        return(tibble::tibble())
+      }
       dplyr::bind_rows(
         gdalraster::gdal_get_driver_md(format = driver, mdi_name = "DMD_CREATIONOPTIONLIST") |>
           xml_parse_gdal_options(driver = driver, type = "creation", sub_type = "dataset", scope = "vector"),
