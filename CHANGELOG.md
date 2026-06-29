@@ -80,6 +80,9 @@
 
 ## Refactoring
 
+- Streamline utility functions and update documentation
+  ([e9667da](https://github.com/jimbrig/gdalvector/commit/e9667dabf3129c2b4934f527a5f68275ec0d287d)) -
+  (Jimmy Briggs)
 - **opts:** Add consistent ... pass-through to all typed builders
   ([\#2](https://github.com/jimbrig/gdalvector/issues/2))
   ([fa3ac9c](https://github.com/jimbrig/gdalvector/commit/fa3ac9c88bcef0fae56c8875934cfd0282172c23)) -
