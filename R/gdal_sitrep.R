@@ -90,6 +90,11 @@ gdal_sitrep_alg_check <- function() {
   !identical(gdal_alg_names(), character(0))
 }
 
+gdal_sitrep_driver_check <- function(driver) {
+  drvs <- gdalraster::gdal_formats()$short_name
+  driver %in% drvs
+}
+
 # algorithmic -----------------------------------------------------------------------------------------------------
 
 gdal_alg_names <- function() {
