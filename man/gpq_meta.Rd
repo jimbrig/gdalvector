@@ -11,7 +11,6 @@ Each returns a classed list with \code{format()} and \code{print()} methods:
 \item \code{\link[=gpq_schema_info]{gpq_schema_info()}}: the Parquet schema (leaf columns, struct nodes, logical types).
 \item \code{\link[=gpq_row_groups]{gpq_row_groups()}}: row group and column chunk statistics, with decoded min/max values.
 \item \code{\link[=gpq_geo_metadata]{gpq_geo_metadata()}}: the GeoParquet (\code{geo}) and GDAL (\verb{gdal:*}) key-value metadata.
-\item \code{\link[=gpq_arrow_schema]{gpq_arrow_schema()}}: the Arrow schema (requires the \pkg{arrow} package).
 \item \code{\link[=gpq_inspect]{gpq_inspect()}}: all of the above, assembled into one object.
 }
 

@@ -21,7 +21,6 @@
 #' - [gpq_schema_info()]: the Parquet schema (leaf columns, struct nodes, logical types).
 #' - [gpq_row_groups()]: row group and column chunk statistics, with decoded min/max values.
 #' - [gpq_geo_metadata()]: the GeoParquet (`geo`) and GDAL (`gdal:*`) key-value metadata.
-#' - [gpq_arrow_schema()]: the Arrow schema (requires the \pkg{arrow} package).
 #' - [gpq_inspect()]: all of the above, assembled into one object.
 #'
 #' The footer is read with [nanoparquet::read_parquet_metadata()] and embedded JSON metadata is parsed with
@@ -116,30 +115,49 @@ print.gpq_file_info <- function(x, ...) {
 
 # schema ----------------------------------------------------------------------------------------------------------
 
-#' GeoParquet Schema Info
+#' GeoParquet Schema
 #'
 #' @description
-#' Read and tidy the Parquet schema. The raw \pkg{nanoparquet} schema interleaves the root node, struct/group nodes
-#' (e.g. `geometry_bbox`) and the leaf columns; these are separated, the `logical_type` list-column is rendered to a
-#' string, and geometry annotations (encoding and geometry types) from the `geo` metadata are joined onto the
-#' relevant leaf columns.
+#' Read the tidied Parquet schema as a tibble: one row per leaf column with its Parquet physical type,
+#' converted/logical types, repetition, mapped R type, and (for geometry columns) the encoding and geometry types
+#' from the `geo` metadata. For a high-level summary instead of the full table, see [gpq_schema_info()].
 #'
 #' @inheritParams gpq_file_info
 #'
 #' @returns
-#' A `gpq_schema_info` object (a list) with:
-#' - `source`, `path`: the file name and full path.
-#' - `root`: the root schema node.
-#' - `struct_nodes`: the struct/group nodes (e.g. `geometry_bbox`).
-#' - `columns`: a one-row-per-leaf [tibble::tibble()] (`id`, `name`, `parquet_type`, `converted_type`,
-#'   `logical_type`, `repetition`, `r_type`, `info`).
-#' - `n_leaf`, `n_struct`: the leaf column and struct node counts.
+#' A [tibble::tibble()] with columns `id`, `name`, `parquet_type`, `converted_type`, `logical_type`, `repetition`,
+#' `r_type`, and `info`.
 #'
 #' @export
 #'
 #' @importFrom nanoparquet read_parquet_schema
-#' @importFrom tibble tibble as_tibble
-#' @importFrom purrr map_chr
+#'
+#' @examples
+#' f <- system.file("extdata/atlanta/atlanta.parquet", package = "gdalvector")
+#' gpq_schema(f)
+gpq_schema <- function(gpq_path) {
+  check_file(gpq_path, ext = "parquet")
+  raw <- nanoparquet::read_parquet_schema(gpq_path)
+  .gpq_schema_columns(raw, .gpq_read_meta(gpq_path)$geo$columns)
+}
+
+#' GeoParquet Schema Info
+#'
+#' @description
+#' Summarize the Parquet schema of a (Geo)Parquet file: leaf column and struct node counts, the geometry column(s),
+#' and the distribution of Parquet physical types. The full per-column table is available from [gpq_schema()] or the
+#' object's `columns` element.
+#'
+#' @inheritParams gpq_file_info
+#'
+#' @returns
+#' A `gpq_schema_info` object (a list) with `source`, `path`, `struct_nodes`, `columns` (the [gpq_schema()] tibble),
+#' and the `n_leaf`/`n_struct` counts.
+#'
+#' @export
+#'
+#' @importFrom nanoparquet read_parquet_schema
+#' @importFrom tibble as_tibble
 #'
 #' @examples
 #' f <- system.file("extdata/atlanta/atlanta.parquet", package = "gdalvector")
@@ -148,41 +166,20 @@ gpq_schema_info <- function(gpq_path) {
   check_file(gpq_path, ext = "parquet")
 
   raw <- nanoparquet::read_parquet_schema(gpq_path)
-  geo_cols <- .gpq_read_meta(gpq_path)$geo$columns
+  columns <- .gpq_schema_columns(raw, .gpq_read_meta(gpq_path)$geo$columns)
 
-  # leaf columns carry a physical `type`; the root and struct/group nodes do not. neither the root name ("schema"
-  # for GDAL, "duckdb_schema" for DuckDB) nor `r_col` (assigned to struct nodes by some writers) reliably
-  # discriminates them, but the root node is always the first schema entry.
+  # leaf columns carry a physical `type`; the root (always the first entry) and struct/group nodes (e.g.
+  # `geometry_bbox`) do not.
   is_leaf <- !is.na(raw$type)
-  is_root <- seq_len(nrow(raw)) == 1L
-  is_struct <- !is_leaf & !is_root
-  leaf <- raw[is_leaf, , drop = FALSE]
-
-  columns <- tibble::tibble(
-    id = seq_len(nrow(leaf)),
-    name = leaf$name,
-    parquet_type = leaf$type,
-    converted_type = leaf$converted_type,
-    logical_type = purrr::map_chr(leaf$logical_type, .gpq_logical_type_str),
-    repetition = leaf$repetition_type,
-    r_type = leaf$r_type,
-    info = purrr::map_chr(leaf$name, function(nm) {
-      gc <- geo_cols[[nm]]
-      if (is.null(gc)) {
-        return(NA_character_)
-      }
-      trimws(paste(gc$encoding %||% "", paste(gc$geometry_types, collapse = ", ")))
-    })
-  )
+  is_struct <- !is_leaf & seq_len(nrow(raw)) != 1L
 
   structure(
     list(
       source = basename(gpq_path),
       path = gpq_path,
-      root = tibble::as_tibble(raw[is_root, , drop = FALSE]),
       struct_nodes = tibble::as_tibble(raw[is_struct, , drop = FALSE]),
       columns = columns,
-      n_leaf = sum(is_leaf),
+      n_leaf = nrow(columns),
       n_struct = sum(is_struct)
     ),
     class = c("gpq_schema_info", "list")
@@ -192,14 +189,20 @@ gpq_schema_info <- function(gpq_path) {
 #' @export
 #'
 #' @importFrom cli cli_text
-#' @importFrom utils capture.output
-format.gpq_schema_info <- function(x, n = 20L, ...) {
-  c(
-    gpq_cli_fmt(
-      cli::cli_text("{.cls {class(x)}} ({x$n_leaf} leaf column{?s}, {x$n_struct} struct node{?s})")
-    ),
-    utils::capture.output(print(x$columns, n = n))
-  )
+#' @importFrom stats setNames
+format.gpq_schema_info <- function(x, ...) {
+  geom <- x$columns[!is.na(x$columns$info), , drop = FALSE]
+  types <- sort(table(x$columns$parquet_type), decreasing = TRUE)
+  gpq_cli_fmt({
+    cli::cli_text("{.cls {class(x)}}")
+    cli_kv(list(
+      "Leaf columns" = x$n_leaf,
+      "Struct nodes" = if (x$n_struct > 0L) x$struct_nodes$name else NA,
+      "Geometry" = if (nrow(geom) > 0L) paste0(geom$name, " (", geom$info, ")") else NA
+    ))
+    cli_kv(stats::setNames(as.integer(types), names(types)), title = "Parquet types")
+    cli::cli_text("{.emph Full column table via} {.fn gpq_schema}")
+  })
 }
 
 #' @export
@@ -418,114 +421,24 @@ print.gpq_geo_metadata <- function(x, ...) {
 }
 
 
-# arrow schema ----------------------------------------------------------------------------------------------------
-
-#' GeoParquet Arrow Schema
-#'
-#' @description
-#' Read the Arrow-level schema (Arrow data types and extension metadata such as `geoarrow.wkb`). Requires the
-#' \pkg{arrow} package and aborts with an installation hint when it is not available.
-#'
-#' @inheritParams gpq_file_info
-#'
-#' @returns
-#' A `gpq_arrow_schema` object (a list) with:
-#' - `source`, `path`: the file name and full path.
-#' - `fields`: a [tibble::tibble()] of `index`, `name`, `arrow_type`, `nullable`, and `extension`.
-#' - `n_fields`: the field count.
-#' - `schema_meta`: the schema-level key-value metadata.
-#' - `schema`: the raw [arrow::Schema] object.
-#'
-#' @export
-#'
-#' @importFrom tibble tibble
-#' @importFrom purrr map list_rbind
-#'
-#' @examples
-#' \dontrun{
-#' f <- system.file("extdata/atlanta/atlanta.parquet", package = "gdalvector")
-#' gpq_arrow_schema(f)
-#' }
-gpq_arrow_schema <- function(gpq_path) {
-  check_file(gpq_path, ext = "parquet")
-  if (!requireNamespace("arrow", quietly = TRUE)) {
-    gdal_abort(
-      c(
-        "Package {.pkg arrow} is required for {.fn gpq_arrow_schema}.",
-        "i" = 'Install it with {.run install.packages("arrow")}.'
-      ),
-      cls = "gpq_arrow_unavailable_error"
-    )
-  }
-
-  sch <- arrow::open_dataset(gpq_path)$schema
-  fields <- purrr::map(
-    seq_along(sch$fields),
-    function(i) {
-      f <- sch$field(i - 1L)
-      tibble::tibble(
-        index = i,
-        name = f$name,
-        arrow_type = f$type$ToString(),
-        nullable = f$nullable,
-        extension = f$metadata[["ARROW:extension:name"]] %||% NA_character_
-      )
-    }
-  ) |>
-    purrr::list_rbind()
-
-  structure(
-    list(
-      source = basename(gpq_path),
-      path = gpq_path,
-      fields = fields,
-      n_fields = length(sch$fields),
-      schema_meta = sch$metadata,
-      schema = sch
-    ),
-    class = c("gpq_arrow_schema", "list")
-  )
-}
-
-#' @export
-#'
-#' @importFrom cli cli_text
-#' @importFrom utils capture.output
-format.gpq_arrow_schema <- function(x, n = 20L, ...) {
-  c(
-    gpq_cli_fmt(cli::cli_text("{.cls {class(x)}} ({x$n_fields} field{?s})")),
-    utils::capture.output(print(x$fields, n = n))
-  )
-}
-
-#' @export
-print.gpq_arrow_schema <- function(x, ...) {
-  cat(format(x, ...), sep = "\n")
-  invisible(x)
-}
-
-
 # inspect ---------------------------------------------------------------------------------------------------------
 
 #' Comprehensive GeoParquet Introspection
 #'
 #' @description
-#' Assemble [gpq_file_info()], [gpq_schema_info()], [gpq_row_groups()], [gpq_geo_metadata()] and (optionally)
-#' [gpq_arrow_schema()] into a single object.
+#' Assemble [gpq_file_info()], [gpq_schema_info()], [gpq_row_groups()] and [gpq_geo_metadata()] into a single object.
 #'
 #' @inheritParams gpq_file_info
-#' @param arrow Logical; include the Arrow schema (requires the \pkg{arrow} package). Defaults to `FALSE`.
 #'
 #' @returns
-#' A `gpq_inspect` object (a list) with `file_info`, `schema`, `row_groups`, `geo_metadata` and (optionally)
-#' `arrow_schema` elements.
+#' A `gpq_inspect` object (a list) with `file_info`, `schema`, `row_groups` and `geo_metadata` elements.
 #'
 #' @export
 #'
 #' @examples
 #' f <- system.file("extdata/atlanta/atlanta.parquet", package = "gdalvector")
 #' gpq_inspect(f)
-gpq_inspect <- function(gpq_path, arrow = FALSE) {
+gpq_inspect <- function(gpq_path) {
   check_file(gpq_path, ext = "parquet")
 
   structure(
@@ -533,8 +446,7 @@ gpq_inspect <- function(gpq_path, arrow = FALSE) {
       file_info = gpq_file_info(gpq_path),
       schema = gpq_schema_info(gpq_path),
       row_groups = gpq_row_groups(gpq_path),
-      geo_metadata = gpq_geo_metadata(gpq_path),
-      arrow_schema = if (isTRUE(arrow)) gpq_arrow_schema(gpq_path) else NULL
+      geo_metadata = gpq_geo_metadata(gpq_path)
     ),
     class = c("gpq_inspect", "list")
   )
@@ -543,9 +455,8 @@ gpq_inspect <- function(gpq_path, arrow = FALSE) {
 #' @export
 #'
 #' @importFrom cli cli_text
-#' @importFrom purrr compact
 format.gpq_inspect <- function(x, ...) {
-  parts <- purrr::compact(list(x$file_info, x$schema, x$row_groups, x$geo_metadata, x$arrow_schema))
+  parts <- list(x$file_info, x$schema, x$row_groups, x$geo_metadata)
   c(
     gpq_cli_fmt(cli::cli_text("{.cls {class(x)}}")),
     "",
@@ -597,6 +508,33 @@ print.gpq_inspect <- function(x, ...) {
   rlang::try_fetch(yyjsonr::read_json_str(val), error = function(cnd) NULL)
 }
 
+# build the one-row-per-leaf-column schema tibble from a raw nanoparquet schema and the parsed `geo` columns. leaf
+# columns are those carrying a physical `type`; the `info` column annotates geometry columns with their encoding and
+# geometry types.
+#' @keywords internal
+#' @noRd
+#' @importFrom tibble tibble
+#' @importFrom purrr map_chr
+.gpq_schema_columns <- function(raw, geo_cols) {
+  leaf <- raw[!is.na(raw$type), , drop = FALSE]
+  tibble::tibble(
+    id = seq_len(nrow(leaf)),
+    name = leaf$name,
+    parquet_type = leaf$type,
+    converted_type = leaf$converted_type,
+    logical_type = purrr::map_chr(leaf$logical_type, .gpq_logical_type_str),
+    repetition = leaf$repetition_type,
+    r_type = leaf$r_type,
+    info = purrr::map_chr(leaf$name, function(nm) {
+      gc <- geo_cols[[nm]]
+      if (is.null(gc)) {
+        return(NA_character_)
+      }
+      trimws(paste(gc$encoding %||% "", paste(gc$geometry_types, collapse = ", ")))
+    })
+  )
+}
+
 # render a nanoparquet `logical_type` list element (e.g. list(type = "DECIMAL", scale = 2)) as a string.
 # `lt$type` is `NULL` when `lt` is `NULL`, an empty list, or simply has no type, so one guard covers all three.
 #' @keywords internal
@@ -614,24 +552,25 @@ print.gpq_inspect <- function(x, ...) {
   paste0(lt$type, "(", kv, ")")
 }
 
-# normalize a GeoParquet `crs` field to a `type`/`name`/`authority` summary, resolving the name and EPSG code via
-# GDAL's SRS API. A `NULL` crs means the GeoParquet default of OGC:CRS84 (lon/lat WGS 84). The `crs` can otherwise
-# be a PROJJSON object (parsed to a list) or an authority/WKT string; both are accepted by the SRS functions.
+# normalize a GeoParquet `crs` field to a `type`/`name`/`authority` summary, read directly from the embedded
+# metadata (no GDAL/PROJ calls). A `NULL` crs means the GeoParquet default of OGC:CRS84 (lon/lat WGS 84); a list is
+# a PROJJSON object carrying its own `name` and `id`; anything else is an authority or WKT string.
 #' @keywords internal
 #' @noRd
-#' @importFrom gdalraster srs_get_name srs_find_epsg
-#' @importFrom rlang try_fetch
+#' @importFrom purrr pluck
 .gpq_crs_summary <- function(crs) {
   if (is.null(crs)) {
     return(list(type = "default", name = "WGS 84 (CRS84)", authority = "OGC:CRS84"))
   }
-  srs <- if (is.list(crs)) yyjsonr::write_json_str(crs, opts = JSON_WRITE_OPTS) else as.character(crs)
-  name <- rlang::try_fetch(gdalraster::srs_get_name(srs), error = function(cnd) NA_character_)
-  epsg <- rlang::try_fetch(gdalraster::srs_find_epsg(srs), error = function(cnd) NA_character_)
+  if (!is.list(crs)) {
+    return(list(type = "string", name = NA_character_, authority = as.character(crs)[[1L]]))
+  }
+  id <- crs$id %||% purrr::pluck(crs, "ids", 1L)
+  authority <- if (!is.null(id)) paste0(id$authority, ":", id$code) else NA_character_
   list(
-    type = if (is.list(crs)) "PROJJSON" else "string",
-    name = if (length(name) == 1L && nzchar(name)) name else NA_character_,
-    authority = if (length(epsg) == 1L && nzchar(epsg)) epsg else NA_character_
+    type = "PROJJSON",
+    name = crs$name %||% NA_character_,
+    authority = authority
   )
 }
 

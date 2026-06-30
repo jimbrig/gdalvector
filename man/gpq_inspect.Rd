@@ -4,20 +4,16 @@
 \alias{gpq_inspect}
 \title{Comprehensive GeoParquet Introspection}
 \usage{
-gpq_inspect(gpq_path, arrow = FALSE)
+gpq_inspect(gpq_path)
 }
 \arguments{
 \item{gpq_path}{Path to a (Geo)Parquet (\verb{*.parquet}) file.}
-
-\item{arrow}{Logical; include the Arrow schema (requires the \pkg{arrow} package). Defaults to \code{FALSE}.}
 }
 \value{
-A \code{gpq_inspect} object (a list) with \code{file_info}, \code{schema}, \code{row_groups}, \code{geo_metadata} and (optionally)
-\code{arrow_schema} elements.
+A \code{gpq_inspect} object (a list) with \code{file_info}, \code{schema}, \code{row_groups} and \code{geo_metadata} elements.
 }
 \description{
-Assemble \code{\link[=gpq_file_info]{gpq_file_info()}}, \code{\link[=gpq_schema_info]{gpq_schema_info()}}, \code{\link[=gpq_row_groups]{gpq_row_groups()}}, \code{\link[=gpq_geo_metadata]{gpq_geo_metadata()}} and (optionally)
-\code{\link[=gpq_arrow_schema]{gpq_arrow_schema()}} into a single object.
+Assemble \code{\link[=gpq_file_info]{gpq_file_info()}}, \code{\link[=gpq_schema_info]{gpq_schema_info()}}, \code{\link[=gpq_row_groups]{gpq_row_groups()}} and \code{\link[=gpq_geo_metadata]{gpq_geo_metadata()}} into a single object.
 }
 \examples{
 f <- system.file("extdata/atlanta/atlanta.parquet", package = "gdalvector")

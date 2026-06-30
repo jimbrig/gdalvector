@@ -41,6 +41,18 @@ test_that("gpq_file_info errors on missing files and non-parquet extensions", {
 
 # gpq_schema_info -------------------------------------------------------------------------------------------------
 
+test_that("gpq_schema returns a tidy one-row-per-leaf tibble", {
+  sch <- gpq_schema(test_data("geo.parquet"))
+
+  expect_s3_class(sch, "tbl_df")
+  expect_identical(nrow(sch), 8L)
+  expect_identical(
+    names(sch),
+    c("id", "name", "parquet_type", "converted_type", "logical_type", "repetition", "r_type", "info")
+  )
+  expect_match(sch$info[sch$name == "geometry"], "^WKB")
+})
+
 test_that("gpq_schema_info separates leaves from struct nodes and annotates geometry", {
   sch <- gpq_schema_info(test_data("geo.parquet"))
 
@@ -124,29 +136,9 @@ test_that("gpq_geo_metadata warns and flags non-geoparquet files", {
 })
 
 
-# gpq_arrow_schema ------------------------------------------------------------------------------------------------
-
-test_that("gpq_arrow_schema reads arrow fields when arrow is available", {
-  skip_if_not_installed("arrow")
-  schema <- gpq_arrow_schema(test_data("geo.parquet"))
-
-  expect_s3_class(schema, "gpq_arrow_schema")
-  expect_true("geometry" %in% schema$fields$name)
-  expect_true(all(c("index", "name", "arrow_type", "nullable", "extension") %in% names(schema$fields)))
-})
-
-test_that("gpq_arrow_schema aborts with a typed condition when arrow is unavailable", {
-  local_mocked_bindings(requireNamespace = function(...) FALSE, .package = "base")
-  expect_error(
-    gpq_arrow_schema(test_data("geo.parquet")),
-    class = "gpq_arrow_unavailable_error"
-  )
-})
-
-
 # gpq_inspect -----------------------------------------------------------------------------------------------------
 
-test_that("gpq_inspect assembles all panels and omits arrow by default", {
+test_that("gpq_inspect assembles all panels", {
   res <- gpq_inspect(test_data("geo.parquet"))
 
   expect_s3_class(res, "gpq_inspect")
@@ -154,7 +146,6 @@ test_that("gpq_inspect assembles all panels and omits arrow by default", {
   expect_s3_class(res$schema, "gpq_schema_info")
   expect_s3_class(res$row_groups, "gpq_row_groups")
   expect_s3_class(res$geo_metadata, "gpq_geo_metadata")
-  expect_null(res$arrow_schema)
 })
 
 

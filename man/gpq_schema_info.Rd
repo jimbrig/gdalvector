@@ -10,21 +10,13 @@ gpq_schema_info(gpq_path)
 \item{gpq_path}{Path to a (Geo)Parquet (\verb{*.parquet}) file.}
 }
 \value{
-A \code{gpq_schema_info} object (a list) with:
-\itemize{
-\item \code{source}, \code{path}: the file name and full path.
-\item \code{root}: the root schema node.
-\item \code{struct_nodes}: the struct/group nodes (e.g. \code{geometry_bbox}).
-\item \code{columns}: a one-row-per-leaf \code{\link[tibble:tibble]{tibble::tibble()}} (\code{id}, \code{name}, \code{parquet_type}, \code{converted_type},
-\code{logical_type}, \code{repetition}, \code{r_type}, \code{info}).
-\item \code{n_leaf}, \code{n_struct}: the leaf column and struct node counts.
-}
+A \code{gpq_schema_info} object (a list) with \code{source}, \code{path}, \code{struct_nodes}, \code{columns} (the \code{\link[=gpq_schema]{gpq_schema()}} tibble),
+and the \code{n_leaf}/\code{n_struct} counts.
 }
 \description{
-Read and tidy the Parquet schema. The raw \pkg{nanoparquet} schema interleaves the root node, struct/group nodes
-(e.g. \code{geometry_bbox}) and the leaf columns; these are separated, the \code{logical_type} list-column is rendered to a
-string, and geometry annotations (encoding and geometry types) from the \code{geo} metadata are joined onto the
-relevant leaf columns.
+Summarize the Parquet schema of a (Geo)Parquet file: leaf column and struct node counts, the geometry column(s),
+and the distribution of Parquet physical types. The full per-column table is available from \code{\link[=gpq_schema]{gpq_schema()}} or the
+object's \code{columns} element.
 }
 \examples{
 f <- system.file("extdata/atlanta/atlanta.parquet", package = "gdalvector")

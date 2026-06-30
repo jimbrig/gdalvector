@@ -21,7 +21,7 @@
 #' - `{.val}`, `{.cls}`: brightened to cyan (the builtin blue is too dim on dark backgrounds).
 #'
 #' Per the cli theming model (see `?cli::themes`), this is applied as a scoped [cli::cli_div()] theme around the
-#' package's own output (via [gpq_cli_fmt()]) rather than mutating the global `cli.theme` option, so it never
+#' package's own output (via `gpq_cli_fmt()`) rather than mutating the global `cli.theme` option, so it never
 #' affects other packages' output. Unknown classes degrade gracefully to unstyled text.
 #'
 #' @returns A named list suitable for the `theme` argument of [cli::cli_div()].
