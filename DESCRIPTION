@@ -13,6 +13,7 @@ BugReports: https://github.com/jimbrig/gdalvector/issues
 Depends: 
     R (>= 4.2)
 Imports: 
+    arrow,
     bit64,
     cli,
     climenu,
@@ -26,6 +27,7 @@ Imports:
     gpkg,
     httr2,
     jsonvalidate,
+    nanoparquet,
     openssl,
     processx,
     ps,
