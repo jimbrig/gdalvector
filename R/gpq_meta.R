@@ -595,11 +595,12 @@ print.gpq_inspect <- function(x, ...) {
 }
 
 # render a nanoparquet `logical_type` list element (e.g. list(type = "DECIMAL", scale = 2)) as a string.
+# `lt$type` is `NULL` when `lt` is `NULL`, an empty list, or simply has no type, so one guard covers all three.
 #' @keywords internal
 #' @noRd
 #' @importFrom rlang is_empty
 .gpq_logical_type_str <- function(lt) {
-  if (is.null(lt) || rlang::is_empty(lt) || is.null(lt$type)) {
+  if (is.null(lt$type)) {
     return(NA_character_)
   }
   extras <- lt[names(lt) != "type"]
@@ -610,20 +611,25 @@ print.gpq_inspect <- function(x, ...) {
   paste0(lt$type, "(", kv, ")")
 }
 
-# normalize a GeoParquet `crs` field (NULL / PROJJSON list / WKT string) to a small summary.
+# normalize a GeoParquet `crs` field to a `type`/`name`/`authority` summary, resolving the name and EPSG code via
+# GDAL's SRS API. A `NULL` crs means the GeoParquet default of OGC:CRS84 (lon/lat WGS 84). The `crs` can otherwise
+# be a PROJJSON object (parsed to a list) or an authority/WKT string; both are accepted by the SRS functions.
 #' @keywords internal
 #' @noRd
-#' @importFrom purrr pluck
+#' @importFrom gdalraster srs_get_name srs_find_epsg
+#' @importFrom rlang try_fetch
 .gpq_crs_summary <- function(crs) {
   if (is.null(crs)) {
-    return(list(type = "none", name = NA_character_, authority = NA_character_))
+    return(list(type = "default", name = "WGS 84 (CRS84)", authority = "OGC:CRS84"))
   }
-  if (!is.list(crs)) {
-    return(list(type = "WKT", name = substr(as.character(crs), 1L, 80L), authority = NA_character_))
-  }
-  id <- crs$id %||% purrr::pluck(crs, "ids", 1L)
-  authority <- if (!is.null(id)) paste0(id$authority, ":", id$code) else NA_character_
-  list(type = "PROJJSON", name = crs$name %||% NA_character_, authority = authority)
+  srs <- if (is.list(crs)) yyjsonr::write_json_str(crs, opts = JSON_WRITE_OPTS) else as.character(crs)
+  name <- rlang::try_fetch(gdalraster::srs_get_name(srs), error = function(cnd) NA_character_)
+  epsg <- rlang::try_fetch(gdalraster::srs_find_epsg(srs), error = function(cnd) NA_character_)
+  list(
+    type = if (is.list(crs)) "PROJJSON" else "string",
+    name = if (length(name) == 1L && nzchar(name)) name else NA_character_,
+    authority = if (length(epsg) == 1L && nzchar(epsg)) epsg else NA_character_
+  )
 }
 
 # decode a raw binary Parquet min/max statistic to an R scalar based on the column's physical type, returning `NA`
@@ -632,7 +638,7 @@ print.gpq_inspect <- function(x, ...) {
 #' @noRd
 #' @importFrom rlang try_fetch
 .gpq_decode_stat <- function(raw_val, parquet_type) {
-  if (is.null(raw_val) || length(raw_val) == 0L) {
+  if (length(raw_val) == 0L) {
     return(NA)
   }
   rlang::try_fetch(
@@ -640,8 +646,8 @@ print.gpq_inspect <- function(x, ...) {
       parquet_type,
       BOOLEAN = as.logical(as.integer(raw_val[1L])),
       INT32 = readBin(raw_val, "integer", size = 4L, n = 1L, endian = "little"),
-      INT64 = .gpq_raw_to_int64(raw_val),
-      INT96 = .gpq_raw_to_int64(raw_val),
+      INT64 = raw_to_int64(raw_val, endian = "little"),
+      INT96 = raw_to_int64(raw_val, endian = "little"),
       FLOAT = readBin(raw_val, "double", size = 4L, n = 1L, endian = "little"),
       DOUBLE = readBin(raw_val, "double", size = 8L, n = 1L, endian = "little"),
       BYTE_ARRAY = raw_to_char(strip_null_bytes(raw_val)),
@@ -652,19 +658,6 @@ print.gpq_inspect <- function(x, ...) {
   )
 }
 
-# decode an 8-byte (little-endian, two's complement) integer to a double - exact for typical display ranges.
-#' @keywords internal
-#' @noRd
-.gpq_raw_to_int64 <- function(raw_val) {
-  bytes <- as.numeric(raw_val)
-  n <- length(bytes)
-  val <- sum(bytes * 256^(seq_len(n) - 1L))
-  if (n >= 8L && bytes[[n]] >= 128) {
-    val <- val - 2^(8 * n)
-  }
-  val
-}
-
 # reduce a column's per-row-group decoded statistics to a single formatted scalar (numeric -> `fn`, character ->
 # lexical `fn`). used inside the `col_summary` group/summarise to produce global min/max strings.
 #' @keywords internal
@@ -672,7 +665,7 @@ print.gpq_inspect <- function(x, ...) {
 #' @importFrom purrr discard
 #' @importFrom rlang is_empty
 .gpq_global_stat <- function(vals, fn) {
-  vals <- purrr::discard(vals, \(v) is.null(v) || length(v) == 0L || all(is.na(v)))
+  vals <- purrr::discard(vals, is_blank)
   if (rlang::is_empty(vals)) {
     return("-")
   }

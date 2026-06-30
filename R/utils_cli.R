@@ -38,29 +38,29 @@ gdalvector_cli_theme <- function() {
 
 # key-value list --------------------------------------------------------------------------------------------------
 
-# emit a named list as a cli definition list (`key: value`), the package-wide way to render a small set of
-# scalar fields in a `format`/`print` method. values are styled with `{.val}` (so strings are quoted, numbers and
-# `rlang::as_bytes()` sizes are not); `NULL`/`NA`/empty values render as an em dash. intended to be wrapped in a
+# emit a named list as aligned `key  value` lines, the package-wide way to render a small set of scalar fields in
+# a `format`/`print` method. keys are bold in the terminal's default foreground (legible on any background);
+# values are styled with `{.val}` (strings quoted, numbers and `rlang::as_bytes()` sizes not); blank values render
+# as an em dash. emitted via `cli::cli_verbatim()` so the column alignment survives, and meant to be wrapped in a
 # `cli::cli_fmt()` block by the calling formatter.
 #' @keywords internal
 #' @noRd
-#' @importFrom cli cli_dl col_grey format_inline
+#' @importFrom cli cli_verbatim style_bold format_inline
 cli_kv <- function(x) {
   if (length(x) == 0L) {
     return(invisible(NULL))
   }
-  values <- vapply(
-    x,
-    function(value) {
-      if (is.null(value) || length(value) == 0L || all(is.na(value))) {
-        cli::col_grey("\u2014")
-      } else {
-        cli::format_inline("{.val {value}}")
-      }
+  width <- max(nchar(names(x)))
+  lines <- vapply(
+    seq_along(x),
+    function(i) {
+      value <- x[[i]]
+      rendered <- if (is_blank(value)) "\u2014" else cli::format_inline("{.val {value}}")
+      paste0(cli::style_bold(formatC(names(x)[[i]], width = -width)), "  ", rendered)
     },
     character(1L)
   )
-  cli::cli_dl(values)
+  cli::cli_verbatim(lines)
   invisible(NULL)
 }
 

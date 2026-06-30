@@ -13,6 +13,11 @@ is_int64 <- function(x) {
   bit64::is.integer64(x)
 }
 
+# TRUE for `NULL`, zero-length, or entirely-`NA` input (`all(is.na())` covers all three cases).
+is_blank <- function(x) {
+  all(is.na(x))
+}
+
 
 # vsi -------------------------------------------------------------------------------------------------------------
 
