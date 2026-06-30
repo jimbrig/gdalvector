@@ -164,9 +164,9 @@ gdal_vector_layer_fid_col <- function(dsn, layer = gdal_vector_layer(dsn), ...) 
   if (!(gdal_fid_col %in% fields)) {
     cli::cli_bullets(
       c(
-       "!" = "FID column reported by GDAL ({.field {gdal_fid_col}}) is not an actual field in the layer {.field {layer}}.",
-       "i" = "This is common for some drivers (e.g., GeoPackage) where the FID is a virtual column and not stored as a field.",
-       "i" = "Consider using {.field 'CAST(rowid AS INTEGER) AS source_fid'} in SQL performed against the layer get the FID used by GDAL as an attribute field"
+        "!" = "FID column reported by GDAL ({.field {gdal_fid_col}}) is not an actual field in the layer {.field {layer}}.",
+        "i" = "This is common for some drivers (e.g., GeoPackage) where the FID is a virtual column and not stored as a field.",
+        "i" = "Consider using {.field 'CAST(rowid AS INTEGER) AS source_fid'} in SQL performed against the layer get the FID used by GDAL as an attribute field"
       )
     )
   }
