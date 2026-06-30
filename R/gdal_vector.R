@@ -161,13 +161,17 @@ gdal_vector_layer_fid_col <- function(dsn, layer = gdal_vector_layer(dsn), ...) 
   withr::defer(vec$close())
   fields <- vec$getFieldNames()
   gdal_fid_col <- vec$getFIDColumn()
+  if (!nzchar(gdal_fid_col)) {
+    gdal_fid_col <- '""'
+  }
   if (!(gdal_fid_col %in% fields)) {
-    cli::cli_bullets(
+    gdal_inform(
       c(
         "!" = "FID column reported by GDAL ({.field {gdal_fid_col}}) is not an actual field in the layer {.field {layer}}.",
         "i" = "This is common for some drivers (e.g., GeoPackage) where the FID is a virtual column and not stored as a field.",
         "i" = "Consider using {.field 'CAST(rowid AS INTEGER) AS source_fid'} in SQL performed against the layer get the FID used by GDAL as an attribute field"
-      )
+      ),
+      cls = "gdal_fid_col_inform"
     )
   }
   return(gdal_fid_col)
