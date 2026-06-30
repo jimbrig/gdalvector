@@ -11,19 +11,19 @@
 #' Package cli Theme
 #'
 #' @description
-#' Reusable semantic styling for the package's cli output (GDAL option rendering, and future
-#' driver/validation/sitrep views). Defines a small set of custom inline span classes:
+#' Reusable semantic styling for the package's cli output. Defines a small set of custom inline span classes and
+#' nudges two builtin ones to colors that stay legible on dark terminal backgrounds:
 #'
 #' - `{.drv}`: a GDAL driver short name.
 #' - `{.flag}`: a CLI flag (e.g. `--open-option`).
 #' - `{.optname}`: an option name.
 #' - `{.optval}`: an option value.
+#' - `{.val}`, `{.cls}`: brightened to cyan (the builtin blue is too dim on dark backgrounds).
 #'
-#' The theme is applied locally where output is produced (via [cli::cli_div()]), not registered
-#' globally on package load, so the package never mutates the user's session-wide cli styling.
-#' Unknown classes degrade gracefully to unstyled text when the theme is not active.
+#' Applied once on load (see `zzz.R`) by layering onto the active cli theme; unknown classes degrade gracefully to
+#' unstyled text.
 #'
-#' @returns A named list suitable for the `theme` argument of [cli::cli_div()].
+#' @returns A named list suitable for the `theme` argument of [cli::cli_div()] or the `cli.theme` option.
 #'
 #' @keywords internal
 #' @noRd
@@ -32,7 +32,9 @@ gdalvector_cli_theme <- function() {
     "span.drv" = list(color = "cyan"),
     "span.flag" = list(color = "grey"),
     "span.optname" = list(color = "blue"),
-    "span.optval" = list(color = "green")
+    "span.optval" = list(color = "green"),
+    "span.val" = list(color = "cyan"),
+    "span.cls" = list(color = "cyan")
   )
 }
 
