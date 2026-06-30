@@ -646,11 +646,10 @@ print.gpq_inspect <- function(x, ...) {
       parquet_type,
       BOOLEAN = as.logical(as.integer(raw_val[1L])),
       INT32 = readBin(raw_val, "integer", size = 4L, n = 1L, endian = "little"),
-      INT64 = raw_to_int64(raw_val, endian = "little"),
-      INT96 = raw_to_int64(raw_val, endian = "little"),
+      INT64 = as.numeric(raw_to_int64(raw_val)),
       FLOAT = readBin(raw_val, "double", size = 4L, n = 1L, endian = "little"),
       DOUBLE = readBin(raw_val, "double", size = 8L, n = 1L, endian = "little"),
-      BYTE_ARRAY = raw_to_char(strip_null_bytes(raw_val)),
+      BYTE_ARRAY = ,
       FIXED_LEN_BYTE_ARRAY = raw_to_char(strip_null_bytes(raw_val)),
       NA
     ),
@@ -665,7 +664,7 @@ print.gpq_inspect <- function(x, ...) {
 #' @importFrom purrr discard
 #' @importFrom rlang is_empty
 .gpq_global_stat <- function(vals, fn) {
-  vals <- purrr::discard(vals, is_blank)
+  vals <- purrr::discard(vals, \(v) all(is.na(v)))
   if (rlang::is_empty(vals)) {
     return("-")
   }

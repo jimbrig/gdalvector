@@ -36,20 +36,13 @@ raw_to_int <- function(x, size = 4L, endian = "big", signed = TRUE) {
   readBin(x, what = "integer", size = size, endian = endian, signed = signed)
 }
 
-# decode an 8-byte (or any width) integer from raw bytes as a double. `readBin()` cannot read 64-bit integers, so
-# the bytes are accumulated manually, with two's-complement applied for signed negatives. exact for the typical
-# display ranges encountered in Parquet statistics.
-raw_to_int64 <- function(x, endian = "little", signed = TRUE) {
-  bytes <- as.numeric(x)
-  if (identical(endian, "big")) {
-    bytes <- rev(bytes)
-  }
-  n <- length(bytes)
-  val <- sum(bytes * 256^(seq_len(n) - 1L))
-  if (signed && n > 0L && bytes[[n]] >= 128) {
-    val <- val - 2^(8 * n)
-  }
-  val
+# decode a 64-bit integer from 8 raw bytes via bit64. base `readBin()` cannot read 8-byte integers, but a bit64
+# `integer64` stores its value as the raw bits of a double, so reading the bytes as a double and reinterpreting the
+# class yields the correct signed value (with none of the manual two's-complement handling getting in the way).
+raw_to_int64 <- function(x, endian = "little") {
+  out <- readBin(x, what = "double", n = 1L, size = 8L, endian = endian)
+  class(out) <- "integer64"
+  out
 }
 
 int_to_hex_str <- function(x, width = 8L, prefix = TRUE, upper = TRUE) {

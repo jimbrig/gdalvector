@@ -57,7 +57,7 @@ cli_kv <- function(x) {
     seq_along(x),
     function(i) {
       value <- x[[i]]
-      rendered <- if (is_blank(value)) "\u2014" else cli::format_inline("{.val {value}}")
+      rendered <- if (all(is.na(value))) "\u2014" else cli::format_inline("{.val {value}}")
       paste0(cli::style_bold(formatC(names(x)[[i]], width = -width)), "  ", rendered)
     },
     character(1L)
