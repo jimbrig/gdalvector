@@ -20,10 +20,11 @@
 #' - `{.optval}`: an option value.
 #' - `{.val}`, `{.cls}`: brightened to cyan (the builtin blue is too dim on dark backgrounds).
 #'
-#' Applied once on load (see `zzz.R`) by layering onto the active cli theme; unknown classes degrade gracefully to
-#' unstyled text.
+#' Per the cli theming model (see `?cli::themes`), this is applied as a scoped [cli::cli_div()] theme around the
+#' package's own output (via [gpq_cli_fmt()]) rather than mutating the global `cli.theme` option, so it never
+#' affects other packages' output. Unknown classes degrade gracefully to unstyled text.
 #'
-#' @returns A named list suitable for the `theme` argument of [cli::cli_div()] or the `cli.theme` option.
+#' @returns A named list suitable for the `theme` argument of [cli::cli_div()].
 #'
 #' @keywords internal
 #' @noRd
@@ -38,31 +39,44 @@ gdalvector_cli_theme <- function() {
   )
 }
 
-# key-value list --------------------------------------------------------------------------------------------------
-
-# emit a named list as aligned `key  value` lines, the package-wide way to render a small set of scalar fields in
-# a `format`/`print` method. keys are bold in the terminal's default foreground (legible on any background);
-# values are styled with `{.val}` (strings quoted, numbers and `rlang::as_bytes()` sizes not); blank values render
-# as an em dash. emitted via `cli::cli_verbatim()` so the column alignment survives, and meant to be wrapped in a
-# `cli::cli_fmt()` block by the calling formatter.
+# capture a cli block to a character vector under the package theme. wraps the output in a scoped `cli_div()` so the
+# theme (see `gdalvector_cli_theme()`) applies only to this block, then captures it with `cli_fmt()`. `code` is
+# evaluated lazily inside the themed div.
 #' @keywords internal
 #' @noRd
-#' @importFrom cli cli_verbatim style_bold format_inline
-cli_kv <- function(x) {
+#' @importFrom cli cli_fmt cli_div cli_end
+gpq_cli_fmt <- function(code) {
+  cli::cli_fmt({
+    cli::cli_div(theme = gdalvector_cli_theme())
+    code
+    cli::cli_end()
+  })
+}
+
+# key-value bullets -----------------------------------------------------------------------------------------------
+
+# emit a named list as `* key: value` bullets, optionally under a bold section title - the package-wide way to
+# render a small group of scalar fields in a `format`/`print` method. values are styled with `{.val}`; blank values
+# render as an em dash. meant to be wrapped in a themed `gpq_cli_fmt()` block by the calling formatter.
+#' @keywords internal
+#' @noRd
+#' @importFrom cli cli_text cli_bullets
+cli_kv <- function(x, title = NULL) {
   if (length(x) == 0L) {
     return(invisible(NULL))
   }
-  width <- max(nchar(names(x)))
-  lines <- vapply(
-    seq_along(x),
-    function(i) {
-      value <- x[[i]]
-      rendered <- if (all(is.na(value))) "\u2014" else cli::format_inline("{.val {value}}")
-      paste0(cli::style_bold(formatC(names(x)[[i]], width = -width)), "  ", rendered)
-    },
-    character(1L)
-  )
-  cli::cli_verbatim(lines)
+  if (!is.null(title)) {
+    cli::cli_text("{.strong {title}:}")
+  }
+  for (i in seq_along(x)) {
+    key <- names(x)[[i]]
+    value <- x[[i]]
+    if (all(is.na(value))) {
+      cli::cli_bullets(c("*" = "{key}: \u2014"))
+    } else {
+      cli::cli_bullets(c("*" = "{key}: {.val {value}}"))
+    }
+  }
   invisible(NULL)
 }
 

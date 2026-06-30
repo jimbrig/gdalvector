@@ -18,15 +18,11 @@
 #' @keywords internal
 #' @noRd
 #' @importFrom rlang on_load local_use_cli
-#' @importFrom utils modifyList
 rlang::on_load({
   pkg_env_init()
   gdal_config_init()
   gdal_drivers_init()
   rlang::local_use_cli()
-  # layer the package's custom inline span styles (`.drv`, `.optname`, `.optval`, ...) onto the active cli theme
-  # so output formatters can use them without re-applying a local theme on every call.
-  options(cli.theme = utils::modifyList(getOption("cli.theme", default = list()), gdalvector_cli_theme()))
 })
 
 # onLoad ----------------------------------------------------------------------------------------------------------

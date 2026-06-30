@@ -87,10 +87,10 @@ gpq_file_info <- function(gpq_path) {
 
 #' @export
 #'
-#' @importFrom cli cli_fmt cli_text
+#' @importFrom cli cli_text
 #' @importFrom rlang as_bytes
 format.gpq_file_info <- function(x, ...) {
-  cli::cli_fmt({
+  gpq_cli_fmt({
     cli::cli_text("{.cls {class(x)}}")
     cli_kv(list(
       "Source" = x$source,
@@ -191,11 +191,11 @@ gpq_schema_info <- function(gpq_path) {
 
 #' @export
 #'
-#' @importFrom cli cli_fmt cli_text
+#' @importFrom cli cli_text
 #' @importFrom utils capture.output
 format.gpq_schema_info <- function(x, n = 20L, ...) {
   c(
-    cli::cli_fmt(
+    gpq_cli_fmt(
       cli::cli_text("{.cls {class(x)}} ({x$n_leaf} leaf column{?s}, {x$n_struct} struct node{?s})")
     ),
     utils::capture.output(print(x$columns, n = n))
@@ -275,7 +275,7 @@ gpq_row_groups <- function(gpq_path) {
 
 #' @export
 #'
-#' @importFrom cli cli_fmt cli_text
+#' @importFrom cli cli_text
 #' @importFrom dplyr mutate
 #' @importFrom rlang as_bytes
 #' @importFrom utils capture.output
@@ -286,7 +286,7 @@ format.gpq_row_groups <- function(x, n = 20L, ...) {
     uncompressed = rlang::as_bytes(.data$uncompressed)
   )
   c(
-    cli::cli_fmt(cli::cli_text("{.cls {class(x)}} ({nrow(x$row_groups)} row group{?s})")),
+    gpq_cli_fmt(cli::cli_text("{.cls {class(x)}} ({nrow(x$row_groups)} row group{?s})")),
     utils::capture.output(print(summary, n = n))
   )
 }
@@ -371,32 +371,35 @@ gpq_geo_metadata <- function(gpq_path) {
 
 #' @export
 #'
-#' @importFrom cli cli_fmt cli_text
+#' @importFrom cli cli_text
 format.gpq_geo_metadata <- function(x, ...) {
-  cli::cli_fmt({
+  gpq_cli_fmt({
     cli::cli_text("{.cls {class(x)}}")
     if (!isTRUE(x$is_geoparquet)) {
       cli::cli_text("{.emph No {.field geo} metadata; not a GeoParquet file.}")
     } else {
-      cli_kv(list(
-        "Version" = x$version,
-        "Primary column" = x$primary_column,
-        "Encoding" = x$encoding,
-        "Geometry types" = x$geometry_types,
-        "Orientation" = x$orientation,
-        "Edges" = x$edges,
-        "Bounding box" = x$bbox,
-        "CRS type" = x$crs_type,
-        "CRS name" = x$crs_name,
-        "CRS authority" = x$crs_authority
-      ))
-      if (!is.null(x$covering)) {
-        cli::cli_text("{.strong Covering}")
-        cli_json(x$covering)
-      }
+      cli_kv(
+        list(
+          "Version" = x$version,
+          "Primary column" = x$primary_column,
+          "Encoding" = x$encoding,
+          "Geometry types" = x$geometry_types,
+          "Orientation" = x$orientation,
+          "Edges" = x$edges,
+          "Bounding box" = x$bbox
+        ),
+        title = "GeoParquet"
+      )
+      cli_kv(
+        list("Type" = x$crs_type, "Name" = x$crs_name, "Authority" = x$crs_authority),
+        title = "CRS"
+      )
       if (!is.null(x$gdal_creation_opts)) {
-        cli::cli_text("{.strong GDAL creation options}")
-        cli_kv(x$gdal_creation_opts)
+        cli_kv(x$gdal_creation_opts, title = "GDAL Creation Options")
+      }
+      if (!is.null(x$covering)) {
+        cli::cli_text("{.strong Covering:}")
+        cli_json(x$covering)
       }
       if (!is.null(x$gdal_schema)) {
         cli::cli_text("{.emph GDAL OGR schema present; see} {.code x$gdal_schema}")
@@ -486,11 +489,11 @@ gpq_arrow_schema <- function(gpq_path) {
 
 #' @export
 #'
-#' @importFrom cli cli_fmt cli_text
+#' @importFrom cli cli_text
 #' @importFrom utils capture.output
 format.gpq_arrow_schema <- function(x, n = 20L, ...) {
   c(
-    cli::cli_fmt(cli::cli_text("{.cls {class(x)}} ({x$n_fields} field{?s})")),
+    gpq_cli_fmt(cli::cli_text("{.cls {class(x)}} ({x$n_fields} field{?s})")),
     utils::capture.output(print(x$fields, n = n))
   )
 }
@@ -539,12 +542,12 @@ gpq_inspect <- function(gpq_path, arrow = FALSE) {
 
 #' @export
 #'
-#' @importFrom cli cli_fmt cli_text
+#' @importFrom cli cli_text
 #' @importFrom purrr compact
 format.gpq_inspect <- function(x, ...) {
   parts <- purrr::compact(list(x$file_info, x$schema, x$row_groups, x$geo_metadata, x$arrow_schema))
   c(
-    cli::cli_fmt(cli::cli_text("{.cls {class(x)}}")),
+    gpq_cli_fmt(cli::cli_text("{.cls {class(x)}}")),
     "",
     unlist(lapply(parts, function(part) c(format(part, ...), "")), use.names = FALSE)
   )
