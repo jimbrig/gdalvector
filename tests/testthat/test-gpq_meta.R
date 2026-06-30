@@ -151,7 +151,7 @@ test_that("gpq_inspect assembles all panels", {
 
 # format & print --------------------------------------------------------------------------------------------------
 
-test_that("format methods return character vectors and print without error", {
+test_that("format methods return character vectors and print() emits them invisibly", {
   f <- test_data("geo.parquet")
 
   for (obj in list(
@@ -164,7 +164,8 @@ test_that("format methods return character vectors and print without error", {
     out <- format(obj)
     expect_type(out, "character")
     expect_match(cli::ansi_strip(paste(out, collapse = "\n")), class(obj)[[1]], fixed = TRUE)
-    expect_no_error(print(obj))
+    # `expect_output()` captures stdout so the printed panels do not pollute test output
+    expect_output(expect_invisible(print(obj)))
   }
 })
 
