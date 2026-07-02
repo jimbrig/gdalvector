@@ -7,7 +7,7 @@
 is_vsi_path(x)
 }
 \arguments{
-\item{x}{Character string to check. Should represent a path or URL (or in rare caes, a connection string).}
+\item{x}{Character string to check. Should represent a path or URL (or in rare cases, a connection string).}
 }
 \value{
 Logical indicating if the path starts with a valid VSI prefix.

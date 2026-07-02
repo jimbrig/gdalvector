@@ -25,6 +25,9 @@
 #' ### Virtual File System (VSI)
 #'
 #' - `is_vsi_path(x)`: Check if a path is a GDAL Virtual File System (VSI) path or URL.
+#'
+#' @keywords internal
+NULL
 
 # types -----------------------------------------------------------------------------------------------------------
 
@@ -43,7 +46,7 @@ is_int64 <- function(x) {
 #'
 #' Virtual File System's include prefixes such as `/vsistdin/`, `/vsistdout/`, `/vsimem/`, etc.
 #'
-#' @param x Character string to check. Should represent a path or URL (or in rare caes, a connection string).
+#' @param x Character string to check. Should represent a path or URL (or in rare cases, a connection string).
 #'
 #' @returns
 #' Logical indicating if the path starts with a valid VSI prefix.

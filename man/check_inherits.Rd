@@ -5,7 +5,7 @@
 \alias{check_inherits2}
 \alias{check_inherits_any}
 \alias{check_inherits_all}
-\title{Class Inheritence Checks}
+\title{Class Inheritance Checks}
 \usage{
 check_inherits(
   x,

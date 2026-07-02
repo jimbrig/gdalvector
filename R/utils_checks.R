@@ -42,7 +42,7 @@ check_abort <- gdal_abort_check
 
 # inherits ------------------------------------------------------------------------------------------------------
 
-#' Class Inheritence Checks
+#' Class Inheritance Checks
 #'
 #' @description
 #' These functions perform checks that assert the underlying class of objects passed to them.
