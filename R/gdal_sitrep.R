@@ -6,68 +6,6 @@
 #
 #  ------------------------------------------------------------------------
 
-# relevant functions:
-# -------------------------------------------------------------------------
-# gdalraster --------------------------------------------------------------
-# gdalraster::lib_versions()
-# gdalraster::gdal_version()
-# gdalraster::gdal_version_num()
-# gdalraster::gdal_compute_version()
-# gdalraster::proj_version()
-# gdalraster::proj_networking()
-# gdalraster::proj_search_paths()
-# gdalraster::geos_version()
-# gdalraster::has_geos()
-# gdalraster::has_spatialite()
-# gdalraster::http_enabled()
-# gdalraster::gdal_global_reg_names()
-# gdalraster::gdal_commands()
-# gdalraster::gdal_usage()
-# gdalraster::gdal_formats()
-# gdalraster::identifyDriver()
-# gdalraster::gdal_get_driver_md()
-# gdalraster::inspectDataset()
-# gdalraster::get_config_option()
-# gdalraster::get_cache_max()
-# gdalraster::get_cache_used()
-# gdalraster::get_num_cpus()
-# gdalraster::get_usable_physical_ram()
-# gdalraster::getCreationOptions()
-# gdalraster::push_error_handler()
-# gdalraster::pop_error_handler()
-# gdalraster::srs_info_from_db()
-# gdalraster::vsi_clear_path_options()
-# gdalraster::vsi_constants
-# gdalraster::vsi_curl_clear_cache()
-# gdalraster::vsi_get_fs_options()
-# gdalraster::vsi_set_path_option()
-# gdalraster::vsi_supports_rnd_write()
-# gdalraster::vsi_supports_seq_write()
-# sf ---------------------------------------------------------------------
-# sf:::db_drivers
-# sf:::extension_map
-# sf:::prefix_map
-# sf::sf_extSoftVersion()
-# sf::gdal_compressors()
-# sf::gdal_utils()
-# sf::is_driver_available()
-# sf::is_driver_can()
-# sf::rawToHex
-# sf::sf_proj_info()
-# sf::st_drivers()
-# sf::proj_tools()
-# sf::s2()
-# sf::sf_use_s2()
-# sf::proj_info()
-# sf::sf_proj_search_paths()
-# terra -----------------------------------------------------------------
-# terra::libVersion()
-# vapour ----------------------------------------------------------------
-# vapour::vapour_gdal_version()
-# vapour::vapour_proj_version()
-# geos ------------------------------------------------------------------
-# geos::geos_version()
-
 # sitrep ----------------------------------------------------------------------------------------------------------
 
 gdal_sitrep <- function() {}

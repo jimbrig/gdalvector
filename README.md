@@ -18,7 +18,7 @@
  \__, /\__,_/\__,_/_/ |___/\___/\___/\__/\____/_/
 /____/
 
-gdalvector v0.0.1 - Modern Package for GDAL Vector Data
+gdalvector v0.0.4 - Modern Package for GDAL Vector Data
 ```
 
 ## Overview
