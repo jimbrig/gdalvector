@@ -8,6 +8,9 @@
 
 ## Bug Fixes
 
+- Support known GDAL drivers even if unregistered
+  ([2e4a86a](https://github.com/jimbrig/gdalvector/commit/2e4a86a128e27b9c5890e4fe7901884e251a5ebf)) -
+  (Jimmy Briggs)
 - **drivers:** Fix issues when missing drivers
   ([b5230ac](https://github.com/jimbrig/gdalvector/commit/b5230ac20f552f31ed68797f4b8d8250f402b6b1)) -
   (Jimmy Briggs)

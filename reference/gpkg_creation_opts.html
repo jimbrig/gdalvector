@@ -134,12 +134,12 @@ user-supplied values always take precedence. Defaults to <code>FALSE</code>.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">gpkg_creation_opts</span><span class="op">(</span>geometry_name <span class="op">=</span> <span class="st">"geom"</span>, spatial_index <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">&lt;gdal_creation_opts/gdal_opts&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">&lt;gdal_creation_opts/gdal_opts&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Driver: <span style="color: #00BBBB;">GPKG</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creation Options: <span style="color: #00BB00;">GEOMETRY_NAME=geom, SPATIAL_INDEX=YES</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Command Line: --output-format 'GPKG' --layer-creation-option 'GEOMETRY_NAME=geom' --layer-creation-option 'SPATIAL_INDEX=YES'</span>
 <span class="r-in"><span><span class="fu">gpkg_creation_opts</span><span class="op">(</span>VERSION <span class="op">=</span> <span class="st">"1.4"</span>, level <span class="op">=</span> <span class="st">"dataset"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">&lt;gdal_creation_opts/gdal_opts&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">&lt;gdal_creation_opts/gdal_opts&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Driver: <span style="color: #00BBBB;">GPKG</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creation Options: <span style="color: #00BB00;">VERSION=1.4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Command Line: --output-format 'GPKG' --creation-option 'VERSION=1.4'</span>

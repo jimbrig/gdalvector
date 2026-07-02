@@ -134,8 +134,29 @@
 - [`gpq_creation_opts()`](http://docs.jimbrig.com/gdalvector/reference/gpq_creation_opts.md)
   : GeoParquet Creation Options
 
+- [`gpq_file_info()`](http://docs.jimbrig.com/gdalvector/reference/gpq_file_info.md)
+  : GeoParquet File Info
+
+- [`gpq_geo_metadata()`](http://docs.jimbrig.com/gdalvector/reference/gpq_geo_metadata.md)
+  : GeoParquet and GDAL Metadata
+
+- [`gpq_inspect()`](http://docs.jimbrig.com/gdalvector/reference/gpq_inspect.md)
+  : Comprehensive GeoParquet Introspection
+
+- [`gpq_meta`](http://docs.jimbrig.com/gdalvector/reference/gpq_meta.md)
+  : GeoParquet Metadata
+
 - [`gpq_open_opts()`](http://docs.jimbrig.com/gdalvector/reference/gpq_open_opts.md)
   : GeoParquet Open Options
+
+- [`gpq_row_groups()`](http://docs.jimbrig.com/gdalvector/reference/gpq_row_groups.md)
+  : GeoParquet Row Groups and Statistics
+
+- [`gpq_schema()`](http://docs.jimbrig.com/gdalvector/reference/gpq_schema.md)
+  : GeoParquet Schema
+
+- [`gpq_schema_info()`](http://docs.jimbrig.com/gdalvector/reference/gpq_schema_info.md)
+  : GeoParquet Schema Info
 
 - [`is_vsi_path()`](http://docs.jimbrig.com/gdalvector/reference/is_vsi_path.md)
   : Is VSI Path
@@ -145,6 +166,11 @@
 
 - [`ping()`](http://docs.jimbrig.com/gdalvector/reference/ping.md) :
   Ping
+
+- [`read_renviron()`](http://docs.jimbrig.com/gdalvector/reference/read_renviron.md)
+  :
+
+  Read `.Renviron` File
 
 - [`remote_download()`](http://docs.jimbrig.com/gdalvector/reference/remote_download.md)
   : Remote File Download with Change Detection
