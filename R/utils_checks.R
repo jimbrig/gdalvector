@@ -292,6 +292,15 @@ check_named2 <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env
   invisible(x)
 }
 
+check_names <- function(x, required, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  check_named(x, arg = arg, call = call)
+  missing_names <- setdiff(required, names(x))
+  if (length(missing_names) > 0) {
+    check_abort("{.arg {arg}} is missing required names: {.field {missing_names}}.", call = call)
+  }
+  invisible(x)
+}
+
 # gdal ------------------------------------------------------------------------------------------------------------
 
 check_gdal_vector <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
@@ -342,6 +351,11 @@ check_dsn <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env())
 
 check_open_opts <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   check_inherits(x, "gdal_open_opts", arg = arg, call = call)
+  invisible(x)
+}
+
+check_gdalg <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  check_inherits(x, "gdalg", arg = arg, call = call)
   invisible(x)
 }
 
@@ -440,7 +454,20 @@ check_file <- function(x, ext = NULL, arg = rlang::caller_arg(x), call = rlang::
   }
   ext <- tolower(ext)
   ext <- gsub("*", "", ext, fixed = TRUE)
-  ext <- gsub(".", "", ext, fixed = TRUE)
+  # ext <- gsub(".", "", ext, fixed = TRUE)
+  ext <- gsub("^\\.", "", ext)
+  # ext_parts <- strsplit(ext, ".", fixed = TRUE)[[1]]
+  # if (length(ext_parts) > 1L) {
+  #   # for each ext_part, check, in order, it against the initial path, then the extension of the initial path sans ext, ...
+  #   for (i in seq_along(ext_parts)) {
+  #     ext_part <- ext_parts[i]
+  #     if (tolower(tools::file_ext(x)) == ext_part) {
+  #       return(invisible(x))
+  #     }
+  #     x <- sub(paste0("\\.", tools::file_ext(x), "$"), "", x)
+  #   }
+  # }
+
   if (length(ext) > 1L) {
     if (!any(tools::file_ext(x) %in% ext)) {
       check_abort("{.arg {arg}} must have one of the following extensions: {.field {ext}}.", call = call)
@@ -662,7 +689,7 @@ check_json_file <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_
 }
 
 check_json_schema_file <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
-  check_file(x, ext = "schema.json", arg = arg, call = call)
+  check_file(x, ext = "json", arg = arg, call = call)
   check_json_file(x, arg = arg, call = call)
   invisible(x)
 }
@@ -722,3 +749,23 @@ check_available_ram <- function(x, arg = rlang::caller_arg(x), call = rlang::cal
   }
   invisible(x)
 }
+
+# spatial ---------------------------------------------------------------------------------------------------------
+
+check_crs <- function(x, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  check_inherits_any(x, c("crs", "crs_wkt", "crs_proj"), arg = arg, call = call)
+  invisible(x)
+}
+
+check_crs_epsg <- function(x, expected_epsg, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  check_crs(x, arg = arg, call = call)
+  epsg <- sf::st_crs(x)$epsg
+  if (is.na(epsg) || epsg != expected_epsg) {
+    check_abort(
+      "Provided {.arg {arg}} CRS {.field {epsg}} does not match expected {.field {expected_epsg}}",
+      call = call
+    )
+  }
+  invisible(x)
+}
+
