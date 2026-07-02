@@ -6,11 +6,54 @@
 #
 #  ------------------------------------------------------------------------
 
-# read write ------------------------------------------------------------------------------------------------------
 
-gdalg_read <- function(path, ...) {}
+# read ------------------------------------------------------------------------------------------------------------
 
-gdalg_write <- function(x, path, ...) {}
+gdalg_read <- function(path, ...) {
+  check_file(path, ext = "json")
+  validate_gdalg_file(path)
+  as_gdalg(read_json_file(path), .path = path)
+}
+
+
+# write -----------------------------------------------------------------------------------------------------------
+
+gdalg_write <- function(x, path, ..., overwrite = FALSE) {
+  check_gdalg(x)
+  command_line <- x$command_line
+  command_line_parsed <- gdalg_parse_command_line(command_line)
+  if (command_line_parsed[[1]] == "gdal") {
+    command_line_parsed <- command_line_parsed[-1]
+  }
+  alg_cmd <- paste(command_line_parsed[[1]], command_line_parsed[[2]], sep = " ")
+  alg_args <- c(
+    command_line_parsed[-c(1, 2)],
+    "!", "write", "--output", path, "--output-format", "GDALG",
+    if (overwrite) "--overwrite" else NULL
+  )
+  res <- rlang::try_fetch({
+    gdalg_alg <- gdalraster::gdal_alg(cmd = alg_cmd, alg_args, parse = FALSE)
+    gdalg_alg$run()
+  }, error = function(e) {
+    FALSE
+  }, finally = {
+    gdalg_alg$close()
+    gdalg_alg$release()
+  })
+  if (res && file.exists(path)) {
+    cli::cli_alert_success("GDALG written to {.file {path}}")
+    return(invisible(path))
+  }
+  FALSE
+}
+
+
+# parse -----------------------------------------------------------------------------------------------------------
+
+gdalg_parse_command_line <- function(command_line) {
+  tokens <- strsplit(command_line, "(?<!\\\\)\\s+(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", perl = TRUE)[[1]]
+  gsub("^\"|\"$", "", tokens)
+}
 
 
 # coercion --------------------------------------------------------------------------------------------------------
@@ -61,9 +104,16 @@ as_gdalg.character <- function(x, ..., call = rlang::caller_env()) {
 }
 
 #' @export
-as_gdalg.list <- function(x, ..., call = rlang::caller_env()) {
-  # check_names(x, required = c("command_line", "gdal_version"))
-  # TODO
+as_gdalg.list <- function(x, ..., .path = NULL, call = rlang::caller_env()) {
+  check_names(x, required = c("type", "command_line", "gdal_version"))
+  type <- purrr::pluck(x, "type", .default = NA_character_)
+  if (!identical(type, "gdal_streamed_alg")) {
+    gdal_abort_check("Provided list must have {.field type} field equal to {.field \"gdal_streamed_alg\"}.", call = call)
+  }
+  cmd <- purrr::pluck(x, "command_line", .default = NULL)
+  ver <- purrr::pluck(x, "gdal_version", .default = gdal_version_num())
+  rel_paths <- purrr::pluck(x, "relative_paths_relative_to_this_file", .default = NULL)
+  new_gdalg(command_line = cmd, gdal_version = ver, relative_paths = rel_paths, .path = .path)
 }
 
 #' @export
@@ -75,16 +125,36 @@ as_gdalg.json <- function(x, ..., call = rlang::caller_env()) {
 # constructor -----------------------------------------------------------------------------------------------------
 
 new_gdalg <- function(command_line, relative_paths = TRUE, gdal_version = gdal_version_num(), .path = NULL) {
+
+  gdalg <- list(
+    type = "gdal_streamed_alg",
+    command_line = command_line,
+    gdal_version = as.character(gdal_version),
+    relative_paths_relative_to_this_file = relative_paths
+  ) |>
+    purrr::compact()
+
   structure(
-    list(
-      type = "gdal_streamed_alg",
-      command_line = command_line,
-      gdal_version = as.character(gdal_version),
-      relative_paths_relative_to_this_file = relative_paths
-    ),
+    gdalg,
     path = .path,
     class = c("gdalg", "list")
   )
+}
+
+
+# validate --------------------------------------------------------------------------------------------------------
+
+validate_gdalg_file <- function(x, schema = pkg_sys_schemas("gdalg.schema.json"), ..., call = rlang::caller_env()) {
+  res <- validate_json_schema(x, schema = schema, ..., call = call)
+  if (res) {
+    gdal_inform(c("v" = "Provided GDALG is valid against the GDALG schema"))
+    return(res)
+  }
+  attr(res, "errors")
+}
+
+validate_gdalg <- function(x, schema = pkg_sys_schemas("gdalg.schema.json"), ..., call = rlang::caller_env()) {
+  check_gdalg(x)
 }
 
 # format and print ------------------------------------------------------------------------------------------------
@@ -107,7 +177,4 @@ print.gdalg <- function(x, ...) {
   invisible(x)
 }
 
-gdalg_parse_command_line <- function(command_line) {
-  tokens <- strsplit(command_line, "(?<!\\\\)\\s+(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", perl = TRUE)[[1]]
-  gsub("^\"|\"$", "", tokens)
-}
+
