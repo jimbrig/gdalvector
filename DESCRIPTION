@@ -26,6 +26,7 @@ Imports:
     gpkg,
     httr2,
     jsonvalidate,
+    nanoparquet,
     openssl,
     processx,
     ps,

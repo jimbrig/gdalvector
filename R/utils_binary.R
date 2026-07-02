@@ -36,6 +36,15 @@ raw_to_int <- function(x, size = 4L, endian = "big", signed = TRUE) {
   readBin(x, what = "integer", size = size, endian = endian, signed = signed)
 }
 
+# decode a 64-bit integer from 8 raw bytes via bit64. base `readBin()` cannot read 8-byte integers, but a bit64
+# `integer64` stores its value as the raw bits of a double, so reading the bytes as a double and reinterpreting the
+# class yields the correct signed value (with none of the manual two's-complement handling getting in the way).
+raw_to_int64 <- function(x, endian = "little") {
+  out <- readBin(x, what = "double", n = 1L, size = 8L, endian = endian)
+  class(out) <- "integer64"
+  out
+}
+
 int_to_hex_str <- function(x, width = 8L, prefix = TRUE, upper = TRUE) {
   hold <- format(as.hexmode(x), width = width, upper.case = upper)
   if (prefix) {
