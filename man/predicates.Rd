@@ -2,11 +2,7 @@
 % Please edit documentation in R/utils_predicates.R
 \name{predicates}
 \alias{predicates}
-\alias{is_int64}
 \title{Predicates}
-\usage{
-is_int64(x)
-}
 \description{
 A collection of predicate functions for checking various conditions, types, and properties of objects.
 These functions return logical values (TRUE or FALSE) based on the input provided.
@@ -26,3 +22,4 @@ These functions return logical values (TRUE or FALSE) based on the input provide
 }
 }
 
+\keyword{internal}
