@@ -83,3 +83,15 @@ gdal_warn_opts <- function(msg, cls = NULL, ..., .envir = parent.frame()) {
 gdal_inform_opts <- function(msg, cls = NULL, ..., .envir = parent.frame()) {
   gdal_inform(msg = msg, cls = c(cls, "gdal_opts_message"), .envir = .envir, ...)
 }
+
+gdal_abort_config <- function(msg, cls = NULL, ..., call = rlang::caller_env(), .envir = parent.frame()) {
+  gdal_abort(msg = msg, cls = c(cls, "gdal_config_error"), call = call, .envir = .envir, ...)
+}
+
+gdal_warn_config <- function(msg, cls = NULL, ..., .envir = parent.frame()) {
+  gdal_warn(msg = msg, cls = c(cls, "gdal_config_warning"), .envir = .envir, ...)
+}
+
+gdal_inform_config <- function(msg, cls = NULL, ..., .envir = parent.frame()) {
+  gdal_inform(msg = msg, cls = c(cls, "gdal_config_message"), .envir = .envir, ...)
+}

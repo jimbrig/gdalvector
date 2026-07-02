@@ -170,6 +170,38 @@ vsi_list_options <- function(dsn) {
     xml_parse_gdal_options()
 }
 
+# runtime-enumerated VSI/network/credential option metadata: vsi_get_fs_options() across every
+# filesystem registered in the running GDAL build, parsed through the same xml parser as the
+# driver metadata. computed lazily, cached in the package environment for the session. this is
+# the runtime-backed portion of the known configuration-option universe (see gdal_config).
+#' @keywords internal
+#' @noRd
+.vsi_fs_options_tbl <- function() {
+  vstate <- .pkg_env$gdal$vsi
+  if (!is.null(vstate$known_tbl)) {
+    return(vstate$known_tbl)
+  }
+  prefixes <- tryCatch(gdalraster::vsi_get_fs_prefixes(), error = function(e) character())
+  prefixes <- prefixes[endsWith(prefixes, "/")]
+  tbl <- prefixes |>
+    purrr::map(function(prefix) {
+      xml <- tryCatch(
+        gdalraster::vsi_get_fs_options(paste0(prefix, "placeholder"), as_list = FALSE),
+        error = function(e) NULL
+      )
+      if (!rlang::is_string(xml) || !nzchar(xml)) {
+        return(NULL)
+      }
+      tryCatch(xml_parse_gdal_options(xml, scope = "all"), error = function(e) NULL)
+    }) |>
+    dplyr::bind_rows()
+  if (nrow(tbl) > 0L) {
+    tbl <- tbl[!duplicated(toupper(tbl$name)), , drop = FALSE]
+  }
+  vstate$known_tbl <- tbl
+  tbl
+}
+
 # handlers ---------------------------------------------------------------------------------------------------------
 
 #' List VSI Handlers Used by a Path

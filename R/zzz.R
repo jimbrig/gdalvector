@@ -22,8 +22,12 @@ rlang::on_load({
   pkg_env_init()
   gdal_config_init()
   gdal_drivers_init()
+  gdal_config_init_defaults()
   rlang::local_use_cli()
 })
+# ordering: gdal_config_init() needs .pkg_env (pkg_env_init); gdal_config_init_defaults() runs
+# after gdal_drivers_init() so the at-load baseline sitrep and known-option checks can draw on
+# the driver metadata table.
 
 # onLoad ----------------------------------------------------------------------------------------------------------
 

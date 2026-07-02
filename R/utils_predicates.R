@@ -6,6 +6,27 @@
 #
 #  ------------------------------------------------------------------------
 
+# topic -----------------------------------------------------------------------------------------------------------
+
+#' Predicates
+#'
+#' @name predicates
+#'
+#' @description
+#' A collection of predicate functions for checking various conditions, types, and properties of objects.
+#' These functions return logical values (TRUE or FALSE) based on the input provided.
+#'
+#' @section Functions:
+#'
+#' ### Types
+#'
+#' - `is_int64(x)`: Check if `x` is of type `integer64`.
+#'
+#' ### Virtual File System (VSI)
+#'
+#' - `is_vsi_path(x)`: Check if a path is a GDAL Virtual File System (VSI) path or URL.
+
+
 # types -----------------------------------------------------------------------------------------------------------
 
 #' @importFrom bit64 is.integer64
@@ -16,15 +37,17 @@ is_int64 <- function(x) {
 
 # vsi -------------------------------------------------------------------------------------------------------------
 
-#' Is VSI Path
+#' Check if Virtual File System (VSI)
 #'
 #' @description
-#' Check if a Path is a GDAL Virtual File System (VSI) Path or URL.
+#' Check if a provided path or URL uses [GDAL's Virtual File System (VSI)](https://gdal.org/en/stable/user/virtual_file_systems.html).
 #'
-#' @param x Character string to check.
+#' Virtual File System's include prefixes such as `/vsistdin/`, `/vsistdout/`, `/vsimem/`, etc.
+#'
+#' @param x Character string to check. Should represent a path or URL (or in rare caes, a connection string).
 #'
 #' @returns
-#' Logical indicating if the path starts with a valid VSI prefix (i.e. `/vsicurl/` or `/vsizip/`).
+#' Logical indicating if the path starts with a valid VSI prefix.
 #'
 #' @examples
 #' is_vsi_path("/vsizip/data.zip")      # TRUE
@@ -36,7 +59,8 @@ is_vsi_path <- function(x) {
   if (!is.character(x) || length(x) != 1L || !nzchar(x)) {
     return(FALSE)
   }
-  all(startsWith(x, "/vsi"), grepl("^/vsi[a-z0-9_]+/", x, ignore.case = TRUE))
+  # all(startsWith(x, "/vsi"), grepl("^/vsi[a-z0-9_]+/", x, ignore.case = TRUE))
+  any(startsWith(x, GDAL_VSI_PREFIXES))
 }
 
 # remote ----------------------------------------------------------------------------------------------------------
@@ -188,6 +212,18 @@ is_gdal_config_opts <- function(x) {
 
 is_gdal_vsi_opts <- function(x) {
   inherits(x, "gdal_vsi_opts")
+}
+
+is_gdal_config <- function(x) {
+  inherits(x, "gdal_config")
+}
+
+is_gdal_config_sitrep <- function(x) {
+  inherits(x, "gdal_config_sitrep")
+}
+
+is_gdal_config_file <- function(x) {
+  inherits(x, "gdal_config_file")
 }
 
 is_gdal_driver_name <- function(x) {
