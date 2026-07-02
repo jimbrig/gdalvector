@@ -85,12 +85,13 @@ the \emph{deltas} it applied (plus what was effective beforehand, for restore).
 \section{Known options}{
 
 Advisory typo checking (classed warning, never blocking - custom application-defined options
-are legal) draws on, in decreasing authority: the VSI/network/credential options enumerated
-from the running GDAL build (\code{\link[gdalraster:vsi_get_fs_options]{gdalraster::vsi_get_fs_options()}} across all registered
-filesystems), the curated per-driver configuration options (driver metadata table), a small
-curated list of core CPL/GDAL/OGR names (\code{GDAL_CORE_CONFIG_OPTS}; GDAL does not expose these at
-runtime), and GDAL-relevant environment variables present at load. Keys GDAL already resolves
-to a value are never flagged.
+are legal) draws on: GDAL's compile-time known-option registry (\code{\link[=gdal_known_config_opts]{gdal_known_config_opts()}},
+parsed from the version-pinned GDAL source header), the VSI/network/credential
+options enumerated from the running GDAL build (\code{\link[gdalraster:vsi_get_fs_options]{gdalraster::vsi_get_fs_options()}} across all
+registered filesystems), the curated per-driver configuration options (driver metadata table),
+and GDAL-relevant environment variables present at load. Keys GDAL already resolves to a value
+are never flagged, and a key found in none of the lists is confirmed against the running build
+itself via \code{\link[=gdal_config_option_known]{gdal_config_option_known()}} (GDAL >= 3.11) before a warning is raised.
 }
 
 \examples{

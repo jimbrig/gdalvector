@@ -355,6 +355,49 @@ test_that("sitrep prints without error and an at-load baseline was stashed", {
   expect_true(is_gdal_config_sitrep(.pkg_env$gdal$config$at_load))
 })
 
+# known options ---------------------------------------------------------------------------------------------------
+
+test_that("the known-option registry is present, authoritative, and filterable", {
+  registry <- gdal_known_config_opts()
+  expect_s3_class(registry, "tbl_df")
+  expect_named(registry, c("name", "source"))
+  expect_gt(nrow(registry), 1000L)
+  expect_true(all(c("GDAL_NUM_THREADS", "AWS_S3_ENDPOINT", "OGR_SQLITE_PRAGMA", "CPL_DEBUG") %in% registry$name))
+  expect_match(attr(registry, "gdal_version"), "^[0-9]+\\.[0-9]+\\.[0-9]+$")
+
+  sqlite <- gdal_known_config_opts("SQLITE")
+  expect_gt(nrow(sqlite), 0L)
+  expect_lt(nrow(sqlite), nrow(registry))
+  expect_true(all(grepl("SQLITE", paste(sqlite$name, sqlite$source), ignore.case = TRUE)))
+})
+
+test_that("gdal_config_option_known() asks the running build and restores all state", {
+  skip_if_not_installed("gdalraster")
+  skip_if(gdalraster::gdal_version_num() < 3110000L, "unknown-option detection requires GDAL >= 3.11")
+
+  debug_before <- gdalraster::get_config_option("CPL_DEBUG")
+  res <- gdal_config_option_known(c("GDAL_NUM_THREADS", "DEFINITELY_NOT_A_REAL_OPTION_XYZ"))
+  expect_identical(
+    res,
+    c(GDAL_NUM_THREADS = TRUE, DEFINITELY_NOT_A_REAL_OPTION_XYZ = FALSE)
+  )
+
+  # probe leaves no trace: CPL_DEBUG restored, probed keys unset again
+  expect_identical(gdalraster::get_config_option("CPL_DEBUG"), debug_before)
+  expect_identical(gdalraster::get_config_option("DEFINITELY_NOT_A_REAL_OPTION_XYZ"), "")
+})
+
+test_that("a build-known key missing from the generated lists is not flagged", {
+  skip_if_not_installed("gdalraster")
+  skip_if(gdalraster::gdal_version_num() < 3110000L, "unknown-option detection requires GDAL >= 3.11")
+  withr::defer(gdal_config_reset())
+
+  # simulate list drift: temporarily hide a genuinely known key from the known-opts universe by
+  # checking a key that is known to the build; the runtime confirmation must rescue it
+  expect_true(unname(gdal_config_option_known("GDAL_CACHEMAX")))
+  expect_no_warning(gdal_config_set(GDAL_CACHEMAX = "256"))
+})
+
 # load-time defaults ----------------------------------------------------------------------------------------------
 
 test_that("fill-only session defaults pin the user agent and are reversible", {

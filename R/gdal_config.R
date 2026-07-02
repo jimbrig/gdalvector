@@ -377,12 +377,13 @@ gdal_config_active <- function() {
 #'
 #' @section Known options:
 #' Advisory typo checking (classed warning, never blocking - custom application-defined options
-#' are legal) draws on, in decreasing authority: the VSI/network/credential options enumerated
-#' from the running GDAL build ([gdalraster::vsi_get_fs_options()] across all registered
-#' filesystems), the curated per-driver configuration options (driver metadata table), a small
-#' curated list of core CPL/GDAL/OGR names (`GDAL_CORE_CONFIG_OPTS`; GDAL does not expose these at
-#' runtime), and GDAL-relevant environment variables present at load. Keys GDAL already resolves
-#' to a value are never flagged.
+#' are legal) draws on: GDAL's compile-time known-option registry ([gdal_known_config_opts()],
+#' parsed from the version-pinned GDAL source header), the VSI/network/credential
+#' options enumerated from the running GDAL build ([gdalraster::vsi_get_fs_options()] across all
+#' registered filesystems), the curated per-driver configuration options (driver metadata table),
+#' and GDAL-relevant environment variables present at load. Keys GDAL already resolves to a value
+#' are never flagged, and a key found in none of the lists is confirmed against the running build
+#' itself via [gdal_config_option_known()] (GDAL >= 3.11) before a warning is raised.
 #'
 #' @inheritParams gdal_config
 #' @param keys Character vector of configuration option names. For `gdal_config_get()` and
@@ -822,6 +823,131 @@ print.gdal_config_sitrep <- function(x, ...) {
   invisible(x)
 }
 
+# known options ---------------------------------------------------------------------------------------------------
+
+#' Known GDAL Configuration Options
+#'
+#' @description
+#' GDAL's compile-time known-configuration-option registry: the contents of
+#' `port/cpl_known_config_options.h` in the GDAL source tree (generated upstream by
+#' `collect_config_options.py`), which is the exact array `CPLGetKnownConfigOptions()`
+#' (GDAL >= 3.11) returns. gdalraster does not bind that function, so the package parses the
+#' version-pinned source header instead (`data-raw/scripts/gdal_known_config_options.R`, which
+#' documents the pinned URL); a copy of the header is also bundled under `inst/schemas/` for
+#' transparency (see `inst/schemas/schemas.R`).
+#'
+#' The pinned GDAL version is recorded in the `gdal_version` attribute of the returned tibble;
+#' drift between that pin and the *running* GDAL build is covered at option-checking time by the
+#' per-key runtime confirmation of [gdal_config_option_known()].
+#'
+#' @param pattern Optional character vector of regular-expression patterns; options whose `name`
+#'   or `source` matches any pattern (case-insensitively) are returned. `NULL` (default) returns
+#'   all options.
+#'
+#' @returns
+#' A [tibble::tibble()] with columns `name` (option name) and `source` (the GDAL source file that
+#' consumes it), carrying a `gdal_version` attribute with the header's version pin.
+#'
+#' @seealso [gdal_config_option_known()], [gdal_config_set()], [gdal_config_sitrep()]
+#'
+#' @export
+#'
+#' @importFrom dplyr filter
+#' @importFrom stringr str_c str_detect regex
+#'
+#' @examples
+#' gdal_known_config_opts()
+#' gdal_known_config_opts("SQLITE")
+#' attr(gdal_known_config_opts(), "gdal_version")
+gdal_known_config_opts <- function(pattern = NULL) {
+  tbl <- gdal_known_config_opts_tbl
+  if (is.null(pattern)) {
+    return(tbl)
+  }
+  check_character(pattern)
+  rx <- stringr::regex(stringr::str_c(pattern, collapse = "|"), ignore_case = TRUE)
+  tbl |>
+    dplyr::filter(
+      stringr::str_detect(.data$name, rx) |
+        dplyr::coalesce(stringr::str_detect(.data$source, rx), FALSE)
+    )
+}
+
+#' Check Configuration Option Names Against the Running GDAL Build
+#'
+#' @description
+#' Ask the *running* GDAL build whether it knows a configuration option name. GDAL >= 3.11 emits a
+#' warning from `CPLSetConfigOption()` for unknown option names when `CPL_DEBUG` is enabled; this
+#' helper performs a no-op set of each key under a temporarily enabled `CPL_DEBUG` and captures
+#' that signal, then restores all touched state. This is the runtime ground truth that
+#' `CPLGetKnownConfigOptions()` would provide if gdalraster exposed it - exact for the loaded
+#' build, unaffected by version drift in the generated known-option lists.
+#'
+#' Note that "unknown to GDAL" does not mean invalid: setting an unknown option is legal and
+#' silently ignored (which is exactly why typo detection matters). Used internally to confirm
+#' suspected-unknown keys before [gdal_config_set()] raises its advisory warning.
+#'
+#' @param keys Character vector of configuration option names.
+#'
+#' @returns
+#' A named logical vector: `TRUE` when the running build knows the key, `FALSE` when it does not,
+#' `NA` when detection is unavailable (GDAL < 3.11).
+#'
+#' @seealso [gdal_config_set()], [gdal_config_sitrep()]
+#'
+#' @export
+#'
+#' @importFrom gdalraster gdal_version_num get_config_option set_config_option
+#' @importFrom stats setNames
+#'
+#' @examples
+#' \dontrun{
+#' gdal_config_option_known(c("GDAL_NUM_THREADS", "GDAL_NUM_THREDS"))
+#' }
+gdal_config_option_known <- function(keys) {
+  check_character(keys)
+  keys <- toupper(keys)
+  if (gdalraster::gdal_version_num() < 3110000L) {
+    return(stats::setNames(rep(NA, length(keys)), keys))
+  }
+
+  debug_before <- gdalraster::get_config_option("CPL_DEBUG")
+  gdalraster::set_config_option("CPL_DEBUG", "ON")
+  withr::defer(gdalraster::set_config_option("CPL_DEBUG", debug_before))
+
+  vapply(
+    stats::setNames(keys, keys),
+    function(key) {
+      current <- gdalraster::get_config_option(key)
+      unknown <- FALSE
+      capture <- function(cond) {
+        if (grepl("Unknown configuration option", conditionMessage(cond), fixed = TRUE)) {
+          unknown <<- TRUE
+        }
+      }
+      muffled_set <- function(value) {
+        withCallingHandlers(
+          gdalraster::set_config_option(key, value),
+          message = function(m) {
+            capture(m)
+            invokeRestart("muffleMessage")
+          },
+          warning = function(w) {
+            capture(w)
+            invokeRestart("muffleWarning")
+          }
+        )
+      }
+      muffled_set(if (nzchar(current)) current else "probe")
+      if (!nzchar(current)) {
+        muffled_set("")
+      }
+      !unknown
+    },
+    logical(1)
+  )
+}
+
 # initialization --------------------------------------------------------------------------------------------------
 
 # initialize the config state at package load: empty stores, a snapshot of GDAL-relevant
@@ -994,7 +1120,9 @@ gdal_config_init_defaults <- function() {
 # internal - known options ----------------------------------------------------------------------------------------
 
 # advisory (warning, non-blocking) check of option names against the known sets - unknown keys are
-# legal in GDAL (custom/app-defined), so this only guards against typos.
+# legal in GDAL (custom/app-defined), so this only guards against typos. keys missing from every
+# list are confirmed against the running build (gdal_config_option_known()) before warning, so
+# version drift in the generated lists never produces false positives.
 #' @keywords internal
 #' @noRd
 #' @importFrom gdalraster get_config_option
@@ -1007,9 +1135,13 @@ gdal_config_init_defaults <- function() {
   # a key GDAL already resolves to a value is evidently in use somewhere; don't flag it
   unknown <- unknown[!vapply(unknown, function(k) nzchar(gdalraster::get_config_option(k)), logical(1))]
   if (length(unknown) > 0L) {
+    confirmed <- gdal_config_option_known(unknown)
+    unknown <- unknown[!confirmed %in% TRUE]
+  }
+  if (length(unknown) > 0L) {
     gdal_warn_config(
-      "Unknown configuration option{?s}: {.field {unknown}} (not in the known GDAL option sets;
-       a typo is silently ignored by GDAL).",
+      "Unknown configuration option{?s}: {.field {unknown}} (not known to GDAL or the package
+       option lists; a typo is silently ignored by GDAL).",
       cls = "gdal_config_unknown_warning"
     )
     return(invisible(FALSE))
@@ -1017,11 +1149,12 @@ gdal_config_init_defaults <- function() {
   invisible(TRUE)
 }
 
-# the known-option universe, in decreasing authority: runtime VSI/network options enumerated from
-# the running GDAL build, curated per-driver config options (driver metadata table), the curated
-# core CPL/GDAL/OGR names (no runtime enumeration exists), and any GDAL-relevant envvars present
-# at load (an app-defined option set via the environment is known to the user's setup by
-# definition).
+# the known-option universe: GDAL's compile-time registry (gdal_known_config_opts(), parsed from
+# the bundled version-pinned header), the runtime VSI/network options enumerated from the running
+# build, curated per-driver config options (driver metadata table), and any GDAL-relevant envvars
+# present at load (an app-defined option set via the environment is known to the user's setup by
+# definition). anything the lists miss (e.g. version drift from the pinned header) is covered by
+# the per-key runtime confirmation in gdal_config_option_known().
 #' @keywords internal
 #' @noRd
 .gdal_config_known_opts <- function() {
@@ -1032,9 +1165,9 @@ gdal_config_init_defaults <- function() {
     driver_opts <- tbl$name[tbl$type == "config"]
   }
   toupper(unique(c(
+    gdal_known_config_opts()$name,
     .vsi_fs_options_tbl()$name,
     driver_opts,
-    GDAL_CORE_CONFIG_OPTS,
     names(.gdal_config_state()$env_at_load)
   )))
 }

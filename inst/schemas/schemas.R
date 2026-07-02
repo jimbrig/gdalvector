@@ -68,3 +68,12 @@ curl::curl_download(
   "https://raw.githubusercontent.com/OSGeo/gdal/refs/heads/master/autotest/ogr/data/parquet/schema_1_1_0.json",
   destfile = "inst/schemas/parquet-1.1.0.metadata.schema.json"
 )
+
+# config options --------------------------------------------------------------------------------------------------
+
+curl::curl_download(
+  "https://raw.githubusercontent.com/OSGeo/gdal/v3.13.0/port/cpl_known_config_options.h",
+  destfile = "inst/schemas/cpl_known_config_options.h"
+)
+
+
