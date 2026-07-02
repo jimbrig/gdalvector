@@ -26,7 +26,6 @@
 #'
 #' - `is_vsi_path(x)`: Check if a path is a GDAL Virtual File System (VSI) path or URL.
 
-
 # types -----------------------------------------------------------------------------------------------------------
 
 #' @importFrom bit64 is.integer64
