@@ -15,7 +15,7 @@ Logical indicating if the path starts with a valid VSI prefix.
 \description{
 Check if a provided path or URL uses \href{https://gdal.org/en/stable/user/virtual_file_systems.html}{GDAL's Virtual File System (VSI)}.
 
-Virtual File System's include prefixes such as \verb{/vsistdin/}, \verb{/vsistdout/}, \verb{/vsimem/}, etc.
+Virtual File Systems include prefixes such as \verb{/vsistdin/}, \verb{/vsistdout/}, \verb{/vsimem/}, etc.
 }
 \examples{
 is_vsi_path("/vsizip/data.zip")      # TRUE
