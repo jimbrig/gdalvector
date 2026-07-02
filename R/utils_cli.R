@@ -80,6 +80,19 @@ cli_kv <- function(x, title = NULL) {
   invisible(NULL)
 }
 
+# redaction -------------------------------------------------------------------------------------------------------
+
+# redact secret-bearing values by key name in printed output - the package-wide guard for
+# anything that renders credentials (config sitreps, vsi path options, gdalrc contents).
+#' @keywords internal
+#' @noRd
+cli_redact <- function(key, value) {
+  if (grepl("KEY|SECRET|TOKEN|PASSWORD|PWD|CREDENTIAL|CONNECTION_STRING", key, ignore.case = TRUE)) {
+    return("<redacted>")
+  }
+  value
+}
+
 # json ------------------------------------------------------------------------------------------------------------
 
 # emit an R object as pretty-printed JSON, the package-wide way to render embedded JSON metadata (e.g. PROJJSON

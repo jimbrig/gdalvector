@@ -2,18 +2,20 @@
 % Please edit documentation in R/utils_predicates.R
 \name{is_vsi_path}
 \alias{is_vsi_path}
-\title{Is VSI Path}
+\title{Check if Virtual File System (VSI)}
 \usage{
 is_vsi_path(x)
 }
 \arguments{
-\item{x}{Character string to check.}
+\item{x}{Character string to check. Should represent a path or URL (or in rare caes, a connection string).}
 }
 \value{
-Logical indicating if the path starts with a valid VSI prefix (i.e. \verb{/vsicurl/} or \verb{/vsizip/}).
+Logical indicating if the path starts with a valid VSI prefix.
 }
 \description{
-Check if a Path is a GDAL Virtual File System (VSI) Path or URL.
+Check if a provided path or URL uses \href{https://gdal.org/en/stable/user/virtual_file_systems.html}{GDAL's Virtual File System (VSI)}.
+
+Virtual File System's include prefixes such as \verb{/vsistdin/}, \verb{/vsistdout/}, \verb{/vsimem/}, etc.
 }
 \examples{
 is_vsi_path("/vsizip/data.zip")      # TRUE
