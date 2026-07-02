@@ -1,3 +1,13 @@
+
+#  ------------------------------------------------------------------------
+#
+# Title : GDAL Vector Checks
+#    By : Jimmy Briggs
+#  Date : 2026-07-01
+#
+#  ------------------------------------------------------------------------
+
+
 gdal_vector_check_spatial_index <- function(
   dsn,
   layer = gdal_vector_layer(dsn),

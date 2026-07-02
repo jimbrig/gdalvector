@@ -64,6 +64,7 @@ gpq_file_info <- function(gpq_path) {
   info <- nanoparquet::read_parquet_info(gpq_path)
   rd <- .gpq_read_meta(gpq_path)
   rg <- rd$meta$row_groups
+  n_rg <- nrow(rg)
 
   structure(
     list(
@@ -75,8 +76,8 @@ gpq_file_info <- function(gpq_path) {
       num_rows = info$num_rows,
       num_cols = info$num_cols,
       num_row_groups = info$num_row_groups,
-      row_group_size = rg$num_rows[1L],
-      row_group_size_last = rg$num_rows[nrow(rg)],
+      row_group_size = if (n_rg > 0L) rg$num_rows[1L] else NA_real_,
+      row_group_size_last = if (n_rg > 0L) rg$num_rows[n_rg] else NA_real_,
       created_by = info$created_by,
       kv_keys = rd$kvm$key
     ),

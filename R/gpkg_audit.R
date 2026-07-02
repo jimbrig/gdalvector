@@ -1,3 +1,12 @@
+
+#  ------------------------------------------------------------------------
+#
+# Title : GeoPackage Audit
+#    By : Jimmy Briggs
+#  Date : 2026-07-01
+#
+#  ------------------------------------------------------------------------
+
 gpkg_contents <- function(gpkg_path) {
   check_file(gpkg_path, ext = ".gpkg")
   gpkg::gpkg_contents(gpkg_path) |> tibble::as_tibble()

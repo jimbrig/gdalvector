@@ -95,6 +95,41 @@ gdal_sitrep_driver_check <- function(driver) {
   driver %in% drvs
 }
 
+gdal_sitrep_geos_check <- function() {
+  gdalraster::has_geos()
+}
+
+gdal_sitrep_spatialite_check <- function() {
+  gdalraster::has_spatialite()
+}
+
+gdal_sitrep_proj_check <- function() {
+  dir.exists(gdalraster::proj_search_paths())
+}
+
+
+# commands --------------------------------------------------------------------------------------------------------
+
+gdal_list_commands <- function(filter = NULL, output = c("tibble", "list")) {
+  if (!gdal_sitrep_alg_check()) {
+    gdal_abort_check(
+      c(
+        "GDAL command discovery not available",
+        "i" = "Requires gdalraster >= 2.2.0 with GDAL 3.11+"
+      )
+    )
+  }
+  gdalraster::gdal_commands(contains = filter, cout = FALSE)
+}
+
+
+# features --------------------------------------------------------------------------------------------------------
+
+# should apply checks for certain features:
+# - explicit_args (GDAL 3.12+ and gdalraster algorithmic api bindings)
+# - arrow driver (3.12+ and arrow driver)
+# - gdalg native support (3.11+ and algorithmic api)
+
 # algorithmic -----------------------------------------------------------------------------------------------------
 
 gdal_alg_names <- function() {
@@ -120,6 +155,10 @@ gdal_version <- function(backend = c("system", "gdalraster", "sf", "terra", "vap
     "terra" = gdal_version_terra(),
     "vapour" = gdal_version_vapour()
   )
+}
+
+gdal_version_check <- function() {
+
 }
 
 gdal_version_num <- function() {

@@ -159,22 +159,30 @@ gdal_vector_layer_geom_col_type <- function(dsn, layer = gdal_vector_layer(dsn),
 gdal_vector_layer_fid_col <- function(dsn, layer = gdal_vector_layer(dsn), ...) {
   vec <- gdal_vector_open(dsn = dsn, layer = layer, ...)
   withr::defer(vec$close())
-  fields <- vec$getFieldNames()
   gdal_fid_col <- vec$getFIDColumn()
-  if (!nzchar(gdal_fid_col)) {
-    gdal_fid_col <- '""'
-  }
-  if (!(gdal_fid_col %in% fields)) {
+  # `getFIDColumn()` names the real source column OGR uses as the feature ID (a GeoPackage primary key like
+  # "fid"/"lrid", OpenFileGDB "OBJECTID", ...), or "" when the FID is implicit with no backing column (shapefiles,
+  # GeoJSON, FlatGeobuf, FID-less Parquet). The two cases need opposite advice: a named FID is hidden from the
+  # field list and must be renamed to be carried through, while an implicit FID must be surfaced via the dialect's
+  # special field (`FID` in OGR SQL, `rowid` in the SQLITE dialect).
+  if (nzchar(gdal_fid_col)) {
     gdal_inform(
       c(
-        "!" = "FID column reported by GDAL ({.field {gdal_fid_col}}) is not an actual field in the layer {.field {layer}}.",
-        "i" = "This is common for some drivers (e.g., GeoPackage) where the FID is a virtual column and not stored as a field.",
-        "i" = "Consider using {.field 'CAST(rowid AS INTEGER) AS source_fid'} in SQL performed against the layer to get the FID used by GDAL as an attribute field"
+        "!" = "GDAL uses {.field {gdal_fid_col}} as the feature ID of layer {.field {layer}}; it is consumed as the FID and is not exposed as a regular, queryable field.",
+        "i" = "To carry its values through as an attribute, rename it in an OGR SQL (SQLITE dialect) query, e.g. {.code CAST(rowid AS INTEGER) AS source_fid}."
+      ),
+      cls = "gdal_fid_col_inform"
+    )
+  } else {
+    gdal_inform(
+      c(
+        "i" = "Layer {.field {layer}} has no named FID column; GDAL assigns an implicit, sequential feature ID.",
+        "i" = "Reference it via {.field FID} (OGR SQL dialect) or {.field rowid} (SQLITE dialect), e.g. {.code SELECT rowid AS source_fid, * FROM ...}."
       ),
       cls = "gdal_fid_col_inform"
     )
   }
-  return(gdal_fid_col)
+  gdal_fid_col
 }
 
 # feature count ---------------------------------------------------------------------------------------------------
