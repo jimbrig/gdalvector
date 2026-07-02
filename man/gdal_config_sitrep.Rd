@@ -27,12 +27,10 @@ attribution:
 }
 
 Coverage spans keys pinned by the package, GDAL-relevant environment variables, config-file
-entries, and a probe of the full known-option universe (runtime VSI metadata + driver metadata
-\itemize{
-\item curated core names), so externally set in-memory values for any documented key are discovered
-too. Secret-bearing values are redacted in printed output. A baseline sitrep taken at package
-load is stashed internally ("the world as gdalvector found it").
-}
+entries, and a probe of the full known-option universe (runtime VSI metadata, driver metadata,
+and the curated core names), so externally set in-memory values for any documented key are
+discovered too. Secret-bearing values are redacted in printed output. A baseline sitrep taken
+at package load is stashed internally ("the world as gdalvector found it").
 }
 \examples{
 \dontrun{

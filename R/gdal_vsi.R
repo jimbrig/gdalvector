@@ -176,6 +176,10 @@ vsi_list_options <- function(dsn) {
 # the runtime-backed portion of the known configuration-option universe (see gdal_config).
 #' @keywords internal
 #' @noRd
+#' @importFrom dplyr bind_rows
+#' @importFrom gdalraster vsi_get_fs_prefixes vsi_get_fs_options
+#' @importFrom purrr map
+#' @importFrom rlang is_string
 .vsi_fs_options_tbl <- function() {
   vstate <- .pkg_env$gdal$vsi
   if (!is.null(vstate$known_tbl)) {

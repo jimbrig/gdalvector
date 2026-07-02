@@ -44,7 +44,7 @@ is_int64 <- function(x) {
 #' @description
 #' Check if a provided path or URL uses [GDAL's Virtual File System (VSI)](https://gdal.org/en/stable/user/virtual_file_systems.html).
 #'
-#' Virtual File System's include prefixes such as `/vsistdin/`, `/vsistdout/`, `/vsimem/`, etc.
+#' Virtual File Systems include prefixes such as `/vsistdin/`, `/vsistdout/`, `/vsimem/`, etc.
 #'
 #' @param x Character string to check. Should represent a path or URL (or in rare cases, a connection string).
 #'
@@ -61,8 +61,11 @@ is_vsi_path <- function(x) {
   if (!is.character(x) || length(x) != 1L || !nzchar(x)) {
     return(FALSE)
   }
-  # all(startsWith(x, "/vsi"), grepl("^/vsi[a-z0-9_]+/", x, ignore.case = TRUE))
-  any(startsWith(x, GDAL_VSI_PREFIXES))
+  # pattern-based rather than a hardcoded prefix list: recognizes any /vsi<handler>/ the running
+  # GDAL build may register (streaming variants, /vsi7z/, /vsikerchunk_*, ...); see also
+  # GDAL_VSI_PREFIXES for the curated common set and gdalraster::vsi_get_fs_prefixes() for the
+  # runtime enumeration.
+  grepl("^/vsi[a-z0-9_]+/", x, ignore.case = TRUE)
 }
 
 # remote ----------------------------------------------------------------------------------------------------------

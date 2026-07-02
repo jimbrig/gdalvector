@@ -71,6 +71,8 @@ NULL
 
 #' @keywords internal
 #' @noRd
+#' @importFrom purrr walk map_chr
+#' @importFrom stats setNames
 new_gdal_config_file <- function(
   path = NULL,
   configoptions = as_gdal_config_opts(list()),
@@ -95,8 +97,17 @@ new_gdal_config_file <- function(
 
 #' @rdname gdal_config_file
 #' @export
+#' @importFrom dplyr group_by group_map
+#' @importFrom purrr compact
+#' @importFrom stats setNames
 gdal_config_file_read <- function(path) {
   check_path(path)
+  if (dir.exists(path)) {
+    gdal_abort_config(
+      "{.arg path} must be a GDAL configuration file, not a directory: {.path {path}}.",
+      cls = "gdal_config_file_error"
+    )
+  }
   entries <- .gdalrc_entries(path)
 
   section_kv <- function(section) {
@@ -195,6 +206,7 @@ gdal_config_file <- function(refresh = FALSE) {
 
 #' @rdname gdal_config
 #' @export
+#' @importFrom rlang caller_env
 as_gdal_config.gdal_config_file <- function(x, ..., call = rlang::caller_env()) {
   new_gdal_config(x$configoptions, x$credentials)
 }
@@ -202,6 +214,8 @@ as_gdal_config.gdal_config_file <- function(x, ..., call = rlang::caller_env()) 
 # format and print ------------------------------------------------------------------------------------------------
 
 #' @export
+#' @importFrom cli cli_text cli_alert_info
+#' @importFrom purrr imap_chr
 format.gdal_config_file <- function(x, ...) {
   config_payload <- .gdal_opts_payload(x$configoptions)
 
@@ -250,6 +264,10 @@ print.gdal_config_file <- function(x, ...) {
 # KEY=VALUE lines (values may contain further `=`).
 #' @keywords internal
 #' @noRd
+#' @importFrom dplyr filter mutate if_else group_by ungroup select
+#' @importFrom stringr str_trim str_starts str_detect str_remove_all fixed
+#' @importFrom tibble tibble
+#' @importFrom tidyr fill separate_wider_delim
 .gdalrc_entries <- function(path) {
   tibble::tibble(raw = stringr::str_trim(readLines(path, warn = FALSE))) |>
     dplyr::filter(nzchar(.data$raw), !stringr::str_starts(.data$raw, stringr::fixed("#"))) |>

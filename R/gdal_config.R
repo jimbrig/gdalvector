@@ -51,13 +51,18 @@
 #' @param x Object to coerce.
 #' @inheritParams rlang::args_error_context
 #'
-#' @returns A `gdal_config` object: a list with elements `opts` (a [gdal_config_opts()]) and `vsi`
-#'   (a named list of path-bound [gdal_vsi_opts()], keyed by path prefix).
+#' @returns
+#' A `gdal_config` object: a list with elements `opts` (a [gdal_config_opts()]) and `vsi`
+#' (a named list of path-bound [gdal_vsi_opts()], keyed by path prefix).
 #'
 #' @seealso [gdal_config_set()], [gdal_config_active()], [gdal_config_sitrep()],
 #'   [gdal_config_file_read()], [with_gdal_config()]
 #'
 #' @export
+#'
+#' @importFrom rlang list2 names2 current_env
+#' @importFrom stats setNames
+#' @importFrom utils modifyList
 #'
 #' @examples
 #' gdal_config(
@@ -125,6 +130,7 @@ gdal_config <- function(...) {
 
 #' @keywords internal
 #' @noRd
+#' @importFrom purrr walk map_chr
 new_gdal_config <- function(opts = as_gdal_config_opts(list()), vsi = list()) {
   check_inherits(opts, "gdal_config_opts")
   purrr::walk(vsi, check_vsi_opts)
@@ -139,6 +145,7 @@ new_gdal_config <- function(opts = as_gdal_config_opts(list()), vsi = list()) {
 
 #' @rdname gdal_config
 #' @export
+#' @importFrom rlang caller_env
 as_gdal_config <- function(x, ..., call = rlang::caller_env()) {
   UseMethod("as_gdal_config")
 }
@@ -180,6 +187,8 @@ as_gdal_config.character <- function(x, ..., call = rlang::caller_env()) {
 # methods ---------------------------------------------------------------------------------------------------------
 
 #' @export
+#' @importFrom purrr compact
+#' @importFrom rlang exec
 c.gdal_config <- function(...) {
   dots <- purrr::compact(list(...))
   if (length(dots) == 0L) {
@@ -189,6 +198,8 @@ c.gdal_config <- function(...) {
 }
 
 #' @export
+#' @importFrom cli cli_text cli_alert_info
+#' @importFrom purrr imap_chr
 format.gdal_config <- function(x, ...) {
   n_opts <- length(.gdal_opts_payload(x$opts))
   n_vsi <- length(x$vsi)
@@ -228,11 +239,13 @@ print.gdal_config <- function(x, ...) {
 
 #' @rdname as_gdal_config_opts
 #' @export
+#' @importFrom rlang caller_env
 as_gdal_config_opts.gdal_config <- function(x, ..., driver = NULL, call = rlang::caller_env()) {
   as_gdal_config_opts(x$opts, driver = driver, call = call)
 }
 
 #' @export
+#' @importFrom purrr map
 as.list.gdal_config <- function(x, ...) {
   list(
     opts = as.list(x$opts),
@@ -255,6 +268,8 @@ as.list.gdal_config <- function(x, ...) {
 #'
 #' @rdname as_gdal_args
 #' @export
+#' @importFrom purrr map keep compact reduce
+#' @importFrom utils modifyList
 as_gdal_args.gdal_config <- function(x, ..., flatten_vsi = FALSE) {
   args <- as_gdal_args(x$opts, ...)
   if (length(x$vsi) == 0L) {
@@ -300,11 +315,14 @@ as_gdal_args.gdal_config <- function(x, ..., flatten_vsi = FALSE) {
 #' render it for a CLI invocation (`as_gdal_args(gdal_config_active())`) or serialize it
 #' ([gdal_config_file_write()]).
 #'
-#' @returns A [gdal_config()] value (empty when nothing has been applied).
+#' @returns
+#' A [gdal_config()] value (empty when nothing has been applied).
 #'
 #' @seealso [gdal_config_set()], [gdal_config_sitrep()]
 #'
 #' @export
+#'
+#' @importFrom purrr imap
 #'
 #' @examples
 #' gdal_config_active()
@@ -409,6 +427,8 @@ gdal_config_set <- function(...) {
 
 #' @rdname gdal_config_set
 #' @export
+#' @importFrom gdalraster get_config_option
+#' @importFrom stats setNames
 gdal_config_get <- function(keys = NULL) {
   if (is.null(keys)) {
     keys <- names(.gdal_config_state()$restore)
@@ -423,6 +443,8 @@ gdal_config_get <- function(keys = NULL) {
 
 #' @rdname gdal_config_set
 #' @export
+#' @importFrom gdalraster get_config_option
+#' @importFrom rlang arg_match
 gdal_config_unset <- function(keys, mode = c("reveal", "mask", "scrub")) {
   mode <- rlang::arg_match(mode)
   check_character(keys)
@@ -476,6 +498,8 @@ gdal_config_unset <- function(keys, mode = c("reveal", "mask", "scrub")) {
 
 #' @rdname gdal_config_set
 #' @export
+#' @importFrom gdalraster set_config_option vsi_set_path_option
+#' @importFrom stats setNames
 gdal_config_reset <- function(keys = NULL) {
   state <- .gdal_config_state()
   reset_vsi <- is.null(keys)
@@ -563,6 +587,9 @@ NULL
 
 #' @rdname with_gdal_config
 #' @export
+#' @importFrom gdalraster get_config_option set_config_option vsi_set_path_option
+#' @importFrom stats setNames
+#' @importFrom withr defer
 local_gdal_config <- function(..., .local_envir = parent.frame()) {
   cfg <- gdal_config(...)
   state <- .gdal_config_state()
@@ -603,6 +630,7 @@ local_gdal_config <- function(..., .local_envir = parent.frame()) {
 
 #' @rdname with_gdal_config
 #' @export
+#' @importFrom rlang current_env
 with_gdal_config <- function(new, code) {
   local_gdal_config(new, .local_envir = rlang::current_env())
   code
@@ -626,19 +654,25 @@ with_gdal_config <- function(new, code) {
 #' - `unset`: no value in effect.
 #'
 #' Coverage spans keys pinned by the package, GDAL-relevant environment variables, config-file
-#' entries, and a probe of the full known-option universe (runtime VSI metadata + driver metadata
-#' + curated core names), so externally set in-memory values for any documented key are discovered
-#' too. Secret-bearing values are redacted in printed output. A baseline sitrep taken at package
-#' load is stashed internally ("the world as gdalvector found it").
+#' entries, and a probe of the full known-option universe (runtime VSI metadata, driver metadata,
+#' and the curated core names), so externally set in-memory values for any documented key are
+#' discovered too. Secret-bearing values are redacted in printed output. A baseline sitrep taken
+#' at package load is stashed internally ("the world as gdalvector found it").
 #'
-#' @returns A `gdal_config_sitrep` object: `options` (tibble: `key`, `effective`, `envvar`, `set`,
-#'   `source`), `set` (the active session payload), `vsi` (path-bound options per prefix), `file`
-#'   (the discovered config file), and `time`. Has cli `format()`/`print()` and
-#'   [tibble::as_tibble()] methods.
+#' @returns
+#' A `gdal_config_sitrep` object: `options` (tibble: `key`, `effective`, `envvar`, `set`,
+#' `source`), `set` (the active session payload), `vsi` (path-bound options per prefix), `file`
+#' (the discovered config file), and `time`. Has cli `format()`/`print()` and
+#' [tibble::as_tibble()] methods.
 #'
 #' @seealso [gdal_config_active()], [gdal_config_file()], [gdal_config_set()]
 #'
 #' @export
+#'
+#' @importFrom dplyr bind_rows case_when if_else
+#' @importFrom gdalraster get_config_option
+#' @importFrom purrr map
+#' @importFrom tibble tibble
 #'
 #' @examples
 #' \dontrun{
@@ -710,6 +744,8 @@ gdal_config_sitrep <- function() {
 #'
 #' @rdname as_gdal_config_opts
 #' @export
+#' @importFrom rlang arg_match caller_env
+#' @importFrom stats setNames
 as_gdal_config_opts.gdal_config_sitrep <- function(
   x,
   ...,
@@ -739,6 +775,8 @@ as_tibble.gdal_config_sitrep <- function(x, ...) {
 }
 
 #' @export
+#' @importFrom cli cli_text cli_alert_info
+#' @importFrom purrr imap_chr
 format.gdal_config_sitrep <- function(x, ...) {
   opts <- x$options
   n <- if (is.null(opts)) 0L else nrow(opts)
@@ -792,6 +830,7 @@ print.gdal_config_sitrep <- function(x, ...) {
 # metadata is available.
 #' @keywords internal
 #' @noRd
+#' @importFrom rlang env_has
 gdal_config_init <- function() {
   if (!exists(".pkg_env")) {
     return(invisible())
@@ -821,6 +860,10 @@ gdal_config_init <- function() {
 # setting always wins), and skipped entirely via options(gdalvector.config_defaults = FALSE).
 #' @keywords internal
 #' @noRd
+#' @importFrom gdalraster get_config_option
+#' @importFrom purrr iwalk
+#' @importFrom rlang env_has
+#' @importFrom stats setNames
 gdal_config_init_defaults <- function() {
   if (!exists(".pkg_env")) {
     return(invisible())
@@ -881,6 +924,7 @@ gdal_config_init_defaults <- function() {
 # restore entry.
 #' @keywords internal
 #' @noRd
+#' @importFrom gdalraster get_config_option set_config_option
 .gdal_config_put <- function(key, value) {
   state <- .gdal_config_state()
   if (is.null(state$restore[[key]])) {
@@ -898,6 +942,8 @@ gdal_config_init_defaults <- function() {
 
 #' @keywords internal
 #' @noRd
+#' @importFrom gdalraster vsi_set_path_option
+#' @importFrom stats setNames
 .gdal_vsi_put <- function(path, key, value) {
   vstate <- .gdal_vsi_state()
   gdalraster::vsi_set_path_option(path, key, value)
@@ -914,6 +960,7 @@ gdal_config_init_defaults <- function() {
 # global-channel keys set (the manual-restore contract of gdal_config_set).
 #' @keywords internal
 #' @noRd
+#' @importFrom gdalraster get_config_option
 .gdal_config_apply <- function(cfg) {
   payload <- .gdal_opts_payload(cfg$opts)
   .gdal_config_check_keys(names(payload))
@@ -950,6 +997,7 @@ gdal_config_init_defaults <- function() {
 # legal in GDAL (custom/app-defined), so this only guards against typos.
 #' @keywords internal
 #' @noRd
+#' @importFrom gdalraster get_config_option
 .gdal_config_check_keys <- function(keys) {
   if (length(keys) == 0L) {
     return(invisible(TRUE))
