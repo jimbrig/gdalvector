@@ -47,6 +47,63 @@
 <strong>drivers:</strong> Fix issues when missing drivers (<a href="https://github.com/jimbrig/gdalvector/commit/b5230ac20f552f31ed68797f4b8d8250f402b6b1" class="external-link">b5230ac</a>) - (Jimmy Briggs)</li>
 </ul></div>
 <div class="section level2">
+<h2 id="configuration">Configuration<a class="anchor" aria-label="anchor" href="#configuration"></a></h2>
+<ul><li>
+<strong>config:</strong> Add ‘context/’ to gitignore (<a href="https://github.com/jimbrig/gdalvector/commit/4b20a29d904e785fe94c747aea8d72f7c8a34f39" class="external-link">4b20a29</a>) - (Jimmy Briggs)</li>
+</ul></div>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a></h2>
+<ul><li>
+<strong>gdal-vector:</strong> Correct grammar in FID column informational message (<a href="https://github.com/jimbrig/gdalvector/commit/66a5988389a014ece9e236b267b549014d2e872b" class="external-link">66a5988</a>) - (Jimmy Briggs)</li>
+</ul></div>
+<div class="section level2">
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a></h2>
+<ul><li>
+<strong>cli:</strong> Improve output legibility and theme application (<a href="https://github.com/jimbrig/gdalvector/commit/7e5d7ea13061a91664a571778e0e7cd198493317" class="external-link">7e5d7ea</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>gpq:</strong> Improve GeoParquet CRS resolution (<a href="https://github.com/jimbrig/gdalvector/commit/361ba1a3d922bb3e7331c22370768cb3807d54a8" class="external-link">361ba1a</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>data:</strong> Add Atlanta sample geospatial data (<a href="https://github.com/jimbrig/gdalvector/commit/eac241cecc645fc40c190e8e378c1d95b3a5d435" class="external-link">eac241c</a>) - (Jimmy Briggs)</li>
+<li>Add GDAL vector schema transformation and GeoParquet introspection capabilities (<a href="https://github.com/jimbrig/gdalvector/commit/de91c73f1e1e0000a8a598854bc595bbd2a9f811" class="external-link">de91c73</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>gpq:</strong> Add comprehensive metadata introspection (<a href="https://github.com/jimbrig/gdalvector/commit/b17c0d46870b7ba5908c69802d8fdce35b833e0d" class="external-link">b17c0d4</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>cli:</strong> Integrate custom inline styles into global theme (<a href="https://github.com/jimbrig/gdalvector/commit/ae8c00fbcbc4863f5f7e810ad96be2ff97e37a71" class="external-link">ae8c00f</a>) - (Jimmy Briggs)</li>
+<li>Add utility to read .Renviron files (<a href="https://github.com/jimbrig/gdalvector/commit/946f3164764cf95de134dcdf67a00a19d62969c0" class="external-link">946f316</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>cli:</strong> Add utilities for rendering structured data (<a href="https://github.com/jimbrig/gdalvector/commit/0c2da701475925954e5171a49c3f96f29dfcd3de" class="external-link">0c2da70</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>vector:</strong> Add schema specification and transformation pipeline (<a href="https://github.com/jimbrig/gdalvector/commit/d28e75bf119e880d8870ac856b2cc0190531b48a" class="external-link">d28e75b</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>vector:</strong> Warn when GDAL FID column is virtual (<a href="https://github.com/jimbrig/gdalvector/commit/cd236114a739a626f7cb647c2c0842b911a825ff" class="external-link">cd23611</a>) - (Jimmy Briggs)</li>
+</ul></div>
+<div class="section level2">
+<h2 id="refactoring">Refactoring<a class="anchor" aria-label="anchor" href="#refactoring"></a></h2>
+<ul><li>
+<strong>gdal-vector:</strong> Improve FID column reporting and messaging (<a href="https://github.com/jimbrig/gdalvector/commit/27b2a8dc34e26226fe27e6830aa308cd2abf1668" class="external-link">27b2a8d</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>gpq_meta:</strong> Refactor GeoParquet schema inspection and remove Arrow dependency (<a href="https://github.com/jimbrig/gdalvector/commit/ad153b9ac3c13fd4c18a241c1b67bf374e426cc8" class="external-link">ad153b9</a>) - (Jimmy Briggs)
+<ul><li>
+<strong>BREAKING CHANGE:</strong> The <code>gpq_arrow_schema()</code> function has been removed.</li>
+</ul></li>
+<li>
+<strong>cli:</strong> Refactor output formatting and theme application (<a href="https://github.com/jimbrig/gdalvector/commit/8c4ef37a015bde273abeb3619cf2f17b32ae9c1b" class="external-link">8c4ef37</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>utils:</strong> Improve 64-bit integer decoding and remove blank predicate (<a href="https://github.com/jimbrig/gdalvector/commit/c5b79b7d17e71f19918e7ba0b83c32306110325f" class="external-link">c5b79b7</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>gdal-vector-schema:</strong> Remove vector schema transformation utilities (<a href="https://github.com/jimbrig/gdalvector/commit/99b145568538ba7ea7343dae367a26edccf867d3" class="external-link">99b1455</a>) - (Jimmy Briggs)
+<ul><li>
+<strong>BREAKING CHANGE:</strong> Functions for GDAL vector schema specification and pipeline argument generation have been removed and are no longer available.</li>
+</ul></li>
+</ul></div>
+<div class="section level2">
+<h2 id="testing">Testing<a class="anchor" aria-label="anchor" href="#testing"></a></h2>
+<ul><li>
+<strong>gpq_meta:</strong> Improve print() method invisibility and output tests (<a href="https://github.com/jimbrig/gdalvector/commit/84a0c577f6d74676a8e856f5a627083a3eefcc84" class="external-link">84a0c57</a>) - (Jimmy Briggs)</li>
+<li>
+<strong>gpq:</strong> Add comprehensive tests for metadata introspection (<a href="https://github.com/jimbrig/gdalvector/commit/507163be7f05f8993050427d3e41f78740f13d11" class="external-link">507163b</a>) - (Jimmy Briggs)</li>
+</ul></div>
+<div class="section level2">
 <h2 id="id_003--2026-06-29">
 <a href="https://github.com/jimbrig/gdalvector/tree/v0.0.3" class="external-link">0.0.3</a>- (2026-06-29)<a class="anchor" aria-label="anchor" href="#id_003--2026-06-29"></a></h2>
 </div>
@@ -57,7 +114,7 @@
 <li>Fix initialization (<a href="https://github.com/jimbrig/gdalvector/commit/20f2badfea891c446083d34177841ccb288318b4" class="external-link">20f2bad</a>) - (Jimmy Briggs)</li>
 </ul></div>
 <div class="section level2">
-<h2 id="configuration">Configuration<a class="anchor" aria-label="anchor" href="#configuration"></a></h2>
+<h2 id="configuration-1">Configuration<a class="anchor" aria-label="anchor" href="#configuration-1"></a></h2>
 <ul><li>
 <strong>ci:</strong> Standardize and streamline GitHub Actions workflows (<a href="https://github.com/jimbrig/gdalvector/commit/40b431fed3b4086752d8d985574a8d11b3f30408" class="external-link">40b431f</a>) - (Jimmy Briggs)</li>
 <li>
@@ -75,7 +132,7 @@
 <strong>github-actions:</strong> Add core workflows for R package CI (<a href="https://github.com/jimbrig/gdalvector/commit/d76bd6aa8302df93bd62f1d9fbf113362e719a6f" class="external-link">d76bd6a</a>) - (Jimmy Briggs)</li>
 </ul></div>
 <div class="section level2">
-<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a></h2>
+<h2 id="documentation-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-1"></a></h2>
 <ul><li>
 <strong>design:</strong> Add comprehensive architecture and usage documentation (<a href="https://github.com/jimbrig/gdalvector/commit/d12a5da293afdd5ddb15460ce90714e6eedb0766" class="external-link">d12a5da</a>) - (Jimmy Briggs)</li>
 <li>
@@ -90,12 +147,12 @@
 <li>Add and update project badges (<a href="https://github.com/jimbrig/gdalvector/commit/fe1d15890acb84afe94e973925707cc76b13d5cb" class="external-link">fe1d158</a>) - (Jimmy Briggs)</li>
 </ul></div>
 <div class="section level2">
-<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a></h2>
+<h2 id="features-1">Features<a class="anchor" aria-label="anchor" href="#features-1"></a></h2>
 <ul><li>
 <strong>dev:</strong> Add development scripts and package infrastructure setup (<a href="https://github.com/jimbrig/gdalvector/commit/f31275a5c3ad20e1b7713ff450ab75b7da6a149b" class="external-link">f31275a</a>) - (Jimmy Briggs)</li>
 </ul></div>
 <div class="section level2">
-<h2 id="refactoring">Refactoring<a class="anchor" aria-label="anchor" href="#refactoring"></a></h2>
+<h2 id="refactoring-1">Refactoring<a class="anchor" aria-label="anchor" href="#refactoring-1"></a></h2>
 <ul><li>Streamline utility functions and update documentation (<a href="https://github.com/jimbrig/gdalvector/commit/e9667dabf3129c2b4934f527a5f68275ec0d287d" class="external-link">e9667da</a>) - (Jimmy Briggs)</li>
 <li>
 <strong>opts:</strong> Add consistent ... pass-through to all typed builders (<a href="https://github.com/jimbrig/gdalvector/issues/2" class="external-link">#2</a>) (<a href="https://github.com/jimbrig/gdalvector/commit/fa3ac9c88bcef0fae56c8875934cfd0282172c23" class="external-link">fa3ac9c</a>) - (Jimmy Briggs)</li>
@@ -117,7 +174,7 @@
 <ul><li>Standardize code formatting and improve readability (<a href="https://github.com/jimbrig/gdalvector/commit/6af5f13f4b32c4366f7186e316a5df561aaf2d92" class="external-link">6af5f13</a>) - (Jimmy Briggs)</li>
 </ul></div>
 <div class="section level2">
-<h2 id="testing">Testing<a class="anchor" aria-label="anchor" href="#testing"></a></h2>
+<h2 id="testing-1">Testing<a class="anchor" aria-label="anchor" href="#testing-1"></a></h2>
 <ul><li>
 <strong>opts:</strong> Require testthat (&gt;= 3.1.0) and use expect_no_error() (<a href="https://github.com/jimbrig/gdalvector/issues/2" class="external-link">#2</a>) (<a href="https://github.com/jimbrig/gdalvector/commit/1216bd47af6c925b2a2a689303480326f3c546bb" class="external-link">1216bd4</a>) - (Jimmy Briggs)</li>
 <li>
