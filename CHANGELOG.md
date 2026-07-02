@@ -11,6 +11,42 @@
 - Support known GDAL drivers even if unregistered ([2e4a86a](https://github.com/jimbrig/gdalvector/commit/2e4a86a128e27b9c5890e4fe7901884e251a5ebf))  - (Jimmy Briggs)
 - **drivers:** Fix issues when missing drivers ([b5230ac](https://github.com/jimbrig/gdalvector/commit/b5230ac20f552f31ed68797f4b8d8250f402b6b1))  - (Jimmy Briggs)
 
+## Configuration
+
+- **config:** Add 'context/' to gitignore ([4b20a29](https://github.com/jimbrig/gdalvector/commit/4b20a29d904e785fe94c747aea8d72f7c8a34f39))  - (Jimmy Briggs)
+
+## Documentation
+
+- **gdal-vector:** Correct grammar in FID column informational message ([66a5988](https://github.com/jimbrig/gdalvector/commit/66a5988389a014ece9e236b267b549014d2e872b))  - (Jimmy Briggs)
+
+## Features
+
+- **cli:** Improve output legibility and theme application ([7e5d7ea](https://github.com/jimbrig/gdalvector/commit/7e5d7ea13061a91664a571778e0e7cd198493317))  - (Jimmy Briggs)
+- **gpq:** Improve GeoParquet CRS resolution ([361ba1a](https://github.com/jimbrig/gdalvector/commit/361ba1a3d922bb3e7331c22370768cb3807d54a8))  - (Jimmy Briggs)
+- **data:** Add Atlanta sample geospatial data ([eac241c](https://github.com/jimbrig/gdalvector/commit/eac241cecc645fc40c190e8e378c1d95b3a5d435))  - (Jimmy Briggs)
+- Add GDAL vector schema transformation and GeoParquet introspection capabilities ([de91c73](https://github.com/jimbrig/gdalvector/commit/de91c73f1e1e0000a8a598854bc595bbd2a9f811))  - (Jimmy Briggs)
+- **gpq:** Add comprehensive metadata introspection ([b17c0d4](https://github.com/jimbrig/gdalvector/commit/b17c0d46870b7ba5908c69802d8fdce35b833e0d))  - (Jimmy Briggs)
+- **cli:** Integrate custom inline styles into global theme ([ae8c00f](https://github.com/jimbrig/gdalvector/commit/ae8c00fbcbc4863f5f7e810ad96be2ff97e37a71))  - (Jimmy Briggs)
+- Add utility to read .Renviron files ([946f316](https://github.com/jimbrig/gdalvector/commit/946f3164764cf95de134dcdf67a00a19d62969c0))  - (Jimmy Briggs)
+- **cli:** Add utilities for rendering structured data ([0c2da70](https://github.com/jimbrig/gdalvector/commit/0c2da701475925954e5171a49c3f96f29dfcd3de))  - (Jimmy Briggs)
+- **vector:** Add schema specification and transformation pipeline ([d28e75b](https://github.com/jimbrig/gdalvector/commit/d28e75bf119e880d8870ac856b2cc0190531b48a))  - (Jimmy Briggs)
+- **vector:** Warn when GDAL FID column is virtual ([cd23611](https://github.com/jimbrig/gdalvector/commit/cd236114a739a626f7cb647c2c0842b911a825ff))  - (Jimmy Briggs)
+
+## Refactoring
+
+- **gdal-vector:** Improve FID column reporting and messaging ([27b2a8d](https://github.com/jimbrig/gdalvector/commit/27b2a8dc34e26226fe27e6830aa308cd2abf1668))  - (Jimmy Briggs)
+- **gpq_meta:** Refactor GeoParquet schema inspection and remove Arrow dependency ([ad153b9](https://github.com/jimbrig/gdalvector/commit/ad153b9ac3c13fd4c18a241c1b67bf374e426cc8))  - (Jimmy Briggs)
+  - **BREAKING CHANGE:** The `gpq_arrow_schema()` function has been removed.
+- **cli:** Refactor output formatting and theme application ([8c4ef37](https://github.com/jimbrig/gdalvector/commit/8c4ef37a015bde273abeb3619cf2f17b32ae9c1b))  - (Jimmy Briggs)
+- **utils:** Improve 64-bit integer decoding and remove blank predicate ([c5b79b7](https://github.com/jimbrig/gdalvector/commit/c5b79b7d17e71f19918e7ba0b83c32306110325f))  - (Jimmy Briggs)
+- **gdal-vector-schema:** Remove vector schema transformation utilities ([99b1455](https://github.com/jimbrig/gdalvector/commit/99b145568538ba7ea7343dae367a26edccf867d3))  - (Jimmy Briggs)
+  - **BREAKING CHANGE:** Functions for GDAL vector schema specification and pipeline argument generation have been removed and are no longer available.
+
+## Testing
+
+- **gpq_meta:** Improve print() method invisibility and output tests ([84a0c57](https://github.com/jimbrig/gdalvector/commit/84a0c577f6d74676a8e856f5a627083a3eefcc84))  - (Jimmy Briggs)
+- **gpq:** Add comprehensive tests for metadata introspection ([507163b](https://github.com/jimbrig/gdalvector/commit/507163be7f05f8993050427d3e41f78740f13d11))  - (Jimmy Briggs)
+
 ## [0.0.3](https://github.com/jimbrig/gdalvector/tree/v0.0.3)- (2026-06-29)
 
 ## Bug Fixes
